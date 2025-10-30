@@ -1,0 +1,183 @@
+# 3.2 Structuring and constructing modules part 2: Package-like Modules
+
+The previous part teaches you on how to import / export data from module, and in this part, you'll learn on how to create a module that mimics the package system in R and package system in other languages such as Python. One of the strengths of **{box}** is that you don't need to create an R package just to store the R codes and make it accessible to other end-users. Because of this package, you can mimic the way on how Python packages are created. It's modular, maintainable, and accessible.
+
+---
+
+## 3.2.1 Create modules from the root folder 
+
+Recall the `not_func.r` script. Keep it and this time, create another scripts named `convert.r` and `hello_world.r`. 
+
+::: {.callout-tip title="Did you know? "}
+
+*Recall that `#' @export` is only necessary when you are exporting specific part of the assigned R code into the namespace.*
+When `#' @export` is placed, it triggers the Roxygen2 functionality, where it keeps the public namespace into the private namespace. 
+
+:::
+
+::: panel-tabset
+
+###  Converting temperatures
+
+Copy this code:
+
+```r
+celsius_to_fahrenheit = function (celsius) {
+    fahrenheit = (celsius * 9/5) + 32
+    fahrenheit
+}
+
+fahrenheit_to_celsius = function (fahrenheit) {
+    celsius = (fahrenheit - 32) * 5/9
+    celsius
+}
+```
+
+### Simple greetings
+
+This example is an example code from the official documentation of **{box}** package. 
+
+``` r
+#' @export
+hello = function (name) {
+    message('Hello, ', name, '!')
+}
+
+#' @export
+bye = function (name) {
+    message('Goodbye ', name, '!')
+}
+```
+
+:::
+
+And access them like:
+
+```{r}
+box::use(
+    ./module/convert, 
+    greet = ./module/hello_world
+)
+
+temperature = 212
+
+glue::glue(
+    "{temperature} degrees Fahrenheit is equivalent to {convert$fahrenheit_to_celsius(temperature)} degrees Celsius"
+)
+
+greet$hello("Amy")
+```
+
+If you have `__init__.r` initialization file already, you can do the following:
+
+```{r}
+box::use(
+    md = ./module
+)
+
+temperature = 212
+
+glue::glue(
+    "{temperature} degrees Fahrenheit is equivalent to {md$convert$fahrenheit_to_celsius(temperature)} degrees Celsius"
+)
+
+md$hello_world$hello("Amy")
+```
+
+And by the way, you can apply aliases for the script accessed as a module, not limited to functions and any objects:
+
+``` r
+box::use(
+    ./module[hw = hello_world],
+    ./module[cv = convert], 
+    ./module[nf = not_func]
+)
+```
+
+## 3.2.2 Create a module from subfolders
+
+Under the **{./module}**, let's create a subfolder named `statistics`, where the small set of statistical functions are contained in separate scripts. Don't forget the `__init__.r` initialization file. 
+
+Here is the structure:
+
+```bash
+statistics/
+├── __init__.r
+├── cor.r
+├── corrr.r
+└── time_series.r
+```
+
+*See the source code of each script here: https://github.com/kisha126/modules-in-r/tree/main/module/statistics*
+
+Access all of the modules within `statistics` by:
+
+```{r}
+box::use(
+    md_sts = ./module/statistics
+)
+```
+
+Example:
+
+```{r}
+with(cars, md_sts$cor$custom_cor(speed, dist))
+
+cor_pipe = md_sts$corrr$cor_pipe
+
+mtcars |> 
+    cor_pipe(mpg, hp, disp, qsec)
+
+mas = md_sts$time_series$moving_average(AirPassengers, win = 3)
+
+plot(
+    seq_along(AirPassengers),
+    AirPassengers, 
+    type = "l",
+    col = "blue", 
+    lwd = 2, 
+    xlab = "Time Index", 
+    ylab = "Passengers", 
+    main = "AirPassengers with Moving Averages"
+)
+
+lines(mas, col = "red")
+```
+
+
+The **{statistics}** *submodule* is accessible: 
+
+```r
+box::use(
+    ./module/statistics
+)
+```
+
+If `__init__.r` file under **{statistics}** subfolder is initialized through:
+
+```r
+#' @export
+box::use(
+    ./cor_nse,
+    ./cor,
+    ./moving_average
+)
+```
+
+*I'll explain about nested modules in the Chapter 3.4.*
+
+::: {.callout-tip title="Recall Chapter 3.1.2"}
+
+If you access **{statistics}** subfolder as a module, under **{./module}** folder like this:
+
+```{r}
+box::use(
+    ./module[st = statistics]
+)
+```
+
+The **{st}** module will not be loaded into the current (root) environment, but loaded under **{./module}** environment
+
+![](Images/img-c3.2.2.jpg)
+
+:::

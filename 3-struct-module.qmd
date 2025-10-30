@@ -1,0 +1,17 @@
+# 3 Employment of Modules: Structures and constructions
+
+From the previous chapter, the guide thoroughly explains how to import R packages and scripts / folders using `box::use()`, the fundamentals of **{box}** package, and why it is such convenient in having more control on how you attach the namespace, between bulky and granular imports, and how **{box}** absolves namespace conflicts in the current environment. 
+
+::: {.callout-tip icon=false title="Little acknowledgement"}
+I'll be glad if you learned something there. I make use of the Giscuss utterance, so sign your GitHub account, and leave a comment [here](https://joshuamarie.github.io/joshuamarie/posts/03-modules-in-r/). 
+:::
+
+In this chapter, we will dive deeper into the creation, organization, and reuse of modules using **{box}**, which is another fundamentals. By structuring your code into reusable modules, you can make your R projects more manageable, scalable, and long-term maintainable.
+
+One of the core strengths of **{box}** is its ability to help you create reusable modules. This chapter will show you how to create, organize, and use modules effectively in your R projects.
+
+---
+
+## Module Basics
+
+In **{box}**, a module is simply between an imported R package, R scripts, or a folder that contains an R script that encapsulates related functions, variables, and objects, forming a cohesive unit of functionality. Think of a module as a container of reusable code, and must be containing a namespace, similar to how Python packages work. This design encompasses module system for R, something that is less robust in R, where you organize your code into logically separated units, making it easy to maintain and reuse across different projects.

@@ -1,0 +1,452 @@
+# 2.1 Array of Imports with Monikers
+
+---
+
+## 2.1.1 Base R vs **{box}** Approach
+
+Let's first compare the traditional R approach with **{box}**:
+
+| Aspect            | Base R                         | **{box}** Approach                 |
+|-------------------|--------------------------------|------------------------------------|
+| Loading Method    | `library(dplyr)`               | `box::use(dplyr)`                  |
+| Namespace Impact  | Attaches to global namespace   | Module-scoped imports              |
+| Conflict Handling | May cause naming conflicts     | Explicit imports prevent conflicts |
+| Code Clarity      | Dependencies implicit          | Dependencies explicitly declared   |
+| Performance       | Loads entire package namespace | More controlled                    |
+
+Oh, and there's also `require()` function, an evil-ler twin of `library()` function, where it won't just attach the *entire* namespace to the search path, it returns `TRUE` (if the package exists; `FALSE` if it doesn't) when executed, and it is TOO inconsistent by as it fails silently — “fails silently” means that a function fails without stopping the program or showing a clear error message. 
+
+---
+
+## 2.1.2 Importing R Packages and scripts / folders
+
+The table not enough for you? This book will further explain. The **{box}** package provides a flexible and explicit way to import external packages and their functions. Let's explore the different importing methods:
+
+### 2.1.2.1 Basic Imports
+
+This book already shows you the basic importation using `box::use()`. But, the `box::use()` function uses `...`, also called "ellipsis", and it acts as a "placeholder" that allows multiple arguments, similar to Python's `*args` and `**kwargs`, thus allows multiple package imports. Since this allows you to import multiple packages and their functions in a single call, separated by comma, you don't have to bother yourself calling multiple calls, like:
+
+:::::: panel-tabset
+
+#### Packages
+
+::::: {.columns}
+
+:::: {.column width="50%"}
+
+```r
+box::use(dplyr[filter, select, mutate])
+box::use(ggplot2[ggplot, geom_point])
+box::use(stats[lm])
+
+data |> 
+    filter(col > 0)     
+data |> 
+    select(col1, col2)  
+```
+::::
+
+:::: {.column width="50%"}
+
+Instead, do the following:
+
+::: {.callout-note icon=false title="Import specific functions" appearance="minimal"}
+
+```r
+box::use(
+    dplyr[filter, select, mutate],
+    ggplot2[ggplot, geom_point],
+    stats[lm]
+)
+
+data |> 
+    filter(col > 0)     
+data |> 
+    select(col1, col2)  
+mtcars |> 
+    lm(formula = mpg ~ wt)
+```
+
+:::
+
+::::
+
+:::::
+
+#### Scripts
+
+Except when importing scripts and modules, you are going to provide the name of the path (should be a literal name, not a string), and/or add prefix `./` that indicates the current path. The use of `../` is allowed as well, but this will be discussed in [Chapter 3.4](3.4-nested-modules.qmd). 
+
+The rest is going to be the same as package import syntax: 
+
+::::: {.columns}
+
+:::: {.column width="50%"}
+
+```r
+box::use(./mod1[fn1, fn2])
+box::use(./mod2[fn3, fn4])
+box::use(./mod3[fn5])
+
+fn1(fn2(5)) 
+```
+::::
+
+:::: {.column width="50%"}
+
+Instead, do the following:
+
+::: {.callout-note icon=false title="Import specific functions" appearance="minimal"}
+
+```r
+box::use(
+    ./mod1[fn1, fn2],
+    ./mod2[fn3, fn4],
+    ./mod3[fn5]
+)
+
+fn1(fn2(5)) 
+```
+
+:::
+
+::::
+
+:::::
+
+In this case, the nuance being: Hard coding multiple calls is avoided
+
+::::::
+
+::: {.callout-tip}
+
+#### Additional information
+
+-   Still allows specified functions to be imported
+-   Functions are available directly by their names
+-   Functions are scoped to your current module
+-   Other functions from these packages remain unavailable
+-   There's difference between the imports of R packages and imports of scripts / folders.
+-   The modules for scripts / folders have structures. More information about it at [Chapter 3: Employment of Modules](3-struct-module.qmd).
+
+:::
+
+### 2.1.2.2 Importing the entirety
+
+Do not confuse this with `library()`, where it attaches the *entire* namespace to the search path, and throwing all the exports into the search path is often *subjectively* (or *objectively*?) discouraged in best software engineering practices. The **{box}** fortunately resolves this: Instead of loading the package onto the global environment, the namespace of the package and scripts / folders, including the functions and other objects, such as data frames or constants like `pi` from **{base}** R, will be encapsulated as an *environment* (another data structure, similar to lists) with its name, and then the imports are accessed directly with `$` subset operator. 
+
+``` r
+box::use(
+    dplyr,
+    ./mod1, 
+    ./mod2
+)  
+
+dplyr$select(data, col1, col2)
+mod1$fn1(mod2$fn3(5))
+```
+
+How beautiful this may be? I have several verdicts: 
+
+-   The entire package namespace becomes available as an *environment*
+-   All functions are (and must) be accessed using the package name as a prefix and `$` operator
+-   This prevents namespace pollution while maintaining access to all functions
+-   Useful when you need many functions from a package
+
+The use of aliases also allowed:
+
+``` r
+box::use(
+    dpr = dplyr, 
+    tdr = tidyr, 
+    md1 = ./module1,
+    md2 = ./module2
+)  
+
+# Usage:
+dpr$filter(data, col1 > 0) |> 
+    tdr$pivot_longer(cols = col2)
+
+md1$fn1(md2$fn3(5))
+```
+
+### 2.1.2.3 Granular Imports with Aliases
+
+The **{box}** package absolves namespace clashes, which commonly occur when different packages have functions with the same name.
+
+When you import the namespace, you are allowed to spice up things a little bit by renaming the imports. This is particularly useful when you have 2 packages to be used and you want to use them both at once. For instance, the **{dplyr}**'s `filter` function, and as you attach the **{dplyr}** namespace, it will mask the existing functions from the global namespace, namely the **{stats}**' `filter` function. This induces namespace clash, and trust me, you may not want this happening. 
+
+My solution: You can load the `filter()` function from the **{dplyr}** namespace through the following: 
+
+``` r
+box::use(
+    dplyr[filter_rows = filter],  # dplyr's filter becomes filter_rows
+    stats[filter_ts = filter]     # stats' filter becomes filter_ts
+)
+
+# Usage:
+data |> filter_rows(col > 0)      
+AirPassengers |> filter_ts()      
+```
+
+::: {.callout-note}
+
+Granular imports in R's `library()` is also allowed using `include.only` parameter. 
+
+For example: 
+
+``` r
+library(dplyr, include.only = c("select", "filter"))
+```
+
+But still no *alias* gimmicks and doesn't even leverage non-standard evaluation, where it treats `include.only` arguments as an object, called as a name, unlike `box::use()`. 
+
+R version 4.4 and above has a shorthand of `library(pkg, include.only = c('fn1', 'fn2'))`: Introducing the `base::use()`. 
+
+Example usage: 
+
+``` r
+use(dplyr, c("select", "filter"))
+```
+
+Also inconsistent as it silently fails, and I won't highly recommend this. 
+
+::: 
+
+### 2.1.2.4 Import special characters
+
+The functions like `%>%` from **{magrittr}** is one of the functions with special characters. In R, operators and functions that use special characters (like `+`, `*`, `%>%`, `%in%`, `%*%`, etc.) are called *infix operators*. These operators require special handling when importing with **{box}**. By the way, those are still *functions*. 
+
+To import functions with special characters, you need to wrap them in backticks:
+
+```{r}
+#| echo: true
+box::use(
+    magrittr[`%>%`, `%T>%`], 
+    dplyr[group_by, summarise]
+)
+
+iris %>% 
+    group_by(Species) %>% 
+    summarise(m = mean(Sepal.Length, na.rm = TRUE))
+```
+
+
+### 2.1.2.5 Wildcard import
+
+The true equivalent of `library(pkg)` is something like `box::use(pkg[...])`. Yet again, we use `...`, also called "ellipsis". The use of `...` sets as a "wildcard", and this, while being *granular*, imports all the namespace withing the package (or modules). The Python's equivalent would be `from pkg import *`.  
+
+For example:
+
+``` r
+box::use(
+    dplyr[...]
+)
+```
+
+---
+
+## 2.1.3 Imports within the function / function call
+
+When we import packages / scripts / folders as modules or import their namespace, did you know the imports are *enclosed* within the scope?
+
+According to the official documentation:
+
+> the effects of `box::use` are restricted to the current scope: we can load and attach names inside a function, and this will not affect the calling scope (or elsewhere).
+
+Here, let me show you:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| collapse: true
+#| comment: "#>"
+mtcars |> 
+    dplyr::reframe(
+        {    
+            box::use(
+                stats[linear_reg = lm, pearson_r = cor],
+                purrr[imap_dfc, set_names],
+                tibble[tbl = tibble]
+            ) 
+            
+            model = linear_reg(mpg ~ wt)
+            coefs = coef(model)
+            coef_table = imap_dfc(coefs, \(bi, nm) {
+                result = tbl(bi)
+                set_names(result, nm)
+            })
+            
+            corr = pearson_r(wt, mpg)
+            
+            test = summary(model)
+            tbl(
+                coef_table, 
+                corr = corr, 
+                rsq = test$r.squared,
+                adj_rsq = test$adj.r.squared
+            )
+        },
+        
+        .by = cyl
+    )
+```
+
+I made this code to study the type-I error by examining how true the linear relationship between `wt` and `mpg` variables from `mtcars` data, when performing statistical analysis. Here, I made imports within `dplyr::reframe()` function call without making side-effect the current environment. This is great if you create a function with external dependencies available from R packages, or within your scripts / folders. 
+
+## 2.1.4 Best Practices for Package Imports
+
+But, of course, R packages have strengths, but don't forget their flaws. I will enumerate the *do's* in **{box}** package:
+
+### 2.1.4.1 Be Specific with Imports
+
+#### a. Avoid importing everything
+
+The use of *wildcards*, i.e. the "ellipsis" `...` within the granular imports through `[...]` is a shortcut to import the namespace, but you are importing everything here. 
+
+``` r
+box::use(
+    dplyr[...]
+)
+```
+
+Don't do this in actual practice, or it will create a mess in the global namespace, just like `library()`. As the *Zen of Python* said: "Explicit is better than implicit." 
+
+#### b. Import only what you need
+
+Of course, in several times, you only import specific parts of the package only. For instance, when you are aggregating data frame with **{dplyr}**, you often only needs `filter()`, `select()`, `mutate()`, `group_by()`, and `summarise()`. Mind you that there are a total of 293 exported namespaces (will be less than that if you don't count the *pseudo-functions*, such as `across()` and `where()`) within **{dplyr}** package, and for your aggregation task, you only need 5 out of the total exports. 
+
+This approach is better because it is explicit and you can even rename those imports: 
+
+``` r
+box::use(
+    dplyr[filter_df = filter, select, mutate, group_by, summarise]
+)
+```
+
+::: {.callout-tip icon=false title="Example (Click to expand)" collapse=true}
+
+Let's take an example, where you want to calculate the sample size, mean, standard deviation, standard error, and the coefficient of variation across the numeric columns in `iris` dataset:
+
+```{r}
+#| echo: true
+box::use(
+    dplyr[n, mutate, relocate, group_by, summarise], 
+    tidyr[melt = pivot_longer, spread = pivot_wider]
+)
+
+iris |> 
+    summarise(
+        across(
+            where(is.numeric), 
+            list(
+                mu = \(x) mean(x, na.rm = TRUE), 
+                sigma = \(x) sd(x, na.rm = TRUE)
+            ), 
+            .names = "{.col}..{.fn}"
+        ), 
+        n = n()
+    ) |> 
+    melt(
+        cols = everything() & !n,
+        names_pattern = "^(.*)\\.\\.(.*)$",
+        names_to = c("Variable", "Statistics"),
+        values_to = "Est"
+    ) |> 
+    spread(
+        names_from = Statistics, 
+        values_from = Est
+    ) |> 
+    mutate(
+        se = sigma / sqrt(n), 
+        cv = sigma / mu
+    ) |> 
+    relocate(
+        n, .after =  Variable
+    )
+```
+
+:::
+
+### 2.1.4.2 Group Related Imports
+
+For better clarity, you can explain the imports you are making *within* the function call `box::use()` with comments `#`. This is not unusual, sometimes this is common. Since comments are allowed, you can group the imports by functionality. 
+
+``` r
+box::use(
+    # Simple aggregation
+    dplyr[filter_df = filter, select, mutate, group_by, summarise],
+    tidyr[pivot_longer, pivot_wider],
+    
+    # To run linear regression and t-test
+    stats[linear_reg = lm, welch_ttest = t.test],
+    
+    # To visualize outputs from linear regression and t-test
+    ggplot2[ggplot, geom_point, geom_smooth, geom_box, theme_minimal, aes]
+)
+```
+
+::: callout-note
+The proper documentation is discussed in Chapter 3.2, which it talks about *Package-like Modules*. 
+:::
+
+### 2.1.4.3 Handle Naming Conflicts
+
+As I discussed in Chapter 2.1.2.3, you are allowed to place an alias within the imports, so that the namespace clash will be resolved. 
+
+The most prominent example is `dplyr::filter()` and `stats::filter()`. 
+
+``` r
+box::use(
+    dplyr[filter_df = filter],
+    stats[filter_ts = filter]
+)
+```
+
+*Rename them whatever you want to employ clarity. *
+
+### Otherwise
+
+::: {.callout-warning title="Otherwise"}
+
+Trust me, I've been this a long time ago: not following any of those practices. So, if you don't do the following practices, you'll create inconsistent and unpredictable flaws. Keep up the good work and do the best practices.
+
+:::
+
+---
+
+## 2.1.5 Troubleshooting Package Imports
+
+Frankly, I will show you solutions if you have similar errors like the following. The common issues to be found when importing packages happen are: 
+
+1.  Obviously, the R package is not installed. This matter is trivial: The package does not exist in your current environment, and you just need to install packages you want to use and import using `box::use()`. 
+
+    ``` r
+    box::use(pkg[func, ...])
+    #> Error in box::use(pkg) : there is no package called ‘pkg’
+
+    install.packages("pkg")
+    ```
+
+2.  When the particular imports does not exist in the package namespace or incorrectly name the import: 
+
+    ``` r
+    box::use(dplyr[nonexistent_function])
+    #> Error in box::use(dplyr[nonexistent_function, slct]) : 
+         name “nonexistent_function”, “slct” not exported by “dplyr”
+    
+    box::use(dplyr[select, filter])
+    ```
+    
+    The **{box}** package enforces strict naming. If possible, check out the official documentation of the R package. Check if you are using indeed correct spelled name, and check if the imports does exist in the package namespace
+
+---
+
+## Benefits and history
+
+The **{box}** package is originally a superset of R package import system. Then the author gradually made some breakthrough editions, by interpolating the module system, something that does exists in other languages, but missed out by R throughout the years. And so, you see, using **{box}** for bringing clean module system in R does offers you these advantages:
+
+-   Explicit dependency declaration
+-   Better namespace control and reduced conflicts
+
+In the next chapter, we'll explore how to create and reuse your own modules effectively.

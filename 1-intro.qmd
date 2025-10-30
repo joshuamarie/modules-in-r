@@ -1,0 +1,35 @@
+# 1 Introduction
+
+Maybe, my knowledge is limited but some R programmers have long sought elegant ways to organize their code into reusable R codes, maintainable modules, and granular import system. Unfortunately, R lacks this system but [box](https://github.com/klmr/box) R package is your saving grace, as it offers a fresh approach to module system in your respective projects.
+
+---
+
+## The Challenge of Code Organization in R
+
+Let's look at the common challenges:
+
+-   R has `source()` function but has [several problems](https://www.reddit.com/r/rstats/comments/lm0smw/comment/gnvy0vn/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button). 
+-   You have to create an R package to organize R codes, but that's pretty much it. There's no way to reuse code in any R script files / folders. 
+-   R has no way to dictate dependencies explicitly between different parts of your code, aside from creating an R package. 
+-   Maintaining consistency across large codebases
+-   Sharing code between projects categorically
+
+## Enter the Box Package
+
+The **{box}** package offers a fresh approach to modular programming within R, bringing clarity and structure to your projects. It addresses these challenges by introducing a modern, explicit module system that feels natural to both any R veteran and developer coming from other programming languages.
+
+## Understanding Modular Programming
+
+Modular programming is a software design approach that emphasizes:
+
+1.  **Breaking Down Complexity**: Dividing large programs into smaller, manageable pieces
+2.  **Encapsulation**: Keeping related code together and protecting it from external interference
+3.  **Interface Design**: Creating clear ways for different parts of your code to interact
+4.  **Reusability**: Making code easy to reuse across different projects
+5.  **Maintainability**: Making code easier to understand and modify
+
+## A Note on Coding Style
+
+In this guide, we'll explore **{box}** using the package author's preferred coding conventions, as I am technically trying to contribute. While these may differ from standard R conventions, understanding them will help you grasp the package's design philosophy. Visit the [vignette](https://cran.r-project.org/web/packages/box/vignettes/contributing.html) for more information about the code style.
+
+Don't worry, if you have another way to write your R code, it's fine (you could use either other's coding convention or both of this). You're free to adapt box's preferred coding style in your own projects. The principles and patterns we'll learn are independent of specific coding conventions.

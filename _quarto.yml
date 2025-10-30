@@ -1,0 +1,67 @@
+project:
+  type: book
+  output-dir: docs
+  render:
+    - "*.qmd"
+
+book:
+  title: "Box: Placing module system into R"
+  subtitle: "Definitive Guide"
+  author:
+    - name: "Joshua Marie"
+    - name: "John Riz Bagnol"
+  # optional: author, date, subtitle, image, etc.
+  sidebar:
+    style: floating
+    search: true
+    collapse-level: 1
+  chapters:
+    - index.qmd
+    - part: "1 Introduction"
+      chapters:
+        - 1-intro.qmd
+        - 1.1-start.qmd
+    - part: "2 Fundamentals of import system in {box} package"
+      chapters:
+        - 2-box-fundamentals.qmd
+        - 2.1-imports.qmd
+        - 2.2-reloading-modules.qmd
+    - part: "3 Employment of Modules: Structures and constructions"
+      chapters:
+        - 3-struct-module.qmd
+        - 3.1-struct-module-1.qmd
+        - 3.2-struct-module-2.qmd
+        - 3.3-add-data.qmd
+        - 3.4-nested-modules.qmd
+        # - 3.5-compiled-codes.qmd
+    - part: "4 Testing Modules"
+      chapters:
+        - 4-testing-modules.qmd
+        - 4.1-testthat.qmd
+        - 4.2-testthat-2.qmd
+
+  repo-url: https://github.com/kisha126/modules-in-r
+  repo-actions: [edit, issue]
+
+format:
+  html:
+    theme:
+      light: [cosmo, custom-light.scss]
+      dark: [darkly, custom-dark.scss]
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    code-copy: true
+    code-overflow: wrap
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    bread-crumbs: false  
+
+execute:
+  warning: false
+  message: false
+  echo: true
+  # freeze: auto
+  

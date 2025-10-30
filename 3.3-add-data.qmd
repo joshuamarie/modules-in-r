@@ -1,0 +1,112 @@
+# 3.3 Structuring and constructing modules part 3: Reading and adding data
+
+When constructing modules, sometimes you a built-in data frame, or any object outside from functions. Let's explore how to effectively import / export and manage different types of data using **{box}**. It could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on. 
+
+In this guide, especially for data frames later, I'll be using the `mpg` dataset from **{ggplot2}** package, and saved it as `mpg.rds` to load it via `readRDS()` function within the module.
+
+---
+
+## 3.3.1 Creating a module for the data
+
+The steps are trivial, (almost) every steps are similar to the process in R packages.
+
+### 3.3.1.1 File "extension"
+
+There's a script under **{./module}** folder named `not_func.r`, where non-functions are contained.
+
+Under **{./module}** folder, copy and paste this code:
+
+``` r
+box::use(
+    tibble[as_tibble]
+)
+
+#' @export
+pi = pi
+
+#' @export
+iris = as_tibble(datasets::iris)
+
+#' @export
+sales = readRDS(box::file('data/sales.rda'))
+```
+
+::: callout-note
+
+No need to place `#' @export` as the code were being exported into namespace of the modules anyways. Only use `#' @export` if you preferred to specifically export some saved R codes into the namespace of the module. When you load external packages or modules with `box::use()`, only what's inside the namespace of the package to be exported.
+
+:::
+
+Save that script and then load the module:
+
+``` r
+box::use(
+    module/not_func
+)
+```
+    
+If you have the initial file, you can import **{./module/not_func.r}** as **{not_func}** module within `[]`. For example:
+
+``` r
+box::use(
+    md_dt = ./module[not_func]
+)
+```
+
+But remember, it will append another environment in the current environment, specifically under **{./module}** environment for **{not_func}**, and then create **{md_dt}** to load the entire **{./module}** afterwards.
+
+#### 3.3.1.2 Loading an object
+
+If you did the following:
+
+``` r
+box::use(
+    md_dt = ./module[not_func]
+)
+```
+
+you can now access the data like this:
+
+``` r
+not_func$pi
+not_func$iris
+head(not_func$mpg, 5)
+```
+
+If it is the other way around:
+
+``` r
+box::use(
+    md_dt = ./module/not_func
+)
+```
+
+you are allowed to do this:
+
+``` r
+md_dt$pi
+md_dt$iris
+head(md_dt$mpg, 5)
+```
+
+Don't forget that granular imports are allowed:
+
+``` r
+box::use(
+    ./module/not_func[pi, iris, sales]
+)
+```
+
+And access freely in R: 
+
+``` r
+pi
+iris
+head(sales, 5)
+```
+
+*Just don't forget to maintain your current environment to avoid conflicts.*
+
+And that's how it is done. I hope you followed the steps so that you can proceed to the next part.
+
+

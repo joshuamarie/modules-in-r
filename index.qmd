@@ -1,0 +1,59 @@
+---
+title: "Box: Placing module system into R"
+subtitle: "Definitive Guide"
+format:
+    html:
+        default: true
+        toc: true
+        toc-depth: 4
+---
+
+# Preface
+
+Welcome to the definitive guide to module system in R using box! 
+
+Whether you want another way to import R packages, or simply seeking better ways to organize your code, this guide helps you to reimagine something did not exist in R for quite a long time: module system. This book introduces you the package that I discovered few years ago, it is called [box](https://github.com/klmr/box), initially **modules** package, by Konrad Rudolph. This package provides a clean, straightforward API to define and manage modules. R, especially its users, suffers from managing huge R pipelines, because there's no clean way to manage such complex pipelines...this problem will potentially cease to exists, as **box** package affords closely equivalent module system to other programming languages like Python, C#, and more. 
+
+## What You'll Find Here
+
+A definitive guide that walks you through:
+
+-  Alternative approach to import R codes (i.e. R packages, modules)
+-  Modern approaches to compose and organize R codes
+-  Step-by-step tutorials for using the **box** package
+-  Best practices for maintainable R code
+
+## Why this book
+
+Only little to no books teach you to correctly write reusable, composable, and modular R codes :). Most of the books maybe teaches you about R, particularly application of R in different fields, but little to none explains one of the best practices. Most of them uses `library()` anyways, so you won't certainly find similar book that teaches modular codes. 
+
+Consequently, while R offers various ways to organize code, the **box** package manages to be superior among them (I am bias) by introducing a fresh, modern approach to module system that may significantly improve your R development workflow, similar to the workflow made by other developers, particularly Python devs. This book bridges the gap between basic R programming and professional-grade code organization.
+
+## How to Use This Guide
+
+The content is structured progressively, building from foundational concepts to deep applications. For the best learning experience:
+
+1.  Start with the introduction to understand the core concepts
+2.  Learning the fundamentals of import system with **{box}** package
+3.  Learning the structures and constructions of reusability of modules, treating them like R packages, and supplied with documentation
+4.  Learning unit testing the modules
+
+## Contributing
+
+Contributions are welcome! If you have suggestions or improvements, please open an [issue](https://github.com/joshuamarie/modules-in-r/issues) or submit a pull request on the [GitHub repository](https://github.com/joshuamarie/modules-in-r).
+
+## License
+
+This book is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). See the [LICENSE](https://github.com/joshuamarie/modules-in-r/blob/main/LICENSE.md) file for details.
+
+## Credits
+
+This book was created by [Joshua Marie](https://github.com/joshuamarie).
+
+Special thanks to:
+
+-   [Konrad Rudolph](https://github.com/klmr) for creating and maintaining the [box](https://github.com/klmr/box) package
+-   The R community for their continued support and feedback
+
+The book is built with [Quarto](https://quarto.org/), hosted on GitHub Pages.
+

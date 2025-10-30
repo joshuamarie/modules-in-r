@@ -1,0 +1,366 @@
+# 3.5 Structuring and constructing modules part 5: Reading compiled codes
+
+Beyond pure R code, **{box}** provides integration with compiled code written in C and FORTRAN. This capability is particularly valuable when you need performance-critical operations or want to integrate existing numerical libraries. Currently, **{box}** package doesn't yet have a fully automated foreign function interface, it makes integrating compiled code straightforward through R's `SHLIB` mechanism.
+
+In this chapter, we'll explore how to integrate compiled codes from C and FORTRAN into your scripts / folders as modules. This chapter will deviate from chapter 3.1 - 3.4, where **{./module}** is the main module example. This, we create a module called **{./cf_module}** that demonstrates practical statistical and computational functions.
+
+::: {.callout-tip title="Why Use Compiled Code with Modules?"}
+
+## Why Use Compiled Code with Modules?
+
+Before diving into this chapter, let us understand when compiled code makes sense:
+
+1.  **Performance**: Compiled languages like C and FORTRAN execute faster than R for loops and numerical computations
+2.  **Legacy Code**: Many statistical algorithms have well-tested FORTRAN implementations dating back decades
+3.  **Memory Efficiency**: Direct memory manipulation in C could be more efficient for large datasets (not fully guaranteed)
+4.  **Modularity**: With **{box}**, you can encapsulate compiled code alongside R wrappers without creating a full package
+
+:::
+
+## 3.5.1 Structure of **{./cf_module}**
+
+Currently, integrating compiled code with **{box}** requires three manual steps:
+
+1.  **Compile** code when a module is installed or loaded for the first time
+2.  **Load** the compiled shared library when a module is loaded
+3.  **Interface** with compiled code via function calls
+
+While this requires some setup, **{box}** makes the process organized and maintainable. In the future, these steps may be automated.
+
+### 3.5.1.1 Setting Up the Compiled Module Structure
+
+Let's create a module directory called **{./cf_module}** with the following structure:
+
+```
+cf_module/
+├── __init__.r
+├── __setup__.r
+├── Makevars
+└── src/
+    ├── string_utils.c
+    ├── filter_ops.c
+    ├── matrix_ops.f
+    └── stats_funcs.f
+```
+
+Notice the special **`__setup__.r`** file - this is a submodule by convention that handles compilation. The **`Makevars`** file contains compilation instructions.
+
+### 3.5.1.2 Compilation Requirements
+
+Before using compiled code with **{box}**, ensure you have the necessary compilation tools:
+
+- **Windows**: Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/)
+- **macOS**: Install Xcode Command Line Tools via `xcode-select --install`
+- **Linux**: Install `gcc`, `gfortran`, and `make` (usually pre-installed or available via package manager)
+
+## 3.5.2 Compilation Instructions
+
+### Step 1: Writing Compilation Instructions
+
+Create a **`cf_module/Makevars`** file to specify compilation flags. This file tells R how to compile your code:
+
+``` make
+PKG_CFLAGS = -std=c11 -pedantic -Wall -Wextra
+PKG_FFLAGS = -std=legacy -Wall -Wextra
+```
+
+These flags ensure:
+
+-   C code uses the C11 standard
+-   FORTRAN uses legacy mode (for older FORTRAN 77 code)
+-   Warnings are enabled to catch potential issues
+
+### Step 2: Creating the Compilation Setup Module
+
+Then create **`cf_module/__setup__.r`** file as a submodule to handle the compilation process. This only runs once when the module is first loaded. We're organizing source files in the `src/` subdirectory, so we need to navigate to that directory for compilation:
+
+```r
+build_shared_lib = function (object_names) {
+    # Change working directory so R finds the Makevars.
+    old_dir = setwd(file.path(box::file(), 'src'))
+    on.exit(setwd(old_dir))
+    
+    # We need to separate C and FORTRAN files
+    c_files = paste0(object_names$c, '.c')
+    f_files = paste0(object_names$f, '.f')
+    
+    # Compile C files if any
+    if (length(c_files) > 0) {
+        exitcode = system2('R', c('CMD', 'SHLIB', c_files))
+        stopifnot(exitcode == 0L)
+    }
+    
+    # Compile FORTRAN files if any
+    if (length(f_files) > 0) {
+        exitcode = system2('R', c('CMD', 'SHLIB', f_files))
+        stopifnot(exitcode == 0L)
+    }
+}
+
+build_shared_lib(list(
+    c = c('string_utils', 'filter_ops'),
+    f = c('matrix_ops', 'stats_funcs')
+))
+```
+
+## 3.5.3 Application
+
+We then write our own C and FORTRAN codes. View the source code of each file here: https://github.com/kisha126/modules-in-r/tree/main/cf_module. The C and FORTRAN source codes are saved in **{./cf_module/src}**
+
+This includes:
+
+1.  C
+
+    -   String manipulation, stored in `string_utils.c`
+    -   C's efficient pointer operations and memory management make it ideal for data filtering tasks, stored in `filter_ops.c`
+
+2.  FORTRAN
+
+    -   String manipulation, stored in `string_utils.c`
+    -   C's efficient pointer operations and memory management make it ideal for data filtering tasks, stored in `filter_ops.c`
+
+
+## Example 3: Matrix Operations in FORTRAN
+
+FORTRAN excels at matrix computations and has been the language of choice for numerical linear algebra for decades. Let's implement matrix trace calculation and transpose operations.
+
+## Example 4: Statistical Functions in FORTRAN
+
+FORTRAN's efficient numerical computations make it perfect for statistical algorithms. Here we implement moving average and weighted mean calculations.
+
+### FORTRAN Code: `cf_module/src/stats_funcs.f`
+
+```fortran
+
+```
+
+## Step 3: Creating the Main Module with Loading Hooks
+
+Now we create the main module file that loads the compiled libraries and exposes the functions. This is where the **`.on_load`** and **`.on_unload`** hooks come in:
+
+### `cf_module/__init__.r`
+
+```r
+
+```
+
+## Step 4: Compiling and Using the Module
+
+First, compile the module by loading the setup submodule:
+
+```r
+# This triggers compilation (only needed once)
+box::use(./cf_module/__setup__)
+```
+
+This creates the shared library files (`.so` on Unix/macOS or `.dll` on Windows) in the `src/` subdirectory. Once compiled, you can use the module normally:
+
+```r
+# Load the module
+box::use(./cf_module)
+
+# String operations (C)
+cf_module$count_character("hello world", "l")
+# [1] 3
+
+cf_module$reverse_str("statistics")
+# [1] "scitsitats"
+
+# Filtering operations (C)
+data_with_outliers = c(1, 2, 3, 4, 5, 100, 6, 7, 8, 9)
+cf_module$remove_outliers(data_with_outliers)
+# [1] 1 2 3 4 5 6 7 8 9
+
+data = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+cf_module$filter_range(data, min = 3, max = 7)
+# [1] 3 4 5 6 7
+
+# Matrix operations (FORTRAN)
+mat = matrix(c(1, 2, 3, 4, 5, 6, 7, 8, 9), nrow = 3)
+cf_module$compute_trace(mat)
+# [1] 15
+
+transposed = cf_module$transpose_square(mat)
+
+# Statistical functions (FORTRAN)
+cf_module$moving_average(data, window = 3)
+
+weights = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 3)
+cf_module$weighted_mean_fortran(data, weights)
+# [1] 6.85
+```
+
+## Understanding the Loading Process
+
+Let's break down what happens when you load the module:
+
+1. **Compilation** (first time only): The `__setup__` submodule navigates to the `src/` directory and runs `R CMD SHLIB` to compile C and FORTRAN files into shared libraries within that directory
+2. **Loading**: The `.on_load` hook uses `dyn.load()` to load the compiled libraries from the `src/` subdirectory into R's namespace
+3. **Function calls**: Exported functions use `.Call()` (for C) or `.Fortran()` (for FORTRAN) to invoke compiled code
+4. **Cleanup**: The `.on_unload` hook ensures libraries are properly unloaded when the module is detached
+
+## Benefits of Using the `src/` Subdirectory
+
+Organizing compiled code in a `src/` subdirectory provides several advantages:
+
+1. **Cleaner module structure**: Keeps the module root directory uncluttered with source files and compiled binaries
+2. **Standard convention**: Follows the same convention used by R packages (which also use `src/` for compiled code)
+3. **Easier .gitignore**: You can add `src/*.so` and `src/*.dll` to ignore compiled binaries while keeping source files
+4. **Better organization**: Separates source code from R code, making it easier to navigate larger modules
+5. **Clear separation**: Makes it immediately obvious which files are compiled code vs R code
+
+## Key Differences Between C and FORTRAN Interfaces
+
+Understanding when to use `.Call()` versus `.Fortran()` is crucial:
+
+### Using `.Call()` for C code:
+- Directly manipulates R's internal SEXP objects
+- More flexible with R data structures
+- Better for complex data types (lists, strings, factors)
+- Requires memory protection with `PROTECT()`/`UNPROTECT()`
+- Returns R objects directly
+
+### Using `.Fortran()` for FORTRAN code:
+- Works with basic numeric arrays and scalars
+- Automatically handles type conversion
+- Pass arguments by reference (all inputs/outputs in argument list)
+- Simpler interface for numerical computations
+- Returns a list with all arguments
+
+## Performance Optimization Tips
+
+When using `dll$function_name` in `.Call()` or `.Fortran()`, R performs a lookup via `getNativeSymbolInfo()` every time. For frequently called functions, store the reference:
+
+```r
+.on_load = function(ns) {
+    ns$dll_string = dyn.load(libname('string_utils'))
+    
+    # Cache symbol references for performance
+    ns$count_char_ptr = dll_string$count_char
+    ns$reverse_string_ptr = dll_string$reverse_string
+}
+
+#' @export
+count_character = function(string, char) {
+    if (!is.character(string) || length(string) != 1) {
+        stop("'string' must be a single character string")
+    }
+    if (!is.character(char) || length(char) != 1 || nchar(char) != 1) {
+        stop("'char' must be a single character")
+    }
+    .Call(count_char_ptr, string, char)
+}
+```
+
+## Best Practices for Compiled Modules
+
+1. **Always use `__setup__` submodule**: This convention makes it clear the file handles compilation
+2. **Include `Makevars`**: Even if minimal, it documents compilation requirements
+3. **Implement `.on_load` and `.on_unload`**: Properly manage library loading and cleanup
+4. **Memory Management in C**: Always use `PROTECT()` and `UNPROTECT()` for R objects; use `R_alloc()` for temporary memory
+5. **Error Handling**: Use `error()` in C code; return error codes (like -999.0) in FORTRAN
+6. **Input Validation**: Validate inputs in R wrappers before calling compiled code
+7. **Documentation**: Document expected input types and dimensions thoroughly
+8. **Platform Testing**: Test on multiple platforms (Windows, macOS, Linux) if sharing code
+
+## Debugging Compiled Code
+
+If compilation fails, check:
+
+```r
+# Run setup manually to see error messages
+box::use(./cf_module/__setup__)
+
+# Check if compilation tools are installed
+system2('R', c('CMD', 'SHLIB', '--version'))
+
+# On Windows, verify Rtools is in PATH
+Sys.which('gcc')
+Sys.which('gfortran')
+```
+
+For runtime issues:
+
+```r
+# Check if libraries loaded correctly
+.on_load = function(ns) {
+    ns$dll_string = dyn.load(libname('string_utils'))
+    print(dll_string)  # Should show loaded symbols
+}
+
+# Test individual functions
+traceback()  # After an error
+
+# Enable verbose mode for FORTRAN calls
+options(verbose = TRUE)
+```
+
+## Performance Comparison
+
+Let's compare the compiled implementations with pure R equivalents:
+
+```r
+library(bench)
+
+# Moving average benchmark
+r_moving_avg = function(x, window) {
+    n = length(x)
+    result = numeric(n)
+    for (i in seq_len(n)) {
+        start = max(1, i - window + 1)
+        end = i
+        result[i] = mean(x[start:end])
+    }
+    result
+}
+
+data = rnorm(10000)
+
+bench::mark(
+    R = r_moving_avg(data, 50),
+    FORTRAN = cf_module$moving_average(data, 50),
+    check = FALSE
+)
+
+# Outlier removal benchmark
+r_remove_outliers = function(x, multiplier = 1.5) {
+    q1 = quantile(x, 0.25)
+    q3 = quantile(x, 0.75)
+    iqr = q3 - q1
+    lower = q1 - multiplier * iqr
+    upper = q3 + multiplier * iqr
+    x[x >= lower & x <= upper]
+}
+
+data_outliers = c(rnorm(1000), runif(50, -100, 100))
+
+bench::mark(
+    R = r_remove_outliers(data_outliers),
+    C = cf_module$remove_outliers(data_outliers),
+    check = FALSE
+)
+```
+
+For large datasets and intensive computations, the compiled versions typically show 5-50x performance improvements over pure R implementations.
+
+## Conclusion
+
+Integrating compiled code with **{box}** modules provides a powerful way to combine R's convenience with the performance of C and FORTRAN. While the process requires manual steps, the `__setup__` convention, `Makevars` configuration, and load hooks create a clean, organized structure.
+
+Key takeaways:
+
+- Use `__setup__.r` submodule for compilation
+- Configure compilation with `Makevars`
+- Load libraries with `.on_load` and cleanup with `.on_unload`
+- Interface with C code using `.Call()` for flexible data handling
+- Interface with FORTRAN code using `.Fortran()` for numerical computations
+- The `__setup__` module only needs to run once; compiled libraries are reused
+
+This approach is ideal for:
+- Performance-critical statistical algorithms
+- Legacy FORTRAN code integration
+- Custom numerical methods
+- String processing at scale
+- Data filtering and transformation operations
+
+In the next section, we'll explore more advanced module patterns and organizational strategies for larger projects.

@@ -1,0 +1,11 @@
+# 4 Unit Testing Modules
+
+One of the significant advantages of modular code is that it's easier to test. When your code is organized into discrete modules with clear interfaces, you can verify each piece works correctly in isolation before integrating everything together. This chapter explores practical approaches to testing your **{box}** modules effectively.
+
+Unlike traditional R package development where tests live in a separate tests / directory far from your implementation code, **{box}** modules encourage a different pattern: keeping tests close to the code they verify. This co-location makes it easier to maintain tests alongside the source code of your module, and it follows conventions used in many modern programming languages like JavaScript, Python, and Rust.
+
+---
+
+## Advantages
+
+Well, according to the official documentation of **{box}** package, it is "agnostic", meaning it doesn't matter which frameworks you are applying to measure the robustness of the modules. The most widely package for unit testing: **{testthat}**, works with modules quite well. In this chapter, **{testthat}** is the main framework we are using. 

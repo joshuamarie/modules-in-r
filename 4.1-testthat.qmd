@@ -1,0 +1,377 @@
+# 4.1 Setting Up Module Tests
+
+The **{box}** package works seamlessly with **{testthat}**, R's most popular testing framework. While you can use other testing frameworks, this guide focuses on testthat because of its widespread adoption and excellent integration with RStudio.
+
+## 4.1.1 Getting Started
+
+Let us revisit the **{./module}** directory from what Chapter 3.1 is on about, and let us test the robustness of **{./module/matrix_ops.r}**, where it overloads `*` and `^` from base R for matrix operations. Update **{./module}** by creating another subfolder named `__tests__/`, next to your module file. The double underscores make it clear this is special infrastructure code, not a regular module.
+
+This is the structure should look like:
+
+```
+module/
+├── __init__.r
+├── convert.r
+├── hello_world.r
+├── matrix_ops.r               # ◄─── Test this
+├── __tests__/                 # ◄─── Add this
+│   ├── __init__.r
+│   ├── helper-module.r
+│   └── test-matrix_ops.r
+├── not_func.r
+├── tables.r
+└── statistics/
+    ├── __init__.r
+    ├── cor.r
+    ├── corrr.r
+    ├── time_series.r
+    └── models/
+        ├── __init__.r
+        ├── linear.r
+        ├── logistic.r
+        └── baseline_logit.r
+```
+
+The **{./module/__tests__/__init__.r}** file serves as the test runner. It's minimal but essential:
+
+```r
+box::use(testthat[...])
+
+.on_load = function (ns) {
+    test_dir(box::file(), reporter = 'progress')
+}
+
+box::export()
+```
+
+The `.on_load` hook ensures tests run automatically when the `__tests__` module loads. Using `box::file()` gives us the current directory path.
+
+The **{./module/__tests__/helper-module.r}** file loads the namespace of the module you want to test into the test environment. In our case, we choose **{./module/matrix_ops.r}**: 
+
+```r
+box::use(../matrix_ops[...])
+```
+
+The `[...]` syntax attaches all exported functions, and we are applying this to make the exports of the module namespace available in tests without prefixes.
+
+## 4.1.2 Making Modules Testable
+
+Suppose you want to verify that **{module/matrix_ops.r}** works correctly. This script contains R source code that overloads the `*` operator from base R to enable intelligent matrix multiplication, and `^` to take the exponentiation of the matrices, except when `^-1`, which takes the (square) matrix its inverse.
+
+Take a look of the source code:
+
+```r
+#' Matrix Multiplication
+#' 
+#' @export
+`*` = function (e1, e2) UseMethod("*")
+
+`*.default` = function (e1, e2) base::`*`(e1, e2)
+
+`*.matrix` = function (e1, e2) {
+    if (is.matrix(e1) && is.matrix(e2)) {
+        # Check dimensions for matrix multiplication
+        if (ncol(e1) == nrow(e2)) {
+            return(base::`%*%`(e1, e2))
+        } else if (ncol(e2) == nrow(e1)) {
+            # Try the other way around if dimensions match
+            return(base::`%*%`(e2, e1))
+        } else {
+            # If neither multiplication works, do element-wise
+            return(base::`*`(e1, e2))
+        }
+    } else {
+        return(base::`*`(e1, e2))
+    }
+}
+
+# ... Truncated ...
+
+box::register_S3_method("^", "default")
+box::register_S3_method("^", "matrix")
+box::register_S3_method("^", "array")
+box::register_S3_method("^", "data.frame")
+```
+
+To make this module testable, append the following code at the bottom of **{module/matrix_ops.r}**:
+
+```r
+if (is.null(box::name())) {
+    box::use(./`__tests__`)
+}
+```
+
+and it becomes:
+
+```r
+#' Matrix Multiplication
+#' 
+#' @export
+`*` = function (e1, e2) UseMethod("*")
+
+`*.default` = function (e1, e2) base::`*`(e1, e2)
+
+`*.matrix` = function (e1, e2) {
+    if (is.matrix(e1) && is.matrix(e2)) {
+        # Check dimensions for matrix multiplication
+        if (ncol(e1) == nrow(e2)) {
+            return(base::`%*%`(e1, e2))
+        } else if (ncol(e2) == nrow(e1)) {
+            # Try the other way around if dimensions match
+            return(base::`%*%`(e2, e1))
+        } else {
+            # If neither multiplication works, do element-wise
+            return(base::`*`(e1, e2))
+        }
+    } else {
+        return(base::`*`(e1, e2))
+    }
+}
+
+# ... The rest are truncated
+
+box::register_S3_method("^", "default")
+box::register_S3_method("^", "matrix")
+box::register_S3_method("^", "array")
+box::register_S3_method("^", "data.frame")
+
+if (is.null(box::name())) {
+    box::use(./`__tests__`)
+}
+```
+
+This conditional check distinguishes between two scenarios: when you execute `Rscript module/matrix_ops.r` directly from the command line, `box::name()` returns `NULL` and the test suite runs. However, when another module imports it using `box::use(module/matrix_ops)`, the condition evaluates to false and tests are skipped.
+
+::: callout-note
+The backticks around `__tests__` — R doesn't normally allow identifiers starting with underscores, so backticks tell R to treat it as a literal name.
+:::
+
+After that, update the **{./module/__tests__/test-matrix_ops.r}** file that contains the actual tests:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| eval: false
+# ---Matrix Multiplication---
+
+test_that('matrix multiplication works correctly', {
+    m1 = matrix(c(1, 2, 3, 4), nrow = 2)
+    m2 = matrix(c(5, 6, 7, 8), nrow = 2)
+
+    result = m1 * m2
+    expected = m1 %*% m2
+
+    expect_equal(result, expected)
+})
+
+test_that('matrix multiplication with dimension mismatch tries reverse order', {
+    m1 = matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)
+    m2 = matrix(c(7, 8), nrow = 2, ncol = 1)
+
+    expect_error(m1 * m2)
+    expect_error(m2 %*% m1)
+})
+
+test_that('matrix multiplication works with scalar', {
+    m1 = matrix(c(1, 2, 3, 4), nrow = 2)
+    scalar = 2
+
+    result = m1 * scalar
+    expected = base::`*`(m1, scalar)
+
+    expect_equal(result, expected)
+})
+
+# ---Exponentiation---
+test_that('matrix inverse (^-1) works correctly', {
+    m = rbind(c(2, 7), c(5, -4))
+    
+    result = m ^ -1
+    expected = solve(m)
+    
+    expect_equal(result, expected)
+})
+
+# ---Solving system of linear equation---
+# ---An example from https://www.youtube.com/watch?v=cblHUeq3bkE---
+test_that('combined operations work (inverse then multiply)', {
+    A = rbind(c(2, 7), c(5, -4))
+    b = cbind(c(34, -1))
+    
+    result = A ^ -1 * b
+    expected = matrix(c(3, 4), ncol = 1)
+    
+    expect_equal(result, expected)
+})
+```
+
+## 4.1.3 Tests Execution
+
+You have several options for running tests:
+
+1.  If you are using the terminal:
+
+    ``` bash
+    Rscript module/matrix_ops.r
+    ```
+    
+    and when all five executable tests passed the unit test, you'll get `.` being tallied:
+    
+    ``` bash
+    $ Rscript module/matrix_ops.r
+    ✔ | F W  S  OK | Context
+    ⠏ |          0 | matrix_ops
+    ✔ |          6 | matrix_ops
+    
+    ══ Results ════════════════════════════════════════════════════════════════
+    [ FAIL 0 | WARN 0 | SKIP 0 | PASS 6 ]
+    
+    You rock!
+    ```
+    
+    This depends on what `reporter` argument you are placing. In this case, `"progress"` is chosen, because in my opinion, this is easier to read. 
+    
+    See Chapter 4.2 to talk about more about diagnostics.
+    
+    ::: callout-important
+    Make sure you are in the current directory where **{./module}** is found. 
+    :::
+    
+    
+2.  In RStudio, locate **{./module/__tests__/test-matrix_ops.r}**. Click the file, and click "Run Tests". 
+
+    ![](Images/img-c4.1.3.jpg)
+
+    ::: callout-important
+    Don't use RStudio's "Source" button! It reuses the current R session, and box caches loaded modules. You might end up testing old code without realizing it. Always run tests in a fresh session to ensure you're testing the current version of your code.
+    :::
+
+## 4.1.4 Testing Nested Modules
+
+How about testing nested modules? We want modules from **{./module/statistics}** to be tested as well. The problem is they found deeply from the parent folder **{./module}**. Updating **{./module/__tests__}**, and prepare some scripts for unit testing the source code of nested scripts / folders, is a mistake. Instead, each subfolder has `__tests__` to be prepared.
+
+The testing pattern from **{./module}** works for nested modules, such as **{./module/statistics}** and **{./module/statistics/models}**. 
+
+Let us test both `module/statistics/models/linear.r` and `module/statistics/models/logistic.r`, for example:
+
+```
+module/statistics/models/
+├── __init__.r
+├── linear.r                 # ◄─── Test this
+├── logistic.r               # ◄─── Test this
+├── __tests__/               # ◄─── Add
+│   ├── __init__.r
+│   ├── helper-module.r
+│   ├── test-linear.r
+│   └── test-logistic.r
+└── baseline_logit.r
+```
+
+The `helper-module.r` file from **{./module/statistics/models}** adjusts the relative path:
+
+```r
+box::use(
+    ../linear[linear_reg], 
+    ../logistic[logistic_reg]
+)
+```
+
+And **{./module/statistics/models/__tests__/test-linear-reg.r}** contains tests `linear_reg()` function: 
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-fold: true
+test_that('Linear Regression from formula S3 method works', {
+    model = linear_reg(mpg ~ wt + hp, mtcars, vif = TRUE)
+    
+    expect_s3_class(model, "linear_reg")
+    expect_true("out" %in% names(model))
+    expect_true("fitted" %in% names(model))
+    expect_true(all(c("terms", "coefficients", "std_err", "t_statistic", "pval", "vif", "tolerance") %in% names(model$out)))
+    expect_equal(nrow(model$out), 3)
+    expect_equal(model$out$terms, c("beta0", "wt", "hp"))
+})
+
+test_that('Linear Regression from data frame S3 method works', {
+    model = 
+        mtcars |> 
+        linear_reg(mpg ~ wt + hp, vif = TRUE)
+    
+    expect_s3_class(model, "linear_reg")
+    expect_equal(nrow(model$out), 3)
+})
+
+test_that('Linear Regression calculates correct coefficients', {
+    # Compare with base R lm()
+    model = linear_reg(mpg ~ wt + hp, mtcars)
+    base_model = lm(mpg ~ wt + hp, mtcars)
+    
+    expect_equal(model$out$coefficients, as.vector(coef(base_model)), tolerance = 1e-6)
+})
+
+test_that('Linear Regression with column selection works', {
+    model =
+        mtcars |> 
+        linear_reg(c(wt, hp), mpg)
+    
+    expect_s3_class(model, "linear_reg")
+    expect_equal(nrow(model$out), 3)
+    
+    # Without vif flag, should not have vif columns
+    expect_false("vif" %in% names(model$out))
+})
+```
+
+As well as **{./module/statistics/models/__tests__/test-logistic-reg.r}** to tests `logistic_reg()` function: 
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-fold: true
+test_that('Logistic Regression from formula S3 method works', {
+    model = logistic_reg(am ~ wt + hp, mtcars, vif = TRUE)
+    
+    expect_s3_class(model, "logistic_reg")
+    expect_true("out" %in% names(model))
+    expect_true("fitted" %in% names(model))
+    expect_true("levels" %in% names(model))
+    expect_true("reference" %in% names(model))
+    expect_true(all(c("terms", "coefficients", "odds_ratio", "std_err", "z_statistic", "pval", "vif", "tolerance") %in% names(model$out)))
+    expect_equal(nrow(model$out), 3)
+    expect_equal(model$out$terms, c("beta0", "wt", "hp"))
+})
+
+test_that('Logistic Regression from data frame S3 method works', {
+    model = 
+        mtcars |> 
+        logistic_reg(am ~ wt + hp, vif = TRUE)
+    
+    expect_s3_class(model, "logistic_reg")
+    expect_equal(nrow(model$out), 3)
+})
+
+test_that('Logistic Regression calculates correct coefficients', {
+    # Compare with base R glm()
+    model = logistic_reg(am ~ wt + hp, mtcars)
+    base_model = glm(am ~ wt + hp, data = mtcars, family = binomial(link = "logit"))
+    
+    expect_equal(model$out$coefficients, as.vector(coef(base_model)), tolerance = 1e-4)
+})
+
+
+test_that('Logistic Regression with column selection works', {
+    model = 
+        mtcars |> 
+        logistic_reg(c(wt, hp), am)
+    
+    expect_s3_class(model, "logistic_reg")
+    expect_equal(nrow(model$out), 3)
+    
+    # Without vif flag, should not have vif columns
+    expect_false("vif" %in% names(model$out))
+})
+```
+
+
+

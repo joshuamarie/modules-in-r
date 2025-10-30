@@ -1,0 +1,233 @@
+# 3.4 Structuring and constructing modules part 4: Accessing modules in any depths
+
+One of the good parts about **{box}** package is it allows accessing deep nested scripts / folders in any depth as modules.
+
+Building on what you learned in the previous section about creating modules from subfolders, **{box}** doesn't limit you to just one level of nesting. You can organize your code into multiple layers of directories, creating a hierarchical structure that makes sense for your project's complexity and organization needs.
+
+---
+
+## 3.4.1 Multi-level folder structures
+
+Let's update **{./module}** folder from Chapter 3.1, by updating (or just copy and paste the source code of **{./module}** in GitHub) `matrix_ops.r` to store functions that rewrites `*` for matrix multiplication and overrides `^` where a specific value, `^-1`, implies the inverse of the matrix, and `tables.r` to store functions for displaying tables in R REPL, and extending the **{./module/statistics}** subfolder by adding another level of organization, e.g. you want to add statistical model utilities organized by model type, saved as **{./module/statistics/models}*** subfolder.
+
+``` bash
+module/
+├── __init__.r
+├── convert.r
+├── hello_world.r
+├── matrix_ops.r              # <------------- Under root **{./module}** folder
+├── not_func.r
+├── tables.r                  # <------------- Under root **{./module}** folder
+└── statistics/
+    ├── __init__.r
+    ├── cor.r
+    ├── corrr.r
+    ├── time_series.r
+    └── models/               # <------------- Subfolder within subfolder
+        ├── __init__.r
+        ├── linear.r
+        ├── logistic.r
+        └── baseline_logit.r
+```
+
+In this structure, **{./module/statistics/models}*** is nested two levels deep from the root **{./module}** folder. Each directory still requires its own `__init__.r` file to be recognized as a module.
+
+::: {.callout-note}
+Remember that every folder you want to treat as a module must contain an `__init__.r` file, regardless of its depth in the folder hierarchy.
+:::
+
+Under **{./module/statistics/models}*** subfolder, place this in `__init__.r` file:
+
+``` r
+#' @export
+box::use(
+    ./linear,
+    ./logistic,
+    ./baseline_logit
+)
+```
+
+And since we are adding another module within **{./module/statistics}**, update its `__init__.r` initialization file:
+
+``` r
+#' @export
+box::use(
+    ./cor,
+    ./corrr,
+    ./time_series, 
+    ./models
+)
+```
+
+## 3.4.2 Accessing deeply nested modules
+
+You can access these deeply nested modules using the same syntax patterns you've already learned in the previous chapter, just with longer paths:
+
+```{r}
+box::use(
+    ./module/statistics/time_series
+)
+
+time_series$ACF(AirPassengers)
+```
+
+Or you can use the parent module and traverse through the hierarchy:
+
+```{r}
+# Access through the parent module
+box::use(
+    md = ./module
+)
+
+# Navigate through the nested structure
+md$statistics$time_series$ACF(AirPassengers)
+```
+
+::: {.callout-tip icon=false title="Source code"}
+
+The code for some script is too long. Navigate the source code by clicking each hyperlinked text:
+
+1.  Under **{./module}**
+
+    -   [`matrix_ops.r`](https://github.com/kisha126/modules-in-r/tree/main/module/matrix_ops.r)
+    -   [`tables.r`](https://github.com/kisha126/modules-in-r/tree/main/module/tables.r)
+    
+2.  Under **{module/statistics/models}**
+
+    -   [`linear.r`](https://github.com/kisha126/modules-in-r/tree/main/module/statistics/models/linear.r)
+    -   [`logistic.r`](https://github.com/kisha126/modules-in-r/tree/main/module/statistics/models/logistic.r)
+    -   [`baseline_logit.r`](https://github.com/kisha126/modules-in-r/tree/main/module/statistics/models/baseline_logit.r)
+
+:::
+
+## 3.4.3 Navigating up the directory tree with `../`
+
+The use of `./` prefix is limited to the root directory only, but how about accessing a script / folder when it is located in parent directories, one level up or more? Just like in file systems, **{box}** allows you to navigate up to parent directories using `../`. This is particularly useful when you have scripts in different folders that need to access modules from sibling or parent directories.
+
+Here's the syntax pattern:
+
+-  Access a script *1 step up* $\rightarrow$ use prefix `../` 
+-  Access a script *2 steps up* $\rightarrow$ use prefix `../../`
+-  Access a script *3 steps up* $\rightarrow$ use prefix `../../../`
+-  ...and so on
+
+### 3.4.3.1 Example: Accessing modules from nested directories
+
+Under `linear.r`, `logistic.r`, and `baseline_logit.r` scripts from **{statistics/models}**, there's an import that tries to access the namespace under `matrix_ops.r` and `tables.r` scripts, where both scripts are found 2 steps upper from the current directory of `linear.r`, `logistic.r`, and `baseline_logit.r` scripts:
+
+``` r
+box::use(
+    ../../matrix_ops[`*`, `^`],
+    ../../tables[draw_table]
+)
+```
+
+Here's the visual representation:
+
+``` bash
+module/
+├── __init__.r
+├── convert.r
+├── hello_world.r
+├── matrix_ops.r              # ◄─── Target module
+├── not_func.r
+├── tables.r                  # ◄─── Target module
+└── statistics/                       ▲
+    ├── __init__.r                    │
+    ├── cor.r                         │
+    ├── corrr.r                       │ 2 directories up
+    ├── time_series.r                 │
+    └── models/                       │  
+        ├── __init__.r                
+        ├── linear.r          # ◄─── Current location
+        ├── logistic.r        # ◄─── Current location
+        └── baseline_logit.r  # ◄─── Current location
+```
+
+::: {.callout-warning}
+The prefix `../` is quite a solution, however, using too many levels (e.g., `../../../`) can make your eye sore, and potentially makes your code harder to understand and maintain. If you find yourself going up many levels, consider reorganizing your folder structure or using absolute paths from the project root.
+:::
+
+::: {.callout-note collapse=true icon=false}
+
+### Practice Question
+
+Suppose you have this structure:
+
+``` bash
+module/
+├── __init__.r
+├── script1.r
+├── script2.r
+├── submodule1/
+│   ├── __init__.r                           
+│   ├── script1.r                      
+│   └── script2.r          
+└── submodule2/
+    ├── __init__.r                           
+    ├── script1.r                      
+    ├── script2.r               
+    └── subsubmodule1/                    
+        ├── __init__.r 
+        ├── script1.r          
+        └── script2.r  
+```
+
+And imagine you are in `script1.r` under **{submodule2/subsubmodule1}**.
+Is it possible to access `script2.r` under **{submodule1}**? 
+
+I'll help you visualize:
+
+``` bash
+module/
+├── __init__.r
+├── script1.r
+├── script2.r
+├── submodule1/
+│   ├── __init__.r                           
+│   ├── script1.r                      
+│   └── script2.r         # ◄─── Target: Access this  
+└── submodule2/
+    ├── __init__.r                           
+    ├── script1.r                      
+    ├── script2.r               
+    └── subsubmodule1/                    
+        ├── __init__.r 
+        ├── script1.r     # ◄─── You are here     
+        └── script2.r   
+```
+
+> Short answer: Yes
+> Long answer: It is possible. You just need to go up 2 directories to reach the **{./module}** level, then navigate into **{submodule1}**:
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show solution"
+box::use(
+    ../../submodule1/script1,
+    tgt = ../../submodule1/script2    # If you prefer with alias
+)
+
+tgt$some_function()
+```
+
+:::
+
+## 3.4.4 Best practices for deep nesting
+
+While **{box}** allows you to nest modules at any depth, here are some of my software engineering principles to consider when organizing your code:
+
+-   **Keep it reasonable**: Deeply nested structures can make navigation more complex. Most projects benefit from a relatively flat hierarchy, though the optimal depth depends on your project's size and complexity.
+
+-   **Organize by functionality**: Group related functions in a way that makes sense for your workflow. For example, keeping all model-related functions under **{./module/statistics/models}**, organized by algorithm type.
+
+-   **Use meaningful names**: Choose folder names that clearly indicate their contents, making it easier to locate specific functionality.
+
+-   **Document your structure**: A README file or comments explaining your module organization can help collaborators (and future you) understand the project layout.
+
+-   **Be mindful with `../`**: Frequent use of parent directory navigation might suggest opportunities to reorganize your structure.
+
+::: {.callout-note}
+There's no strict rule about module depth. The **{box}** package itself doesn't impose limitations on nesting levels. Organize your modules in whatever way makes your code most maintainable and understandable for your specific project needs.
+:::

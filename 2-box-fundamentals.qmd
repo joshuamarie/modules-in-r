@@ -1,0 +1,33 @@
+# 2 Fundamentals of import system with **{box}** package
+
+At first, I doubted the capabilities of **{box}** package: It's verbose, that's all. Like, R already has `library()` to load packages you installed in R, and the package namespace will be utilized *globally*. But when I tried **{box}** package, I learned something that R misses. It blows the import system of native R out of the water. One of **{box}**'s most convenient features is its approach to dictate R packages, scripts, or folders' namespace. There are no consistent module system in native R at all. 
+
+Within Chapter 2, the fundamentals of **{box}** package, the import system with `box::use()`. 
+
+1.  Loading packages
+
+    Unlike the traditional way to load R packages with `library()`, **{box}** is more explicit and more granular to import R packages, and it is more consistent to work with path directories. The rest will be discussed under [Chapter 2.1: Array of Imports with Monikers](2.1-package-imports.qmd). 
+
+2.  Loading scripts / folders
+
+    Scripts and folders can be reused, as long as the namespace is defined. The import system of **{box}** using `box::use()` supersedes both `source()` and `setwd()`, part of the inconsistent designs in R. The rest will be discussed under [Chapter 2.1: Array of Imports with Monikers](2.1-package-imports.qmd#). 
+    
+3.  Reloading modules
+
+    Mostly applied for modules from scripts and folders. When the script or folders are imported as modules, the initial imports is cached. This means that changes you make to your module’s code won’t automatically take effect until you explicitly reload it. The rest will be discussed under [Chapter 2.1: Array of Imports with Monikers](2.2-reloading-modules.qmd)
+
+
+---
+
+## Some restrictions
+
+While the **{box}** package provides different approach to organize and import R code, there are some restrictions to be aware of. Specifically, **{box}** does *not* restricts the following:
+
+-   Attaching meta-packages such as **{tidyverse}** or **{tidymodels}**. 
+-   The use of `library()` / `require()` when constructing a module. 
+
+---
+
+## Base Packages
+
+From my understanding, the author separates **{base}** package to be imported. Which means, when you construct a module, you don't have to load **{base}** packages, e.g. `box::use(base[mean, sum])`. The rest of *base* packages, like **{stats}** and **{utils}**, are required to be called when constructing a *module*, unless it is just an executable script. 

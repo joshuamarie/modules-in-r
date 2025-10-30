@@ -1,0 +1,294 @@
+# 4.2 Unit Test Diagnostics
+
+When tests fail—and they will—you need clear, actionable information about what went wrong. The **{testthat}** package provides several reporting formats that help you understand test results at different levels of detail.
+
+## 4.2.1 Understanding Test Reporters
+
+Test reporters control how **{testthat}** displays test results. You configure them in your **{__tests__/__init__.r}** file through the `reporter` parameter in `test_dir()`:
+
+``` r
+box::use(testthat[...])
+
+.on_load = function (ns) {
+    test_dir(box::file(), reporter = "progress")  # or "summary", "check", etc.
+}
+
+box::export()
+```
+
+Here are different types of `reporter`: 
+
+::: panel-tabset
+
+### Minimal
+
+The default reporter shows only dots and failures:
+
+``` bash
+$ Rscript module/matrix_ops.r
+.....
+```
+
+Each `.` represents a passing test. If a test fails, you'll see `F`, where the test failed happened:
+
+``` bash
+...F..
+```
+
+This is perfect for quick checks during development when you just want to know if everything still works.
+
+### Progress
+
+For slightly more detail, use `reporter = "progress'"`:
+
+``` r
+.on_load = function (ns) {
+    test_dir(box::file(), reporter = 'progress')
+}
+```
+
+Output:
+
+``` bash
+$ Rscript module/matrix_ops.r
+✔ | F W S  OK | Context
+✔ |         5 | matrix_ops
+
+══ Results ═════════════════════════════════════════════════
+Duration: 0.1 s
+
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 5 ]
+```
+
+This shows a summary table with pass/fail counts per context, making it easier to spot which test files have issues.
+
+And by the way, this is the default reporter of `test_dir()`. 
+
+### Check
+
+The `check` reporter provides the most readable output for development:
+
+``` r
+.on_load = function (ns) {
+    test_dir(box::file(), reporter = 'check')
+}
+```
+
+Output:
+
+``` bash
+$ Rscript module/statistics/models/linear.r
+
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 26 ]
+```
+
+Each test's description appears on its own line, making it immediately clear which specific assertions passed or failed.
+
+### Summary
+
+For comprehensive reporting, especially in CI/CD pipelines, use `reporter = 'summary'`:
+
+``` r
+.on_load = function (ns) {
+    test_dir(box::file(), reporter = 'summary')
+}
+```
+
+This gives you:
+
+``` bash
+$ Rscript module/statistics/models/linear.r
+linear-reg: ............
+logistic-reg: ..............
+
+══ DONE ═══════════════════════════════════════════════════════════════════════
+```
+
+and you'll see a number if the test fails. 
+
+::: 
+
+## 4.2.2 Reading Test Failures
+
+Understanding failure messages is crucial for efficient debugging. Here's what a typical failure looks like:
+
+``` bash
+$ Rscript module/statistics/models/linear.r
+
+── Failure ('test-linear.r:15:5'): Linear Regression calculates correct coefficients ──
+`model$out$coefficients` not equal to `as.vector(coef(base_model))`.
+
+Component "coefficients": Mean relative difference: 0.0523
+
+Backtrace:
+ 1. testthat::expect_equal(...)
+      at test-linear.r:15:4
+
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 3 ]
+```
+
+Let's break down this failure message:
+
+1. **Location**: `'test-linear.r:15:5'` tells you exactly where the failure occurred—line 15, column 5
+2. **Context**: The test description helps identify what functionality broke
+3. **Expectation**: Shows what you expected vs. what you got
+4. **Details**: Specific information about the mismatch (e.g., "Mean relative difference: 0.0523")
+5. **Backtrace**: The call stack leading to the failure
+
+## 4.2.3 Common Failure Patterns
+
+### 4.2.3.1 Numerical Precision Concern
+
+Floating-point arithmetic can cause unexpected failures:
+
+``` r
+test_that('matrix operations match', {
+    sols = A ^ -1 * b
+    expected = solve(A) %*% b
+    
+    # This might fail!
+    expect_equal(sols, expected)
+})
+```
+
+The solution is quick and meticulous: Use tolerance for floating-point comparisons.
+
+For example: 
+
+``` r
+test_that('matrix operations match', {
+    sols = A ^ -1 * b
+    expected = solve(A) %*% b
+    
+    # This accounts for rounding errors
+    expect_equal(sols, expected, tolerance = 1e-6)
+})
+```
+
+### 4.2.3.2 Dimension Mismatches
+
+Matrix operations are particularly sensitive to dimensions:
+
+``` r
+test_that('matrix multiplication with dimension mismatch tries reverse order', {
+    m1 = matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)
+    m2 = matrix(c(7, 8), nrow = 2, ncol = 1)
+
+    result = m1 * m2
+    expected = m2 %*% m1
+    
+    expect_equal(result, expected)
+})
+```
+
+If this fails with a dimension error, check:
+
+-   Are you multiplying in the right order?
+-   Do the matrix dimensions actually allow multiplication?
+-   Is your operator overloading logic handling edge cases?
+
+### 4.2.3.3 Type Coercion Concern
+
+R's automatic type conversion can cause subtle bugs:
+
+``` r
+test_that('data frame conversion works', {
+    df = data.frame(a = c(1, 2), b = c(3, 4))
+    result = df * 2
+    
+    # Might fail if df isn't properly converted to matrix
+    expect_s3_class(result, "matrix")
+})
+```
+
+## 4.2.4 Testing Best Practices
+
+### Write Descriptive Test Names
+
+Good test names explain *what* is being tested and *why* it matters. 
+
+1.  Bad description
+
+    ``` r
+    test_that('test 1', { ... })
+    test_that('it works', { ... })
+    ```
+
+2.  Good description
+
+    ``` r
+    test_that('matrix inverse (^-1) works correctly', { ... })
+    test_that('combined operations work (inverse then multiply)', { ... })
+    ```
+
+### Test Both Success and Failure Cases
+
+Don't just test the happy path, must test where it shouldn't be done. 
+
+For example, the `logistic_reg()` implementation must have the response variable limited to factor / binary (contains 0 and 1) data type, 1 variable only, and 2 unique classes only. It must not be 
+
+i.  Other than factor / binary data types like numeric data
+ii.  Have 2 or more variables 
+iii.  The number of unique classes must not have 3 or more classes, within the response variable. 
+
+``` r
+# Test success
+test_that('binary response works with 0/1', {
+    model = logistic_reg(am ~ wt, data = mtcars)
+    expect_s3_class(model, "logistic_reg")
+})
+
+# Test failure
+test_that('error thrown for non-binary response', {
+    test_data = mtcars
+    test_data$multi_class1 = sample(c("A", "B", "C"), nrow(test_data), replace = TRUE)
+    test_data$multi_class2 = sample(c("A", "B", "C"), nrow(test_data), replace = TRUE)
+    
+    expect_error(
+        logistic_reg(cbind(multi_class1, multi_class2) ~ wt + hp, data = test_data),
+        "must be binary with exactly 2 unique values"
+    )
+    
+    expect_error(
+        logistic_reg(mpg ~ wt + hp, data = test_data),
+        "must be binary with exactly 2 unique values or a factor class"
+    )
+})
+```
+
+## 4.2.5 Continuous Integration
+
+R is also used for production, you see. For production code, I recommend integrating your tests into a CI/CD pipeline. 
+
+Here's a simple GitHub Actions workflow:
+
+``` yaml
+# .github/workflows/test.yml
+name: Run Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3.0'
+      
+      - name: Install dependencies
+        run: |
+          install.packages(c("box", "testthat", "dplyr", "purrr", "rlang"))
+        shell: Rscript {0}
+      
+      - name: Test matrix_ops
+        run: Rscript module/matrix_ops.r
+      
+      - name: Test linear regression
+        run: Rscript module/statistics/models/linear.r
+      
+      - name: Test logistic regression
+        run: Rscript module/statistics/models/logistic.r
+```
