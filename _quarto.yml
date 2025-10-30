@@ -40,7 +40,7 @@ book:
         - 4.1-testthat.qmd
         - 4.2-testthat-2.qmd
 
-  repo-url: https://github.com/kisha126/modules-in-r
+  repo-url: https://github.com/joshuamarie/modules-in-r
   repo-actions: [edit, issue]
 
 format:
