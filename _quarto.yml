@@ -43,6 +43,8 @@ book:
   repo-url: https://github.com/joshuamarie/modules-in-r
   repo-actions: [edit, issue]
 
+site-url: https://modules-in-r.joshuamarie.com
+
 format:
   html:
     theme:
