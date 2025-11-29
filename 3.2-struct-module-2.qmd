@@ -108,7 +108,7 @@ statistics/
 └── time_series.r
 ```
 
-*See the source code of each script here: https://github.com/kisha126/modules-in-r/tree/main/module/statistics*
+*See the source code of each script here: https://github.com/joshuamarie/modules-in-r/tree/main/module/statistics*
 
 Access all of the modules within `statistics` by:
 

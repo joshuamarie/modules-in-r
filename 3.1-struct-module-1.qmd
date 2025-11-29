@@ -1,6 +1,6 @@
 # 3.1 Structuring and constructing modules part 1: Initialization
 
-I'll start on how to construct a module *preliminarily*. To demonstrate how to construct modules, let’s work with an example folder named **{./module}**. Each script or subfolder within this directory will serve as a separate module or submodule. The files are expected to be *empty*, since I'll be addressing some of them, or you can visit [**{./module}**](https://github.com/kisha126/modules-in-r/module) to view the pre-written code.
+I'll start on how to construct a module *preliminarily*. To demonstrate how to construct modules, let’s work with an example folder named **{./module}**. Each script or subfolder within this directory will serve as a separate module or submodule. The files are expected to be *empty*, since I'll be addressing some of them, or you can visit [**{./module}**](https://github.com/joshuamarie/modules-in-r/module) to view the pre-written code.
 
 ---
 
@@ -137,7 +137,7 @@ Each level requires its own `__init__.r` file. This organization allows you to a
 
 ## 3.1.2 Importing **{./module}**
 
-Now that you’ve seen the structure of the **{./module}** folder, you can reuse my codes, by forking [**{./module}**](https://github.com/kisha126/modules-in-r/module), found at the source code of this book, into any specified directory. Let's recall what is on about throughout [Chapter 2: Fundamentals of import system in **{box}** package](2-imports.qmd). In this example, we are importing scripts / folders from **{./module}** folder, as modules instead. 
+Now that you’ve seen the structure of the **{./module}** folder, you can reuse my codes, by forking [**{./module}**](https://github.com/joshuamarie/modules-in-r/module), found at the source code of this book, into any specified directory. Let's recall what is on about throughout [Chapter 2: Fundamentals of import system in **{box}** package](2-imports.qmd). In this example, we are importing scripts / folders from **{./module}** folder, as modules instead. 
 
 ### 3.1.2.1 Valid imports
 

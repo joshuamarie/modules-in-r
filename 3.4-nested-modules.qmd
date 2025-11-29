@@ -89,14 +89,14 @@ The code for some script is too long. Navigate the source code by clicking each 
 
 1.  Under **{./module}**
 
-    -   [`matrix_ops.r`](https://github.com/kisha126/modules-in-r/tree/main/module/matrix_ops.r)
-    -   [`tables.r`](https://github.com/kisha126/modules-in-r/tree/main/module/tables.r)
+    -   [`matrix_ops.r`](https://github.com/joshuamarie/modules-in-r/tree/main/module/matrix_ops.r)
+    -   [`tables.r`](https://github.com/joshuamarie/modules-in-r/tree/main/module/tables.r)
     
 2.  Under **{module/statistics/models}**
 
-    -   [`linear.r`](https://github.com/kisha126/modules-in-r/tree/main/module/statistics/models/linear.r)
-    -   [`logistic.r`](https://github.com/kisha126/modules-in-r/tree/main/module/statistics/models/logistic.r)
-    -   [`baseline_logit.r`](https://github.com/kisha126/modules-in-r/tree/main/module/statistics/models/baseline_logit.r)
+    -   [`linear.r`](https://github.com/joshuamarie/modules-in-r/tree/main/module/statistics/models/linear.r)
+    -   [`logistic.r`](https://github.com/joshuamarie/modules-in-r/tree/main/module/statistics/models/logistic.r)
+    -   [`baseline_logit.r`](https://github.com/joshuamarie/modules-in-r/tree/main/module/statistics/models/baseline_logit.r)
 
 :::
 
