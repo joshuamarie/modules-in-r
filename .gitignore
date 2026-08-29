@@ -9,3 +9,5 @@
 /.quarto/
 _book/
 *.Rproj
+
+**/*.quarto_ipynb

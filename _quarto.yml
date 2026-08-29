@@ -19,8 +19,8 @@ book:
     - index.qmd
     - part: "1 Introduction"
       chapters:
-        - 1-intro.qmd
-        - 1.1-start.qmd
+        - Chapter 1/intro.qmd
+        - Chapter 1/get-started.qmd
     - part: "2 Fundamentals of import system in {box} package"
       chapters:
         - 2-box-fundamentals.qmd

@@ -1,0 +1,37 @@
+# 1 Introduction
+
+Some R programmers have long sought elegant ways to organize their code into reusable R codes, maintainable modules, and granular import system. Unfortunately, R lacks ergnomics for a long time, but [{box}](https://github.com/klmr/box) R package will be your saving grace, as it offers a fresh approach to module system in your respective projects.
+
+---
+
+## The Challenge of Code Organization in R
+
+Let's look at the common challenges:
+
+-   R has `source()` function but has [several caveats](https://www.reddit.com/r/rstats/comments/lm0smw/comment/gnvy0vn/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button). 
+-   You have to write an R package just to organize R codes then make those R codes to be reused, but that's pretty much it. There's no way to reuse code in any R script files / folders. 
+-   R has no way to explicitly dictates dependencies between different parts of your scripts, aside from creating an R package. 
+-   Maintaining consistency across large codebases can be slow and tedious. 
+-   Sharing code between projects categorically. 
+
+## Enter the Box Package
+
+Before `{box}`, there are packages out there that actually does a pretty solid job, and those are `{conflicted}` and `{import}`. However, `{box}` package is subjectively but ergonomically superior as it does more: it offers a fresh approach to modular programming within R, bringing clarity and structure to your projects. It addresses these challenges by introducing a modern, explicit module system that feels natural to both any R veteran and developer coming from other programming languages.
+
+## Understanding Modular Programming
+
+Modular programming is a model, a paradigm, that emphasizes the following:
+
+1.  The ability to break down complexity. When the written program gets larger and larger, there's a time that you gonna have to divide large programs into smaller, manageable pieces. 
+2.  An [encapsulation]{.underline}, which keeps related code together and protecting it from external interference.  
+3.  Creating clear ways for different parts of your code to interact. 
+4.  Making code easy to reuse across different projects. 
+5.  Inheriting *maintainability*, making code easier to understand and modify. 
+
+Later, this part explains why a module, in a form of a script or a directory, has a namespace and why they are independent to each other until called.
+
+## Coding Style
+
+In this guide, we'll explore `{box}` using the package author's preferred coding conventions. While they differ from standard R conventions, most especially the ['tidyverse style guide'](https://style.tidyverse.org/), understanding them might help you grasp the package's design philosophy. Visit the [article](https://cran.r-project.org/web/packages/box/vignettes/contributing.html) for more information about the coding style.
+
+Don't worry, if you have another way to write your R code, it's fine (you could use either other's coding convention or both of this). You're free to adapt `{box}`'s preferred coding style in your own projects. The principles and patterns we'll learn are independent of specific coding conventions.

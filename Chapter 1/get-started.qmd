@@ -1,6 +1,6 @@
 # 1.1 Getting Started
 
-Before we dive deeper, install **{box}** from CRAN first:
+Before we dive deeper, install `{box}` from CRAN first:
 
 ``` r
 install.packages("box")
@@ -10,6 +10,20 @@ or you can install the development version from R-universe:
 
 ``` r
 install.packages('box', repos = 'https://klmr.r-universe.dev')
+```
+
+Preferably, for the later chapters which involves the `{carrier}` Rust package, you'll need the following forked version of this package, considering that the patches under the fork hasn't made `{box}` upstream yet. To install, do the following:
+
+``` r
+# Install the package through GitHub
+# This needs compilation BTW
+# Configure the following requirements 
+# Like Rtools and some toolchains
+# To build the package
+# install.packages('pak')
+pak::pak(
+    "joshuamarie/box@feature/carrier-module-support"
+)
 ```
 
 ---
