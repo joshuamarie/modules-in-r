@@ -20,7 +20,7 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.4.2'
-          use-public-rspm: true  
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -32,8 +32,12 @@ jobs:
             xml2
             jsonlite
             yaml
-            testthat
+            pak
           cache-version: 1
+
+      - name: Install forked box package
+        run: |
+          Rscript -e 'pak::pak("joshuamarie/box@feature/carrier-module-support")'
 
       - name: Render
         run: quarto render
