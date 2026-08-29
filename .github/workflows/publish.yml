@@ -1,54 +1,45 @@
-on:
-  workflow_dispatch:
-  push:
-    branches: main
+name: Quarto Render and publish
 
-name: Quarto Publish
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
+      - uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Install R
-        uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.4.2'
+          use-public-rspm: true  
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libcurl4-openssl-dev \
-            libssl-dev \
-            libxml2-dev \
-            libfontconfig1-dev \
-            libfreetype6-dev \
-            libpng-dev \
-            libtiff5-dev \
-            libjpeg-dev
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            knitr
+            rmarkdown
+            tidyverse
+            downlit
+            xml2
+            jsonlite
+            yaml
+            testthat
+          cache-version: 1
 
-      - name: Install R packages
-        run: |
-          Rscript -e 'install.packages(c(
-            "rmarkdown",
-            "knitr",
-            "tidyverse",
-            "downlit",
-            "xml2",
-            "jsonlite",
-            "yaml"
-          ), repos = "https://cloud.r-project.org")'
+      - name: Render
+        run: quarto render
 
-      - name: Render and Publish
-        uses: quarto-dev/quarto-actions/publish@v2
+      - uses: quarto-dev/quarto-actions/publish@v2
+        if: github.event_name != 'pull_request'
         with:
           target: gh-pages
         env:
