@@ -24,9 +24,8 @@ jobs:
 
       - name: Install R dependencies
         uses: r-lib/actions/setup-renv@v2
-        # If you are NOT using renv, delete the line above and use this instead:
-        # run: |
-        #   Rscript -e 'install.packages(c("rmarkdown", "knitr", "tidyverse", "your-other-packages"))'
+        run: |
+            Rscript -e 'install.packages(c("rmarkdown", "knitr", "tidyverse", "testthat"))'
 
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
