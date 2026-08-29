@@ -1,6 +1,6 @@
 ---
-title: "Box: Placing module system into R"
-subtitle: "Definitive Guide"
+title: "Box: Alternative Module System in R"
+subtitle: "Definitive Guide 2nd Edition"
 format:
     html:
         default: true
@@ -10,31 +10,33 @@ format:
 
 # Preface
 
-Welcome to the definitive guide to module system in R using box! 
+Welcome to the definitive guide to module system in R using `{box}`! This is the newest
 
-Whether you want another way to import R packages, or simply seeking better ways to organize your code, this guide helps you to reimagine something did not exist in R for quite a long time: module system. This book introduces you the package that I discovered few years ago, it is called [box](https://github.com/klmr/box), initially **modules** package, by Konrad Rudolph. This package provides a clean, straightforward API to define and manage modules. R, especially its users, suffers from managing huge R pipelines, because there's no clean way to manage such complex pipelines...this problem will potentially cease to exists, as **box** package affords closely equivalent module system to other programming languages like Python, C#, and more. 
+You might have wanted another way to import R packages, or just simply sought better ways to write organized and composable R codes, welcome aboard! This book guides you to the re-imagination of how module system in R should have done. This book introduces you the package called [{box}](https://github.com/klmr/box) (initially started as a `{modules}` package) by Konrad Rudolph. 
 
 ## What You'll Find Here
 
-A definitive guide that walks you through:
+R, especially its users, might have suffered from writing and managing huge R codebases, simply because there's no clean way to manage such complex pipelines. Do not fret, this problem will potentially cease to exists, as `{box}` package provides closely equivalent module system to other programming languages like Python, C#, and more. 
+
+There are many ways to manage R codes, and most solutions out there are subjective. Even though they are subjective, none of the solution hits the level of ergonomicity to actually write and compose reusable R codes. Hence, this definitive guide is written, and what you'll find here is the following:
 
 -  Alternative approach to import R codes (i.e. R packages, modules)
 -  Modern approaches to compose and organize R codes
--  Step-by-step tutorials for using the **box** package
+-  Step-by-step tutorials for using `{box}` package
 -  Best practices for maintainable R code
 
 ## Why this book
 
-Only little to no books teach you to correctly write reusable, composable, and modular R codes :). Most of the books maybe teaches you about R, particularly application of R in different fields, but little to none explains one of the best practices. Most of them uses `library()` anyways, so you won't certainly find similar book that teaches modular codes. 
+There might have handful of books that actually teaches you to correctly import reusable codes, as well to write reusable, composable, and modular R codes (well, [R packages](https://r-pkgs.org/) exists). Most of the books teaches you about R, particularly across different fields, but little to no books explains one of the best practices to write and import reusable and composable R code. Most of the books use `library()` and sometimes through `source()` (it is bad as a way to import your code but not when you want to execute the whole script), thus you won't certainly find similar book that teaches modular codes. 
 
-Consequently, while R offers various ways to organize code, the **box** package manages to be superior among them (I am bias) by introducing a fresh, modern approach to module system that may significantly improve your R development workflow, similar to the workflow made by other developers, particularly Python devs. This book bridges the gap between basic R programming and professional-grade code organization.
+Consequently, R offers various ways to organize R codes, but `{box}` package offers an ergonomic modern approaches to module system that may significantly improve your R development workflows. This book bridges the gap between basic R programming and professional-grade code organization.
 
 ## How to Use This Guide
 
 The content is structured progressively, building from foundational concepts to deep applications. For the best learning experience:
 
-1.  Start with the introduction to understand the core concepts
-2.  Learning the fundamentals of import system with **{box}** package
+1.  Start with the introduction to understand the core concepts. 
+2.  Learning the fundamentals of import system with `{box}` package. 
 3.  Learning the structures and constructions of reusability of modules, treating them like R packages, and supplied with documentation
 4.  Learning unit testing the modules
 
