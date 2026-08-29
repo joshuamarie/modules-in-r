@@ -3,7 +3,7 @@ on:
   push:
     branches: main
 
-name: Quarto Publish
+name: Quarto Render and Publish
 
 jobs:
   build-deploy:
@@ -16,6 +16,17 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Install R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.4.2'   # or 'release'
+
+      - name: Install R dependencies
+        uses: r-lib/actions/setup-renv@v2
+        # If you are NOT using renv, delete the line above and use this instead:
+        # run: |
+        #   Rscript -e 'install.packages(c("rmarkdown", "knitr", "tidyverse", "your-other-packages"))'
 
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
