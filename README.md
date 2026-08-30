@@ -4,7 +4,7 @@ Welcome to the definitive guide to module system in R using box!
 
 📖 **[Read the book online](https://joshuamarie.github.io/modules-in-r/)**
 
-This is the official repository for [Box: Placing module system into R](https://kisha126.github.io/modules-in-r/)
+This is the official repository for **Box: Placing module system into R**. 
 
 ---
 
