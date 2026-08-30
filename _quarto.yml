@@ -21,8 +21,10 @@ book:
     - index.qmd
     - part: "1 Introduction"
       chapters:
-        - Chapter 1/1-intro.qmd
-        - Chapter 1/2-get-started.qmd
+        - text: "1.1 Introduction"
+          href: Chapter 1/1-intro.qmd
+        - text: "1.2 Getting Started"
+          href: Chapter 1/2-get-started.qmd
     - part: "2 Fundamentals of import system in {box} package"
       chapters:
         - Chapter 2/1-box-fundamentals.qmd
