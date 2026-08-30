@@ -444,19 +444,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#the-structure" id="toc-the-structure" class="nav-link active" data-scroll-target="#the-structure">3.1.1 The structure</a>
+  <li><a href="#the-structure" id="toc-the-structure" class="nav-link active" data-scroll-target="#the-structure">The structure</a>
   <ul class="collapse">
-  <li><a href="#initialization" id="toc-initialization" class="nav-link" data-scroll-target="#initialization">3.1.1.1 Initialization</a></li>
-  <li><a href="#scripts-from-root-folder" id="toc-scripts-from-root-folder" class="nav-link" data-scroll-target="#scripts-from-root-folder">3.1.1.2 Scripts from root folder</a></li>
+  <li><a href="#initialization" id="toc-initialization" class="nav-link" data-scroll-target="#initialization">Initialization</a></li>
+  <li><a href="#scripts-from-root-folder" id="toc-scripts-from-root-folder" class="nav-link" data-scroll-target="#scripts-from-root-folder">Scripts from root folder</a></li>
   </ul></li>
-  <li><a href="#importing-.module" id="toc-importing-.module" class="nav-link" data-scroll-target="#importing-.module">3.1.2 Importing <strong>{./module}</strong></a>
+  <li><a href="#importing-.module" id="toc-importing-.module" class="nav-link" data-scroll-target="#importing-.module">Importing <strong>{./module}</strong></a>
   <ul class="collapse">
-  <li><a href="#valid-imports" id="toc-valid-imports" class="nav-link" data-scroll-target="#valid-imports">3.1.2.1 Valid imports</a></li>
+  <li><a href="#valid-imports" id="toc-valid-imports" class="nav-link" data-scroll-target="#valid-imports">Valid imports</a></li>
   </ul></li>
-  <li><a href="#reloading-modules" id="toc-reloading-modules" class="nav-link" data-scroll-target="#reloading-modules">3.1.3 Reloading modules</a>
+  <li><a href="#reloading-modules" id="toc-reloading-modules" class="nav-link" data-scroll-target="#reloading-modules">Reloading modules</a>
   <ul class="collapse">
-  <li><a href="#basic-reloading" id="toc-basic-reloading" class="nav-link" data-scroll-target="#basic-reloading">3.1.3.1 Basic Reloading</a></li>
-  <li><a href="#reload-benefits" id="toc-reload-benefits" class="nav-link" data-scroll-target="#reload-benefits">3.1.3.2 Reload benefits</a></li>
+  <li><a href="#basic-reloading" id="toc-basic-reloading" class="nav-link" data-scroll-target="#basic-reloading">Basic Reloading</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/joshuamarie/modules-in-r/edit/main/Chapter 3/2-struct-module-1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/joshuamarie/modules-in-r/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -484,11 +483,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>I’ll start on how to construct a module <em>preliminarily</em>. To demonstrate how to construct modules, let’s work with an example folder named <strong>{./module}</strong>. Each script or subfolder within this directory will serve as a separate module or submodule. The files are expected to be <em>empty</em>, since I’ll be addressing some of them, or you can visit <a href="https://github.com/joshuamarie/modules-in-r/module"><strong>{./module}</strong></a> to view the pre-written code.</p>
+<p>Let’s start on how to construct a module <em>preliminarily</em>. To demonstrate how to construct modules, let’s work with an example folder named <code>./module/</code>. Each script or subfolder within this directory will serve as a separate module or submodule. The files are expected to be <em>empty</em>, since I’ll be addressing some of them, or you can visit <a href="https://github.com/joshuamarie/modules-in-r/module">./module</a> to view the pre-written code.</p>
 <hr>
 <section id="the-structure" class="level2">
-<h2 class="anchored" data-anchor-id="the-structure">3.1.1 The structure</h2>
-<p>Here’s the structure of the <strong>{./module}</strong> folder I initialize:</p>
+<h2 class="anchored" data-anchor-id="the-structure">The structure</h2>
+<p><code>{box}</code> modules, just like any modules from other programming languages, can go deeper. This is totally different from R where all the source R codes are placed under a flat <code>R/</code> structure. Here’s the structure of the <code>./module</code> folder to be initialize:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module/</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> __init__.r</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> convert.r</span>
@@ -506,14 +505,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> linear.r</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> logistic.r</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="ex">└──</span> baseline_logit.r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you observed, it has 2 levels deep nested modules, and it still can have multiple subdirectories inside <code>module/</code> and, once again, it can go deeper than 2 levels for each subdirectory. This is how module system should look like.</p>
 <section id="initialization" class="level3">
-<h3 class="anchored" data-anchor-id="initialization">3.1.1.1 Initialization</h3>
-<p>The <code>__init__.r</code> file is a special file, acts as the initialization file which marks <strong>{./module}</strong> folder as a <em>package</em>, in which will be executed once you import <strong>{./module}</strong> as a <em>module</em>.</p>
-<ul>
-<li>Really beneficial because you don’t need to explicitly load the script as modules, repetitively.</li>
-<li>It can be used to load or expose specific functions or objects from the submodules within this folder.</li>
-<li>You’ll be always using this special file to treat folders as modules, equivalent to what made Python modules.</li>
-</ul>
+<h3 class="anchored" data-anchor-id="initialization">Initialization</h3>
+<p>The <code>__init__.r</code> file is a special file, acts as the initialization file which marks <code>./module</code> folder as a <em>“package”</em>, in which will be executed once you import <code>./module</code> as a <em>module</em>. Once you have it, it is really beneficial because once you declare exports under <code>__init__.r</code>, that folder now acts like a module itself and you don’t need to explicitly load the script as modules, repetitively.</p>
+<p>Since you have <code>__init__.r</code> as an entry point, you load or expose specific functions or objects out from the submodules within this folder. You’ll be always using this special file to treat folders as modules, equivalent to what made Python modules.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -524,69 +520,63 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><em>Every folder at every level</em> that you want to treat as a module must contain an <code>__init__.r</code> file. This applies to:</p>
-<ul>
-<li>The root module folder (<code>module/</code>)</li>
-<li>Any subfolders (<code>statistics/</code>)</li>
-<li>Any nested subfolders (<code>statistics/models/</code>)</li>
-</ul>
-<p>Without <code>__init__.r</code>, <strong>{box}</strong> won’t recognize the folder as a module.</p>
+<p><em>Every folder at every level</em> that you want to treat as a module must contain an <code>__init__.r</code> file. This applies to the (1) root module folder (<code>module/</code>), (2) any subfolders (<code>statistics/</code>), or even any nested subfolders (<code>statistics/models/</code>)</p>
+<p>Without <code>__init__.r</code>, <code>{box}</code> won’t recognize the folder as a module.</p>
 </div>
 </div>
 </section>
 <section id="scripts-from-root-folder" class="level3">
-<h3 class="anchored" data-anchor-id="scripts-from-root-folder">3.1.1.2 Scripts from root folder</h3>
-<p>The root <code>module/</code> folder contains several scripts that can be directly imported:</p>
-<ul>
-<li><p><strong><code>hello_world.r</code></strong>: A simple demonstration script using examples from the official <strong>{box}</strong> documentation. This showcases basic module functionality and serves as a “Hello World” introduction to module creation.</p></li>
-<li><p><strong><code>convert.r</code></strong>: Contains utility functions for temperature conversion:</p>
-<ul>
-<li><code>celsius_to_fahrenheit()</code>: Converts Celsius to Fahrenheit</li>
-<li><code>fahrenheit_to_celsius()</code>: Converts Fahrenheit to Celsius</li>
-</ul>
-<p>These functions demonstrate how standalone utility functions can be organized in modules.</p></li>
-<li><p><strong><code>matrix_ops.r</code></strong>: Contains matrix operation functions and operators:</p>
-<ul>
-<li>Custom matrix multiplication operators</li>
-<li>Matrix transformation utilities</li>
-</ul>
-<p>This script demonstrates how to export functions with special characters (operators like <code>*</code> or <code>^</code>).</p></li>
-<li><p><strong><code>tables.r</code></strong>: Contains table formatting and display functions:</p>
-<ul>
-<li><code>draw_table()</code>: Displays data frames as table in terminal.</li>
-</ul></li>
-<li><p><strong><code>not_func.r</code></strong>: Demonstrates that modules aren’t limited to functions. This script contains various data structures that can be exported:</p>
-<ul>
-<li>Atomic vectors</li>
-<li>Lists</li>
-<li>Matrices</li>
-<li>Data frames</li>
-<li>N-dimensional arrays</li>
-<li>Constants or configuration values</li>
-</ul>
-<p>This shows that <strong>any R object</strong> can be part of a module’s namespace, not just functions.</p></li>
-</ul>
+<h3 class="anchored" data-anchor-id="scripts-from-root-folder">Scripts from root folder</h3>
+<p>The root <code>module/</code> folder contains few (if not several) scripts that can be directly imported:</p>
+<ol type="1">
+<li><p><code>hello_world.r</code>: A simple demonstration script using examples from the official <code>{box}</code> documentation. This showcases basic module functionality and serves as a “Hello World” introduction to module creation.</p></li>
+<li><p><code>convert.r</code>: Contains utility functions for temperature conversion:</p></li>
+</ol>
+<pre><code>- `celsius_to_fahrenheit()`: Converts Celsius to Fahrenheit
+- `fahrenheit_to_celsius()`: Converts Fahrenheit to Celsius
+
+These functions demonstrate how standalone utility functions can be organized in modules.</code></pre>
+<ol start="3" type="1">
+<li><code>matrix_ops.r</code>: Comprises with overloaded matrix operation functions and operators:</li>
+</ol>
+<pre><code>- Custom matrix multiplication operators
+- Matrix transformation utilities
+
+This script demonstrates how to export functions with special characters (operators like `*` or `^`).</code></pre>
+<p>4 <code>tables.r</code>: Contains table formatting and display functions:</p>
+<pre><code>- `draw_table()`: Displays data frames as table in terminal. </code></pre>
+<ol start="5" type="1">
+<li><code>not_func.r</code>: Contains the exports that are not functions. This simply demonstrates that modules aren’t limited to functions. This script contains various data structures that can be exported:</li>
+</ol>
+<pre><code>- Atomic vectors
+- Lists
+- Matrices
+- Data frames
+- N-dimensional arrays
+- Constants or configuration values
+
+This shows that *any R object* can be part of a module's namespace, not just functions.</code></pre>
 <section id="subfolders-submodules" class="level4">
-<h4 class="anchored" data-anchor-id="subfolders-submodules">3.1.1.3 Subfolders (Submodules)</h4>
+<h4 class="anchored" data-anchor-id="subfolders-submodules">Subfolders (Submodules)</h4>
 <p>The module structure includes organized subfolders that group related functionality:</p>
 <section id="statistical-analysis-submodule-statistics" class="level5">
 <h5 class="anchored" data-anchor-id="statistical-analysis-submodule-statistics">Statistical Analysis Submodule <strong><code>statistics/</code></strong></h5>
-<p>A subfolder dedicated to statistical functions. When imported, this becomes the <strong>{statistics}</strong> submodule. Subfolders like this help categorically group related functionalities within a larger module structure.</p>
-<ul>
-<li><p><strong><code>__init__.r</code></strong>: <strong>Required initialization file</strong>. This marks <code>statistics/</code> as a submodule and controls which functions or scripts are exposed when someone imports the statistics module. Without this file, the folder cannot function as a module.</p></li>
-<li><p><strong><code>cor.r</code></strong>: Contains basic correlation functions:</p>
+<p>A subfolder dedicated to contain statistical functions. When imported, this becomes the <code>{statistics}</code> submodule. Subfolders like this help categorically group related functionalities within a larger module structure.</p>
+<ol type="1">
+<li><p><code>__init__.r</code>: Always the <strong>required initialization file</strong>, if you want to mark <code>statistics/</code> as a submodule and controls which functions or scripts are exposed when someone imports the statistics module. Without this file, the folder cannot function as a module.</p></li>
+<li><p><code>cor.r</code>: Contains basic correlation functions:</p>
 <ul>
 <li>Simple correlation coefficient calculations</li>
 <li>Demonstrates fundamental statistical operations</li>
 </ul></li>
-<li><p><strong><code>corrr.r</code></strong>: An extended correlation module that builds on <code>cor.r</code>:</p>
+<li><p><code>corrr.r</code>: An extended correlation module that builds on <code>cor.r</code>:</p>
 <ul>
 <li>Depends on <code>stats::cor()</code> for computation</li>
-<li>Uses <strong>{tidyverse}</strong> APIs for data manipulation</li>
+<li>Uses <code>{tidyverse}</code> APIs for data manipulation</li>
 <li>Includes nonparametric correlation methods (Spearman, Kendall)</li>
 <li>Shows how modules can have dependencies on other modules and packages</li>
 </ul></li>
-<li><p><strong><code>time_series.r</code></strong>: Contains time series analysis functions:</p>
+<li><p><code>time_series.r</code>: Contains time series analysis functions:</p>
 <ul>
 <li>Moving averages</li>
 <li>Trend analysis</li>
@@ -594,16 +584,16 @@ Important
 <li>Other time series utilities</li>
 </ul>
 <p>Groups all time series functionality under one module for easy access.</p></li>
-</ul>
+</ol>
 </section>
-<section id="statistical-modelling-nested-submodule---statisticsmodels" class="level5">
-<h5 class="anchored" data-anchor-id="statistical-modelling-nested-submodule---statisticsmodels">Statistical modelling nested submodule - <strong>statistics/models/</strong></h5>
+<section id="statistical-modelling-nested-submodule-statisticsmodels" class="level5">
+<h5 class="anchored" data-anchor-id="statistical-modelling-nested-submodule-statisticsmodels">Statistical modelling nested submodule <strong>statistics/models/</strong></h5>
 <p>A nested subfolder (two levels deep) for organizing machine learning and statistical modeling functions. This demonstrates <strong>{box}</strong>’s support for hierarchical module organization.</p>
-<ul>
-<li><p><strong><code>__init__.r</code></strong>: <strong>Required initialization file</strong>. Even though this folder is nested inside another module, it still needs its own <code>__init__.r</code> to be recognized as a submodule.</p></li>
-<li><p><strong><code>linear.r</code></strong>: Linear regression functions.</p></li>
-<li><p><strong><code>logistic.r</code></strong>: Logistic regression functions</p></li>
-</ul>
+<ol type="1">
+<li><p><code>__init__.r</code>: Even though this folder is nested inside another module, it still needs its own <code>__init__.r</code> to be recognized as a submodule.</p></li>
+<li><p><code>linear.r</code>: Linear regression functions.</p></li>
+<li><p><code>logistic.r</code>: Logistic regression functions</p></li>
+</ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Module Hierarchy">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -614,49 +604,61 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Notice how <code>models/</code> is nested inside <code>statistics/</code>, creating a hierarchy: - <code>module/</code> (root) - <code>statistics/</code> (submodule) - <code>models/</code> (nested submodule)</p>
-<p>Each level requires its own <code>__init__.r</code> file. This organization allows you to access functions like: - <code>module$statistics$models$linear$fit_regression()</code> - Or with aliases: <code>lm_models$fit_regression()</code></p>
+<p>Notice how <code>models/</code> is nested inside <code>statistics/</code>, creating a hierarchy:</p>
+<ul>
+<li><p><code>module/</code> (root)</p>
+<ul>
+<li><p><code>statistics/</code> (submodule)</p>
+<ul>
+<li><code>models/</code> (nested submodule)</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Each level requires its own <code>__init__.r</code> file. This organization allows you to access functions like:</p>
+<ul>
+<li><p><code>module$statistics$models$linear$fit_regression()</code></p></li>
+<li><p>Or with aliases: <code>lm_models$fit_regression()</code></p></li>
+</ul>
 </div>
 </div>
-<hr>
 </section>
 </section>
 </section>
 </section>
 <section id="importing-.module" class="level2">
-<h2 class="anchored" data-anchor-id="importing-.module">3.1.2 Importing <strong>{./module}</strong></h2>
-<p>Now that you’ve seen the structure of the <strong>{./module}</strong> folder, you can reuse my codes, by forking <a href="https://github.com/joshuamarie/modules-in-r/module"><strong>{./module}</strong></a>, found at the source code of this book, into any specified directory. Let’s recall what is on about throughout <a href="2-imports.qmd">Chapter 2: Fundamentals of import system in <strong>{box}</strong> package</a>. In this example, we are importing scripts / folders from <strong>{./module}</strong> folder, as modules instead.</p>
+<h2 class="anchored" data-anchor-id="importing-.module">Importing <strong>{./module}</strong></h2>
+<p>Now that you’ve seen the structure of the <code>./module</code> folder, you may want to reuse the codes under <code>./module</code>, by forking <a href="https://github.com/joshuamarie/modules-in-r/module">./module</a>, found at the source code of this book, into any specified directory. Let’s recall what is on about throughout <a href="2-imports.qmd">Chapter 2: Fundamentals of import system in <strong>{box}</strong> package</a>. In this example, we are importing scripts / folders from <code>./module</code> folder, as modules instead.</p>
 <section id="valid-imports" class="level3">
-<h3 class="anchored" data-anchor-id="valid-imports">3.1.2.1 Valid imports</h3>
+<h3 class="anchored" data-anchor-id="valid-imports">Valid imports</h3>
 <p>Here are the valid imports:</p>
 <ol type="1">
 <li><p>With alias</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md =</span> .<span class="sc">/</span>module</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>It’s up to you if you want another name, besides <code>md</code>.</p></li>
-<li><p>Without alias</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>module</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Load specific subfolder as a module</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_stats =</span> .<span class="sc">/</span>module[statistics]</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This is equivalent to:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_stats =</span> .<span class="sc">/</span>module<span class="sc">/</span>statistics</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>as long as <strong>{./module}</strong> has an initialization file.</p></li>
-<li><p>Load specific script as a module</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module[not_func]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md =</span> .<span class="sc">/</span>module</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Note: This is not entirely equivalent to:</p>
+<p><em>Note: It’s up to you if you want another name, besides <code>md</code>.</em></p></li>
+<li><p>Without alias</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module<span class="sc">/</span>not_func</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>because it will append another environment in the current environment, specifically under <strong>{./module}</strong> environment. Additionally, it will create <code>md_dt</code> module, which loads the entire <strong>{./module}</strong>, only if you did the former.</p>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>module</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Load specific subfolder as a module</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_stats =</span> .<span class="sc">/</span>module[statistics]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is equivalent to:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_stats =</span> .<span class="sc">/</span>module<span class="sc">/</span>statistics</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>As long as the <code>statistics/</code> subfolder is publicly exported under the initialization <code>__init__.r</code> file.</p></li>
+<li><p>Load specific script as a module</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module[not_func]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note: This is not entirely equivalent to:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module<span class="sc">/</span>not_func</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here, <code>md_dt</code> is loaded as a module that carries the whole <code>./module</code> folder, not the <code>not_func</code> script. On the other hand, the second code will load <code>not_func</code> script as a module under <code>md_dt</code> name.</p>
 <p><img src="Images/img-c3.1.2.jpg" class="img-fluid"></p></li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -669,35 +671,29 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Do not forget to put <code>./</code> prefix to load specific modules in your project workspace. The lack of <code>./</code> prefix is only valid for R packages. For the deep nested modules, this will be deeply tackled in <a href="3.4-nested-modules.qmd">Chapter 3.4: Accessing modules in any depths</a>.</p>
+<p>Do not forget to put <code>./</code> prefix to load specific local modules in your own workspace. The lack of <code>./</code> prefix is only valid for R packages. For the deep nested modules, this will be deeply tackled in <a href="../Chapter 3/5-nested-modules.html">Chapter 3.4: Accessing modules in any depths</a>.</p>
 </div>
 </div>
 </section>
 </section>
 <section id="reloading-modules" class="level2">
-<h2 class="anchored" data-anchor-id="reloading-modules">3.1.3 Reloading modules</h2>
-<p>During development, most particularly when you import a particular module, you’ll sometimes modify its source code — for example, tweaking functions or adding new ones. However, <strong>{box}</strong> modules are cached after their first import. This means that changes you make to your module’s code won’t automatically take effect until you explicitly reload it.</p>
+<h2 class="anchored" data-anchor-id="reloading-modules">Reloading modules</h2>
+<p>As discussed on Chapter 2, there are times you need to reload the module, only during the development and in an interactive session, most particularly when you import a particular module then you modify its source code. However, <code>{box}</code> modules are cached after their first import. This means that changes you make to your module’s code won’t automatically take effect until you explicitly reload it.</p>
 <section id="basic-reloading" class="level3">
-<h3 class="anchored" data-anchor-id="basic-reloading">3.1.3.1 Basic Reloading</h3>
-<p>To reload a module, <strong>{box}</strong> provides the function <code>box::reload()</code>. This clears the cached version and re-imports the module, ensuring that the latest code changes are applied.</p>
+<h3 class="anchored" data-anchor-id="basic-reloading">Basic Reloading</h3>
+<p>To reload a module, <code>{box}</code> provides the function <code>box::reload()</code>. This clears the cached version and re-imports the module, ensuring that the latest code changes are applied.</p>
 <p>If you’ve imported the module, such as:</p>
 <pre><code>box::use(
     md = ./module
 )</code></pre>
 <p>and you made some changes within its source code, you can reload it simply by:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>And note: This is not allowed to reload <em>submodules</em> under <code>md</code> module:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md<span class="sc">$</span>statistics)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="reload-benefits" class="level3">
-<h3 class="anchored" data-anchor-id="reload-benefits">3.1.3.2 Reload benefits</h3>
-<p>Reloading is particularly useful when:</p>
-<ul>
-<li>You’re iteratively developing and testing module code</li>
-<li>You’ve edited scripts that are already imported</li>
-<li>You want to ensure that any updates to exported objects are reflected in your current R session</li>
-</ul>
-<p>My advise for production code, however, you generally don’t need to always use <code>box::reload()</code> — modules should be stable and imported once.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And note: Reloading <em>submodules</em> under <code>md</code> module is not valid, even though <code>statistics</code> here is a module.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bad</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md<span class="sc">$</span>statistics)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Good</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
