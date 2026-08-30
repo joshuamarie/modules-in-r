@@ -7,12 +7,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,23 +42,10 @@ jobs:
       - name: Render
         run: quarto render
 
-      - name: Upload site artifact
+      - uses: quarto-dev/quarto-actions/publish@v2
         if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
-
-  deploy:
-    needs: build
-    if: github.event_name != 'pull_request'
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
