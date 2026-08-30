@@ -27,9 +27,12 @@ book:
           href: Chapter 1/2-get-started.qmd
     - part: "2 Fundamentals of import system in {box} package"
       chapters:
-        - Chapter 2/1-box-fundamentals.qmd
-        - Chapter 2/2-imports.qmd
-        - Chapter 2/3-reloading-modules.qmd
+        - text: "2.1 {box} Fundamentals"
+          href: Chapter 2/1-box-fundamentals.qmd
+        - text: "2.2 Array of imports and monikers"
+          href: Chapter 2/2-imports.qmd
+        - text: "2.3 Reloading modules"
+          href: Chapter 2/3-reloading-modules.qmd
     - part: "3 Employment of Modules: Structures and constructions"
       chapters:
         - Chapter 3/1-struct-module.qmd

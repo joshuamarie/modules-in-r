@@ -1,33 +1,44 @@
-# 2 Fundamentals of import system with **{box}** package
+# Fundamentals of import system with {box} package
 
-At first, I doubted the capabilities of **{box}** package: It's verbose, that's all. Like, R already has `library()` to load packages you installed in R, and the package namespace will be utilized *globally*. But when I tried **{box}** package, I learned something that R misses. It blows the import system of native R out of the water. One of **{box}**'s most convenient features is its approach to dictate R packages, scripts, or folders' namespace. There are no consistent module system in native R at all. 
+R already has `library()` to load packages you installed in R, then attaches the namespace onto the global namespace / environment, so the namespace from that package you load will be utilized *globally*. Now, you may ask: What's the point of using `{box}` when there's built-in `library()`? Well, you'll learn enough that `{box}` offers best practices and ergnomics, something that R misses. R's module system is NOT the actual modular programming that other programming languages do, and with `{box}`, it blows the import system from R out of the water. 
 
-Within Chapter 2, the fundamentals of **{box}** package, the import system with `box::use()`. 
+`{box}`'s ergonomics and most convenient features is its approach to reuse / import R packages, scripts, or folders' namespace. Consequently, there are no consistent module system in native R at all. But `{box}` does more than importing which will be discussed on the later chapters. 
 
-1.  Loading packages
+## Discussion at Chapter 2
 
-    Unlike the traditional way to load R packages with `library()`, **{box}** is more explicit and more granular to import R packages, and it is more consistent to work with path directories. The rest will be discussed under [Chapter 2.1: Array of Imports with Monikers](2.1-package-imports.qmd). 
+Within Chapter 2, the fundamentals of `{box}` package, the import system with `box::use()` is discussed. 
 
-2.  Loading scripts / folders
+### 1 Loading packages
 
-    Scripts and folders can be reused, as long as the namespace is defined. The import system of **{box}** using `box::use()` supersedes both `source()` and `setwd()`, part of the inconsistent designs in R. The rest will be discussed under [Chapter 2.1: Array of Imports with Monikers](2.1-package-imports.qmd#). 
+Unlike the traditional way to load R packages through `library()`, `{box}` is more explicit, more declarative, and more granular to import R packages, and it is more consistent to work with path directories. 
+
+``` r
+# Base R 
+library(dplyr)
+
+# {box} package
+box::use(dplyr[...])
+```
+
+The rest will be discussed under [Array of Imports with Monikers](2-imports.qmd). 
+
+### 2 Loading scripts / folders
+
+With `{box}` modules, scripts and folders can be loaded and reused, as long as the namespace is defined. They are contained in an *environment* data structure as a *module*. It's good since the import system of `{box}` using `box::use()` supersedes `source()` and then `box::file()` supersedes `setwd()`. For more details, the rest will be discussed under [Array of Imports with Monikers](2.1-package-imports.qmd#). 
     
-3.  Reloading modules
+### 3 Reloading modules
 
-    Mostly applied for modules from scripts and folders. When the script or folders are imported as modules, the initial imports is cached. This means that changes you make to your module’s code won’t automatically take effect until you explicitly reload it. The rest will be discussed under [Chapter 2.1: Array of Imports with Monikers](2.2-reloading-modules.qmd)
-
+Mostly applied for modules from scripts and folders. When the script or folders are imported as modules, the initial imports is cached. This means that changes you make to your module’s code won’t automatically take effect until you explicitly reload it. The rest will be discussed under [Chapter 2.1: Array of Imports with Monikers](2.2-reloading-modules.qmd)
 
 ---
 
 ## Some restrictions
 
-While the **{box}** package provides different approach to organize and import R code, there are some restrictions to be aware of. Specifically, **{box}** does *not* restricts the following:
+While `{box}` package provides different approach to organize and import R code in an ergonomic way, there are some restrictions to be aware of. Specifically, `{box}` does *not* functionally do the following:
 
--   Attaching meta-packages such as **{tidyverse}** or **{tidymodels}**. 
--   The use of `library()` / `require()` when constructing a module. 
-
----
+-   Attaching meta-packages such as `{tidyverse}` and `{tidymodels}`. 
+-   Using `library()` / `require()` inside a module when writing a module. 
 
 ## Base Packages
 
-From my understanding, the author separates **{base}** package to be imported. Which means, when you construct a module, you don't have to load **{base}** packages, e.g. `box::use(base[mean, sum])`. The rest of *base* packages, like **{stats}** and **{utils}**, are required to be called when constructing a *module*, unless it is just an executable script. 
+The author explicitly separates `{base}` package from other base R packages to be imported. Which means, when you construct a module, you don't have to load `{base}` package, e.g. `box::use(base[mean, sum])`. The rest of base R packages, like `{stats}` and `{utils}`, are required to be called when constructing a *module*, unless it is just an executable script. 

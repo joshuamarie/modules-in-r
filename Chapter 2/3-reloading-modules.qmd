@@ -1,16 +1,16 @@
-# 2.2 Reloading modules
+# Reloading modules
 
-When working with modules during development, you'll frequently modify the source code, and need those changes to reflect in your current R session. Understanding how **{box}** handles module reloading to increase development workflow efficiency.
+When working with modules during development, you'll frequently modify the source code, and need those changes to reflect in your current R session. Understanding how `{box}` handles module reloading to increase development workflow efficiency.
 
 This section primarily applies to modules created from scripts and folders, not R packages loaded from CRAN or other repositories.
 
 ---
 
-## 2.2.1 How **{box}** caches modules
+## How {box} caches modules
 
-By default, **{box}** caches modules after the first import. This improves performance but means changes to your module files won't automatically appear in your current session.
+By default, `{box}` caches modules after the first import. This improves performance but means changes to your module files won't automatically appear in your current session.
 
-In this example, imagine you have **{./utils/helpers}**: 
+In this example, imagine you have `./utils/helpers`: 
 
 ``` r
 box::use(./utils/helpers)
@@ -26,7 +26,7 @@ box::use(./utils/helpers)
 helpers$my_function()  # Still uses old version!
 ```
 
-Here's the problem: second import that uses `box::use()`, uses cached version, and the changes you made in **{./utils/helpers}** will NOT be reflected. 
+Here's the problem: second import that uses `box::use()`, uses cached version, and the changes you made in `./utils/helpers` will NOT be reflected. 
 
 There are some reasons why caching happens: 
 
@@ -38,45 +38,35 @@ There are some reasons why caching happens:
 This behavior mirrors how R packages work - once loaded with `library()`, they remain in memory until the session restarts.
 :::
 
----
+## Manual reloading 
 
-## 2.2.2 Manual reloading with `box::reload()`
-
-After importing **{./utils/helpers}** as **./helpers** module, reload **./helpers** with `box::use()`.
+After you load `./utils/helpers` as a `helpers` module, reload `helpers` with `box::reload()`.
 
 To see changes made to a module without restarting R, see what I mean: 
 
-1.  You already did an initial import of **{./utils/helpers}**, saved as **./helpers** module: 
+1.  You already did an initial import of `./utils/helpers`, saved as `./helpers` module: 
 
     ``` r
     box::use(./utils/helpers)
     ```
 
-2.  Make some changes in **{./utils/helpers}**
+2.  Make some changes in `./utils/helpers` whatever you want
 
-3.  Reload **./helpers** to see
+3.  Reload `./helpers` to modify the cached module
 
     ``` r
     box::reload(helpers)
     ```
 
-Now the updated version is loaded
+## Reloading scenarios
 
-``` r
-helpers$my_function()  
-```
+The practical examples are provided below that you can replicate in your current sessions somewhere. First, create `./utils/` folder then create an R script named `helpers.r`. Once `./utils/helpers` is loaded through `box::use(./utils/helpers)`, `helpers` module is now loaded and cached into the current environment.
 
----
-
-## 2.2.3 Reloading scenarios
-
-I made a practical examples that you can replicate in your current sessions somewhere. First, create **./utils** folder then create an R script named **helpers.r**. Once **{./utils/helpers}** is loaded via `box::use(./utils/helpers)`, **{.helpers}** module is made.
-
-3 scenarios that I know of when you made some changes and then reload the **{.helpers}** module
+To be enlightened, here's three (3) scenarios when you made some changes and then reload the `helpers` module: 
 
 ### Scenario 1: Modifying a function
 
-This is what **{./utils/helpers}** contains of: 
+Here's what `./utils/helpers` is made of: 
 
 ```{r}
 #| echo: true
@@ -101,7 +91,7 @@ x = 1 : 10
 helpers$sum(x) 
 ```
 
-Then, change your mind because it will not work once the vector `x` contains missing values `NA`:
+Then, suddenly you changed your mind because you figured out that it will not work once the vector `x` contains missing values `NA`. So, you made another modification: 
 
 ```{r}
 #| echo: true
@@ -125,7 +115,7 @@ sum = function (x, na.rm = FALSE) {
 }
 ```
 
-Reload **{.helpers}** to utilize the changes made:
+Instead of loading the module through `box::use()` again, reload `helpers` to utilize the changes made instead:
 
 ``` r
 box::reload(helpers)
@@ -138,9 +128,9 @@ helpers$sum(x)
 
 ### Scenario 2: Updating namespace
 
-Originally, **{./utils/helpers}** contains only 1 function. How about we made changes in **{.helpers}** module by adding new functions?
+Originally, `./utils/helpers` contains only 1 function. How about we made changes in `helpers` module by adding new functions?
 
-For example, you want a new function **{./utils/helpers}** that calculates the mean:
+For example, you want a new function `./utils/helpers` that calculates the mean:
 
 ```{r}
 #| echo: true
@@ -176,7 +166,7 @@ mean = function (x, na.rm = FALSE) {
 }
 ```
 
-Since it caches the recent **{./utils/helpers}** import, `mean()` from **{.helpers}** won't be available, thus a simple error. 
+Since it caches the recent `./utils/helpers` import, `mean()` from `helpers` won't be available, thus a simple error. 
 
 ``` r
 x = 1 : 10
@@ -186,13 +176,13 @@ helpers$mean(x, na.rm = TRUE)
 #> Error in helpers$mean : name 'mean' not found in 'helpers'
 ```
 
-Once again, reload **{.helpers}**: 
+Once again, reload `helpers` module: 
 
 ``` r
 box::reload(helpers)
 ```
 
-And `helpers$mean()` will be available: 
+And `helpers$mean()` is now available: 
 
 ``` r 
 x = 1 : 10
@@ -204,7 +194,7 @@ helpers$mean(x, na.rm = TRUE)
 
 ### Scenario 3: Changing exported items
 
-What if we only export `mean()` from **{./utils/helpers}**? Fortunately, **{box}** borrows Roxygen2 API, and this includes `#' @export`. 
+What if we only export `mean()` from `./utils/helpers`? By the way, `box::export()` is used to explicitly declare module exports, but fortunately, `{box}` borrows Roxygen2 API, and this includes `#' @export`. 
 
 ```{r}
 #| echo: true
@@ -241,7 +231,7 @@ mean = function (x, na.rm = FALSE) {
 }
 ```
 
-Reload **{.helpers}** with `box::reload()` and `sum()` will not be available to **{.helpers}**:
+Reload `helpers` with `box::reload()` and `sum()` is not one of the exports from `helpers` module now. To see what it means:
 
 ``` r 
 box::reload(helpers)
@@ -256,7 +246,7 @@ helpers$sum(x, na.rm = TRUE)
 #> Error in helpers$sum : name 'sum' not found in 'helpers'
 ```
 
-## 2.2.4 Some pitfalls
+## Some pitfalls
 
 The function `box::reload()` ONLY reloads the module, not the functions or objects under the namespace of the module. Trying to reload function will throw an error saying `Error in box::reload(custom_mean) : "reload” expects a module object, got “fun”, which is of type “function” instead`
 
@@ -272,11 +262,9 @@ box::reload(custom_mean)
 
 The best solution is to restart the session, and the environment/s created by `box::use()` will absolve, and once again, the current environment is now cleansed. 
 
----
+## Compared to restarting R session
 
-## 2.2.5 Compared to restarting R session
-
-To be frank, an R session is simply just a running instance of the R interpreter — the environment where R executes code, stores objects, and manages the workspace. When you start R (via terminal, RStudio, VS Code, or any other interface), you are launching a fresh R session.
+To be frank, an R session is simply just a running instance of the R interpreter. The environment where R executes code, stores objects, and manages the workspace. When you start R (via terminal, RStudio, VS Code, or any other interface), you are launching a fresh R session.
 
 The question is, when to use `box::reload()` versus restarting your R session? 
 
@@ -290,7 +278,7 @@ The question is, when to use `box::reload()` versus restarting your R session?
 
 2.  Restart R session when:
 
-    -   You are instead specific parts of the namespace, in which they cannot be reloaded with `box::use()`, only accepting *modules*. 
+    -   You are instead restart the entire sessione, in which they cannot be reloaded with `box::use()`, only accepting *modules*. 
     -   Refreshing R sessions loses the (nested) environment from the current environment, then start another fresh imports with `box::use()`. 
 
 ::: {.callout-tip title="RStudio Shortcut"}
