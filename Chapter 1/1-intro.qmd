@@ -1,4 +1,4 @@
-# 1 Introduction
+# 1.1 Introduction
 
 Some R programmers have long sought elegant ways to organize their code into reusable R codes, maintainable modules, and granular import system. Unfortunately, R lacks ergonomics for a long time, until [{box}](https://github.com/klmr/box) R package came in as your saving grace, as it offers a fresh approach to module system in your respective projects.
 

@@ -1,4 +1,4 @@
-# 2 Getting Started
+# 1.2 Getting Started
 
 `{box}` is an R package released on CRAN on September 2021. So, before we dive deeper, install `{box}` from CRAN first:
 
