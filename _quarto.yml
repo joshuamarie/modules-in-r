@@ -1,76 +1,66 @@
-project:
-  type: book
-  output-dir: docs
-  execute-dir: project
-  pre-render: setup-modules.r
-  render:
-    - "*.qmd"
+name: Quarto Render and publish
 
-book:
-  title: "Box: Placing module system into R"
-  subtitle: "Definitive Guide"
-  author:
-    - name: "Joshua Marie"
-    - name: "John Riz Bagnol"
-  # optional: author, date, subtitle, image, etc.
-  sidebar:
-    style: floating
-    search: true
-    collapse-level: 1
-  chapters:
-    - index.qmd
-    - part: "1 Introduction"
-      chapters:
-        - text: "1.1 Introduction"
-          href: Chapter 1/1-intro.qmd
-        - text: "1.2 Getting Started"
-          href: Chapter 1/2-get-started.qmd
-    - part: "2 Fundamentals of import system in {box} package"
-      chapters:
-        - text: "2.1 {box} Fundamentals"
-          href: Chapter 2/1-box-fundamentals.qmd
-        - text: "2.2 Array of imports and monikers"
-          href: Chapter 2/2-imports.qmd
-        - text: "2.3 Reloading modules"
-          href: Chapter 2/3-reloading-modules.qmd
-    - part: "3 Employment of Modules: Structures and constructions"
-      chapters:
-        - Chapter 3/1-struct-module.qmd
-        - Chapter 3/2-struct-module-1.qmd
-        - Chapter 3/3-struct-module-2.qmd
-        - Chapter 3/4-add-data.qmd
-        - Chapter 3/5-nested-modules.qmd
-        # - Chapter 3/3.5-compiled-codes.qmd
-    - part: "4 Testing Modules"
-      chapters:
-        - Chapter 4/1-testing-modules.qmd
-        - Chapter 4/2-testthat-1.qmd
-        - Chapter 4/3-testthat-2.qmd
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
 
-  repo-url: https://github.com/joshuamarie/modules-in-r
-  repo-actions: [edit, issue]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
-site-url: https://modules-in-r.joshuamarie.com
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-format:
-  html:
-    theme:
-      light: [cosmo, custom-light.scss]
-      dark: [darkly, custom-dark.scss]
-    css: styles.css
-    toc: true
-    toc-depth: 3
-    number-sections: false
-    code-copy: true
-    code-overflow: wrap
-    anchor-sections: true
-    smooth-scroll: true
-    link-external-newwindow: true
-    bread-crumbs: false  
+      - uses: quarto-dev/quarto-actions/setup@v2
 
-execute:
-  warning: false
-  message: false
-  echo: true
-  # freeze: auto
-  
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.4.2'
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            knitr
+            rmarkdown
+            tidyverse
+            downlit
+            xml2
+            jsonlite
+            yaml
+            pak
+          cache-version: 1
+
+      - name: Install forked box package
+        run: |
+          Rscript -e 'pak::pak("joshuamarie/box@feature/carrier-module-support")'
+
+      - name: Render
+        run: quarto render
+
+      - name: Upload site artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    if: github.event_name != 'pull_request'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
