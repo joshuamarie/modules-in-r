@@ -23,9 +23,9 @@ book:
         - Chapter 1/2-get-started.qmd
     - part: "2 Fundamentals of import system in {box} package"
       chapters:
-        - Chapter 2/2.1-box-fundamentals.qmd
-        - Chapter 2/2.2-imports.qmd
-        - Chapter 2/2.3-reloading-modules.qmd
+        - Chapter 2/1-box-fundamentals.qmd
+        - Chapter 2/2-imports.qmd
+        - Chapter 2/3-reloading-modules.qmd
     - part: "3 Employment of Modules: Structures and constructions"
       chapters:
         - Chapter 3/3-struct-module.qmd
