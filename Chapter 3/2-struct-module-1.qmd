@@ -1,4 +1,4 @@
-# 3.1 Structuring and constructing modules part 1: Initialization
+# Structuring and constructing modules part 1: Initialization
 
 I'll start on how to construct a module *preliminarily*. To demonstrate how to construct modules, let’s work with an example folder named **{./module}**. Each script or subfolder within this directory will serve as a separate module or submodule. The files are expected to be *empty*, since I'll be addressing some of them, or you can visit [**{./module}**](https://github.com/joshuamarie/modules-in-r/module) to view the pre-written code.
 

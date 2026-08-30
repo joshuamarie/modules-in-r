@@ -1,4 +1,4 @@
-# 3 Employment of Modules: Structures and constructions
+# Employment of Modules: Structures and constructions
 
 From the previous chapter, the guide thoroughly explains how to import R packages and scripts / folders using `box::use()`, the fundamentals of `{box}` package, and why it is such convenient in having more control on how you attach the namespace, between bulky and granular imports, and how `{box}` absolves namespace conflicts in the current environment. 
 

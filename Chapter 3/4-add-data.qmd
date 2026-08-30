@@ -1,4 +1,4 @@
-# 3.3 Structuring and constructing modules part 3: Reading and adding data
+# Structuring and constructing modules part 3: Reading and adding data
 
 When constructing modules, sometimes you a built-in data frame, or any object outside from functions. Let's explore how to effectively import / export and manage different types of data using **{box}**. It could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on. 
 

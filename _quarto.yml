@@ -35,11 +35,16 @@ book:
           href: Chapter 2/3-reloading-modules.qmd
     - part: "3 Employment of Modules: Structures and constructions"
       chapters:
-        - Chapter 3/1-struct-module.qmd
-        - Chapter 3/2-struct-module-1.qmd
-        - Chapter 3/3-struct-module-2.qmd
-        - Chapter 3/4-add-data.qmd
-        - Chapter 3/5-nested-modules.qmd
+        - text: "3.1 Structures and constructions"
+          href: Chapter 3/1-struct-module.qmd
+        - text: "3.2 Initialization"
+          href: Chapter 3/2-struct-module-1.qmd
+        - text: "3.3 Package-like Modules"
+          href: Chapter 3/3-struct-module-2.qmd
+        - text: "3.4 Reading and adding data"
+          href: Chapter 3/4-add-data.qmd
+        - text: "3.5 Deep Nested Modules"
+          href: Chapter 3/5-nested-modules.qmd
         # - Chapter 3/3.5-compiled-codes.qmd
     - part: "4 Testing Modules"
       chapters:

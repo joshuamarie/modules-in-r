@@ -1,4 +1,4 @@
-# 3.4 Structuring and constructing modules part 4: Accessing modules in any depths
+# Structuring and constructing modules part 4: Accessing modules in any depths
 
 One of the good parts about **{box}** package is it allows accessing deep nested scripts / folders in any depth as modules.
 
