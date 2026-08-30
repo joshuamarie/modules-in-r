@@ -28,11 +28,11 @@ book:
         - Chapter 2/3-reloading-modules.qmd
     - part: "3 Employment of Modules: Structures and constructions"
       chapters:
-        - Chapter 3/3-struct-module.qmd
-        - Chapter 3/3.1-struct-module-1.qmd
-        - Chapter 3/3.2-struct-module-2.qmd
-        - Chapter 3/3.3-add-data.qmd
-        - Chapter 3/3.4-nested-modules.qmd
+        - Chapter 3/1-struct-module.qmd
+        - Chapter 3/2-struct-module-1.qmd
+        - Chapter 3/3-struct-module-2.qmd
+        - Chapter 3/4-add-data.qmd
+        - Chapter 3/5-nested-modules.qmd
         # - Chapter 3/3.5-compiled-codes.qmd
     - part: "4 Testing Modules"
       chapters:
