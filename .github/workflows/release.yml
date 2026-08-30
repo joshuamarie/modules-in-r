@@ -1,0 +1,29 @@
+name: Publish Book Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Install TinyTeX
+        run: quarto install tinytex
+
+      - name: Render book to PDF
+        run: quarto render --to pdf
+
+      - name: Create release with auto-generated notes and PDF
+        uses: softprops/action-gh-release@v2
+        with:
+          files: _book/*.pdf
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
