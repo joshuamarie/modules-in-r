@@ -1,6 +1,8 @@
 project:
   type: book
   output-dir: docs
+  execute-dir: project
+  pre-render: setup-modules.r
   render:
     - "*.qmd"
 

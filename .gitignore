@@ -11,3 +11,4 @@ _book/
 *.Rproj
 
 **/*.quarto_ipynb
+Chapter */module
