@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Array of Imports with Monikers – Box: Placing module system into R</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Chapter 2/3-reloading-modules.html" rel="next">
+<link href="../Chapter 2/1-box-fundamentals.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-8b59572d5a32d48cb2b99e0b9d237534.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-1e84f8ff0805162a5a8435a15147fa60.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-8b59572d5a32d48cb2b99e0b9d237534.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-002a58eb99fdce6a2cd4786ca075bbbb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-4f68dd4be32aed7e9ef896588cd9369d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-002a58eb99fdce6a2cd4786ca075bbbb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs"><span class="chapter-title">Array of Imports with Monikers</span></h1>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Box: Placing module system into R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/joshuamarie/modules-in-r" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Box: Alternative Module System in R</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">1 Introduction</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 1/1-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">1.1 Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 1/2-get-started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">1.2 Getting Started</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">2 Fundamentals of import system in {box} package</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 2/1-box-fundamentals.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">2.1 {box} Fundamentals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 2/2-imports.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">2.2 Array of imports and monikers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 2/3-reloading-modules.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">2.3 Reloading modules</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">3 Employment of Modules: Structures and constructions</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 3/1-struct-module.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">3 Employment of Modules: Structures and constructions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 3/2-struct-module-1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">3.1 Structuring and constructing modules part 1: Initialization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 3/3-struct-module-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">3.2 Structuring and constructing modules part 2: Package-like Modules</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 3/4-add-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">3.3 Structuring and constructing modules part 3: Reading and adding data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 3/5-nested-modules.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">3.4 Structuring and constructing modules part 4: Accessing modules in any depths</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">4 Testing Modules</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 4/1-testing-modules.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4 Unit Testing Modules</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 4/2-testthat-1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4.1 Setting Up Module Tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapter 4/3-testthat-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4.2 Unit Test Diagnostics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#importing-r-packages-and-scripts-folders" id="toc-importing-r-packages-and-scripts-folders" class="nav-link active" data-scroll-target="#importing-r-packages-and-scripts-folders">Importing R Packages and scripts / folders</a>
+  <ul class="collapse">
+  <li><a href="#basic-imports" id="toc-basic-imports" class="nav-link" data-scroll-target="#basic-imports">Basic Imports</a></li>
+  <li><a href="#importing-the-entirety" id="toc-importing-the-entirety" class="nav-link" data-scroll-target="#importing-the-entirety">Importing the entirety</a></li>
+  <li><a href="#granular-imports-with-aliases-spec-imports" id="toc-granular-imports-with-aliases-spec-imports" class="nav-link" data-scroll-target="#granular-imports-with-aliases-spec-imports">Granular Imports with Aliases {spec-imports}</a></li>
+  <li><a href="#importing-non-syntactic-names" id="toc-importing-non-syntactic-names" class="nav-link" data-scroll-target="#importing-non-syntactic-names">Importing non-syntactic names</a></li>
+  <li><a href="#wildcard-import" id="toc-wildcard-import" class="nav-link" data-scroll-target="#wildcard-import">Wildcard import</a></li>
+  </ul></li>
+  <li><a href="#imports-within-the-function-function-call" id="toc-imports-within-the-function-function-call" class="nav-link" data-scroll-target="#imports-within-the-function-function-call">Imports within the function / function call</a></li>
+  <li><a href="#best-practices-for-package-imports" id="toc-best-practices-for-package-imports" class="nav-link" data-scroll-target="#best-practices-for-package-imports">Best Practices for Package Imports</a>
+  <ul class="collapse">
+  <li><a href="#otherwise" id="toc-otherwise" class="nav-link" data-scroll-target="#otherwise">Otherwise</a></li>
+  </ul></li>
+  <li><a href="#troubleshooting-package-imports" id="toc-troubleshooting-package-imports" class="nav-link" data-scroll-target="#troubleshooting-package-imports">Troubleshooting Package Imports</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/joshuamarie/modules-in-r/edit/main/Chapter 2/2-imports.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/joshuamarie/modules-in-r/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-title">Array of Imports with Monikers</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>There are variety of import patterns in <code>box::use()</code>. The specific pattern: <code>mod[...]</code> allows specific qualification of imports, similar to how indexing in R works. Let’s first compare the traditional R approach with <code>{box}</code>. Here’s the following table:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 36%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th>Base R</th>
+<th>{box} Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Loading Method</td>
+<td><code>library(dplyr)</code></td>
+<td><code>box::use(dplyr)</code> / <code>box::use(dplyr[...])</code></td>
+</tr>
+<tr class="even">
+<td>Namespace Impact</td>
+<td>Attaches to global namespace</td>
+<td>Module-scoped imports</td>
+</tr>
+<tr class="odd">
+<td>Conflict Handling</td>
+<td>May cause naming conflicts</td>
+<td>Explicit imports prevent conflicts</td>
+</tr>
+<tr class="even">
+<td>Code Clarity</td>
+<td>Dependencies implicit</td>
+<td>Dependencies explicitly declared</td>
+</tr>
+<tr class="odd">
+<td>Performance</td>
+<td>Loads entire package namespace</td>
+<td>More controlled</td>
+</tr>
+</tbody>
+</table>
+<p>Oh, and there’s also <code>require()</code> function, an “evil-ler” twin of <code>library()</code> function, where it won’t just attach the <em>entire</em> namespace to the search path, it returns boolean (<code>TRUE</code> if the package exists; <code>FALSE</code> if it doesn’t) when executed. There’s an inconsistency: it fails silently (“fails silently” means that a function fails without stopping the program or showing a clear error message).</p>
+<section id="importing-r-packages-and-scripts-folders" class="level2">
+<h2 class="anchored" data-anchor-id="importing-r-packages-and-scripts-folders">Importing R Packages and scripts / folders</h2>
+<p>If the table is not enough to you, this section will further explain. Let’s explore the different importing methods:</p>
+<section id="basic-imports" class="level3">
+<h3 class="anchored" data-anchor-id="basic-imports">Basic Imports</h3>
+<p>Chapter 1 already shows you the basic ways to import modules using <code>box::use()</code>. This function allows multiple imports at once, whether that module is a package, a local module, or packages managed by <code>{carrier}</code>. This is not different from the ellipsis (<code>...</code>) that allows passing multiple arguments, similar to Python’s <code>*args</code> and <code>**kwargs</code>. Differently, there’s a feature in <code>box::use()</code>’s bracketing method <code>mod[]</code> called “wildcard” in the form of <code>...</code>, e.g.&nbsp;<code>mod[...]</code>, which will attach <u>all the names under that namespace</u>.</p>
+<p>Since this allows you to import multiple packages and their functions in a single call, separated by comma, you don’t have to bother yourself calling multiple calls, like:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Packages</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    dplyr, ggplot2, stats,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    dplyr[filter, select, mutate], </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    ggplot2[ggplot, geom_point], </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    stats[lm], </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Local modules</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>mod, .<span class="sc">/</span>folder<span class="sc">/</span>mod, </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>mod[fn1, ...], </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>folder<span class="sc">/</span>mod[fn1, ...], </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Carrier modules</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    mod, mod<span class="sc">/</span>submodule, </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    mod[fn1, ...], </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    mod<span class="sc">/</span>submodule[fn1, ...]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>When importing scripts and modules, you are going to provide the name of the path (should be a literal name, not a string), and/or add prefix <code>./</code> that indicates the current path. The use of <code>../</code> is allowed as well, but this will be discussed in <a href="3.4-nested-modules.qmd">Chapter 3.4</a>. The rules applied on <code>{box}</code>-<code>{carrier}</code> modules except you are not allowed to place a prefix since they are packages, not a local module.</p>
+</section>
+<section id="importing-the-entirety" class="level3">
+<h3 class="anchored" data-anchor-id="importing-the-entirety">Importing the entirety</h3>
+<p>Do not confuse this with <code>library()</code>, where it attaches the <em>entire</em> namespace to the search path. Throwing all the exports into the search path is often <em>subjectively</em> (or <em>objectively</em>?) bad and is being discouraged in best software engineering practices. <code>{box}</code> has a different: This is the same as Python’s <code>import math</code> semantics, where instead of loading the package goes to the global environment, the namespace of the package and scripts / folders, including the functions and other objects, such as data frames or constants like <code>pi</code> from base R, are encapsulated as <em>environments</em>, (another data structure, similar to lists but mutable) with its name, and then the imports are accessed directly with <code>$</code> subset operator.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    dplyr,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>mod1, </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>mod2</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)  </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">$</span><span class="fu">select</span>(data, col1, col2)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>mod1<span class="sc">$</span><span class="fu">fn1</span>(mod2<span class="sc">$</span><span class="fu">fn3</span>(<span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>How beautiful this may be? The entire package namespace becomes available as an <em>environment</em>. All functions are (and must) be accessed using the package name as a prefix and <code>$</code> operator. This is nice as it prevents namespace pollution while maintaining access to all functions. This might not sound useful since you already did that with <code>pkg::</code> in base R, this is still useful, especially for local modules and <code>{box}</code>-<code>{carrier}</code> modules, where you don’t want to allow to qualify their names.</p>
+<p>The use of aliases also allowed:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">dpr =</span> dplyr, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">tdr =</span> tidyr, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">md1 =</span> .<span class="sc">/</span>module1,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">md2 =</span> .<span class="sc">/</span>module2</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage:</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>dpr<span class="sc">$</span><span class="fu">filter</span>(data, col1 <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    tdr<span class="sc">$</span><span class="fu">pivot_longer</span>(<span class="at">cols =</span> col2)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>md1<span class="sc">$</span><span class="fu">fn1</span>(md2<span class="sc">$</span><span class="fu">fn3</span>(<span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="granular-imports-with-aliases-spec-imports" class="level3">
+<h3 class="anchored" data-anchor-id="granular-imports-with-aliases-spec-imports">Granular Imports with Aliases {spec-imports}</h3>
+<p><code>{box}</code> absolves namespace clashes, which commonly occur when different packages have functions with the same name.</p>
+<p>As you import the names, you are allowed to spice up things a little bit by renaming the original names during the imports. This is superbly useful when you have 2 packages to be used and you want to use them both at once. For instance, the <code>{dplyr}</code>‘s <code>filter()</code> function, and as you attach the <code>{dplyr}</code> namespace, it will mask the existing functions from the global namespace, namely the <code>{stats}</code>’ <code>filter()</code> function. This induces namespace clash, and there are times you may not want this happening.</p>
+<p>Fortunately with <code>{box}</code>, you can load the <code>filter()</code> function from the <code>{dplyr}</code> namespace through the following:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    dplyr[<span class="at">keep_when =</span> filter],  <span class="co"># dplyr's `filter()` becomes `keep_when()`</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    stats[<span class="at">filter_ts =</span> filter]   <span class="co"># stats' filter becomes filter_ts</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> <span class="fu">keep_when</span>(col <span class="sc">&gt;</span> <span class="dv">0</span>)      </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>AirPassengers <span class="sc">|&gt;</span> <span class="fu">filter_ts</span>()      </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Granular imports in R’s <code>library()</code> also allowed using <code>include.only</code> parameter.</p>
+<p>For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">include.only =</span> <span class="fu">c</span>(<span class="st">"select"</span>, <span class="st">"filter"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>But still no <em>alias</em> gimmicks and doesn’t even leverage non-standard evaluation, where it treats <code>include.only</code> arguments as an object, called as a name, unlike <code>box::use()</code>.</p>
+<p>R version 4.4 and above has a shorthand of <code>library(pkg, include.only = c('fn1', 'fn2'))</code>: Introducing the <code>base::use()</code>.</p>
+<p>Example usage:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">use</span>(dplyr, <span class="fu">c</span>(<span class="st">"select"</span>, <span class="st">"filter"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="https://joshuamarie.com/posts/06-load-pkg/#base-use">This is inconsistent, as well, and generally not recommendable.</a>.</p>
+</div>
+</div>
+</section>
+<section id="importing-non-syntactic-names" class="level3">
+<h3 class="anchored" data-anchor-id="importing-non-syntactic-names">Importing non-syntactic names</h3>
+<p>The infix operators like <code>%&gt;%</code> from <code>{magrittr}</code> are considered <a href="https://adv-r.hadley.nz/names-values.html#non-syntactic">non-syntactic names</a>. In R, operators and functions that use special characters (like <code>+</code>, <code>*</code>, <code>%&gt;%</code>, <code>%in%</code>, <code>%*%</code>, etc.) are called <em>infix operators</em> but internally parsed as the usual call in R, e.g.&nbsp;<code>add(a, b)</code>. These operators require special handling when importing with <code>{box}</code>. By the way, yes, these are still <em>functions</em>.</p>
+<p>To import functions with special characters, you need to wrap them in backticks:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    magrittr[<span class="st">`</span><span class="at">%&gt;%</span><span class="st">`</span>, <span class="st">`</span><span class="at">%T&gt;%</span><span class="st">`</span>], </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    dplyr[group_by, summarise],</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    stats[sd, median]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">mu =</span> <span class="fu">mean</span>(Sepal.Length, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">sigma =</span> <span class="fu">sd</span>(Sepal.Length, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">md =</span> <span class="fu">median</span>(Sepal.Length, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  Species       mu sigma    md
+  &lt;fct&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 setosa      5.01 0.352   5  
+2 versicolor  5.94 0.516   5.9
+3 virginica   6.59 0.636   6.5</code></pre>
+</div>
+</div>
+</section>
+<section id="wildcard-import" class="level3">
+<h3 class="anchored" data-anchor-id="wildcard-import">Wildcard import</h3>
+<p>The true equivalent of <code>library(pkg)</code> is through <code>box::use(pkg[...])</code>. Yet again, <code>...</code> are called “ellipsis”. The use of <code>...</code> sets as a “wildcard”, and this, while being <em>granular</em>, imports all the namespace within the package (or modules). The Python’s equivalent would be <code>from pkg import *</code>.</p>
+<p>For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    dplyr[...]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="imports-within-the-function-function-call" class="level2">
+<h2 class="anchored" data-anchor-id="imports-within-the-function-function-call">Imports within the function / function call</h2>
+<p>When we import packages / scripts / folders as modules or import their namespace, did you know the imports are <em>enclosed</em> within the scope?</p>
+<p>According to the official documentation:</p>
+<blockquote class="blockquote">
+<p>the effects of <code>box::use()</code> are restricted to the current scope: we can load and attach names inside a function, and this will not affect the calling scope (or elsewhere).</p>
+</blockquote>
+<p>Here’s an example:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">reframe</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        {    </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>            box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                stats[<span class="at">linear_reg =</span> lm, <span class="at">pearson_r =</span> cor],</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                purrr[imap_dfc, set_names],</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                tibble[<span class="at">tbl =</span> tibble]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>            ) </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            model <span class="ot">=</span> <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>            coefs <span class="ot">=</span> <span class="fu">coef</span>(model)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>            coef_table <span class="ot">=</span> <span class="fu">imap_dfc</span>(coefs, \(bi, nm) {</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                result <span class="ot">=</span> <span class="fu">tbl</span>(bi)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                <span class="fu">set_names</span>(result, nm)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>            corr <span class="ot">=</span> <span class="fu">pearson_r</span>(wt, mpg)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>            test <span class="ot">=</span> <span class="fu">summary</span>(model)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">tbl</span>(</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>                coef_table, </span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>                <span class="at">corr =</span> corr, </span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">rsq =</span> test<span class="sc">$</span>r.squared,</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>                <span class="at">adj_rsq =</span> test<span class="sc">$</span>adj.r.squared</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">.by =</span> cyl</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl (Intercept)        wt       corr       rsq   adj_rsq</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   6    28.40884 -2.780106 -0.6815498 0.4645102 0.3574122</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   4    39.57120 -5.647025 -0.7131848 0.5086326 0.4540362</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   8    23.86803 -2.192438 -0.6503580 0.4229655 0.3748793</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="This code (freely skip this)">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>This code (freely skip this)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This code is made to study the type-I error by examining how true the linear relationship between <code>wt</code> and <code>mpg</code> variables from <code>mtcars</code> data, when performing statistical analysis. Here, this code imports within <code>dplyr::reframe()</code> function call without making side-effect the current environment. This is great if you create a function with external dependencies available from R packages, or within your scripts / folders.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="best-practices-for-package-imports" class="level2">
+<h2 class="anchored" data-anchor-id="best-practices-for-package-imports">Best Practices for Package Imports</h2>
+<p>But, of course, R packages have strengths, but don’t forget their flaws. I will enumerate the <em>do’s</em> in <code>{box}</code> package:</p>
+<ol type="1">
+<li><p>Be Specific with Imports</p>
+<p>Please, do not import everything, unless there’s a good use case. The use of <em>wildcards</em>, i.e.&nbsp;the “ellipsis” <code>...</code> within the granular imports through <code>[...]</code> is a shortcut to import the namespace, but you are importing everything here.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    dplyr[...]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Don’t just do this in actual practice, or it will create a mess in the global namespace, just like <code>library()</code>. As the <em>Zen of Python</em> said: “Explicit is better than implicit.”</p>
+<p>Instead, import only what you need. Of course, in several times, you only import specific parts of the package only. For instance, when you are aggregating data frame with <code>{dplyr}</code>, you often only needs <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, <code>group_by()</code>, and <code>summarise()</code>. Mind you that there are a total of 293 exported namespaces (will be less than that if you don’t count the <em>pseudo-functions</em>, such as <code>across()</code> and <code>where()</code>) within <code>{dplyr}</code> package, and for your aggregation task, you only need 5 out of the total exports.</p>
+<p>This approach is better because it is explicit and you can even rename those imports:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    dplyr[<span class="at">filter_df =</span> filter, select, mutate, group_by, summarise]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Example (Click to expand)">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Example (Click to expand)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Let’s take an example, where you want to calculate the sample size, mean, standard deviation, standard error, and the coefficient of variation across the numeric columns in <code>iris</code> dataset:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    dplyr[n, mutate, relocate, group_by, summarise], </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    tidyr[<span class="at">melt =</span> pivot_longer, <span class="at">spread =</span> pivot_wider]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span> </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">across</span>(</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">where</span>(is.numeric), </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">list</span>(</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">mu =</span> \(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">sigma =</span> \(x) <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>            ), </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">.names =</span> <span class="st">"{.col}..{.fn}"</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        ), </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">melt</span>(</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">cols =</span> <span class="fu">everything</span>() <span class="sc">&amp;</span> <span class="sc">!</span>n,</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">names_pattern =</span> <span class="st">"^(.*)</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">.(.*)$"</span>,</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"Variable"</span>, <span class="st">"Statistics"</span>),</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">values_to =</span> <span class="st">"Est"</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">spread</span>(</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">names_from =</span> Statistics, </span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">values_from =</span> Est</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">se =</span> sigma <span class="sc">/</span> <span class="fu">sqrt</span>(n), </span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">cv =</span> sigma <span class="sc">/</span> mu</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>        n, <span class="at">.after =</span>  Variable</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 6
+  Variable         n    mu sigma     se    cv
+  &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1 Sepal.Length   150  5.84 0.828 0.0676 0.142
+2 Sepal.Width    150  3.06 0.436 0.0356 0.143
+3 Petal.Length   150  3.76 1.77  0.144  0.470
+4 Petal.Width    150  1.20 0.762 0.0622 0.636</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div></li>
+<li><p>Group Related Imports</p>
+<p>This is just an opinion. For better clarity, you can explain the imports you are making <em>within</em> the function call <code>box::use()</code> with comments <code>#</code>. This is not unusual, sometimes this is common. Since comments are allowed, you can group the imports by functionality.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Simple aggregation</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    dplyr[<span class="at">filter_df =</span> filter, select, mutate, group_by, summarise],</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    tidyr[pivot_longer, pivot_wider],</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># To run linear regression and t-test</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    stats[<span class="at">linear_reg =</span> lm, <span class="at">welch_ttest =</span> t.test],</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># To visualize outputs from linear regression and t-test</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    ggplot2[ggplot, geom_point, geom_smooth, geom_box, theme_minimal, aes]</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<!-- ::: callout-note -->
+<!-- The proper documentation is discussed in Chapter 3.2, which it talks about *Package-like Modules*. -->
+<!-- ::: --></li>
+<li><p>Handle Naming Conflicts</p>
+<p>As discussed <a href="#spec-imports">here</a>, you are allowed to place an alias within the imports, so that the namespace clash will be resolved.</p>
+<p>The most prominent example is <code>dplyr::filter()</code> and <code>stats::filter()</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    dplyr[<span class="at">keep_when =</span> filter],</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    stats[<span class="at">filter_ts =</span> filter]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Rename them whatever you want to employ clarity.</em></p></li>
+</ol>
+<section id="otherwise" class="level3">
+<h3 class="anchored" data-anchor-id="otherwise">Otherwise</h3>
+<div class="callout callout-style-default callout-warning callout-titled" title="Otherwise">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Otherwise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Trust me, I’ve been this a long time ago: not following any of those practices. So, if you don’t do the following practices, you’ll create inconsistent and unpredictable flaws. Keep up the good work and do the best practices.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="troubleshooting-package-imports" class="level2">
+<h2 class="anchored" data-anchor-id="troubleshooting-package-imports">Troubleshooting Package Imports</h2>
+<p>Frankly, I will show you solutions if you have similar errors like the following. The common issues to be found when importing packages happen are:</p>
+<ol type="1">
+<li><p>Obviously, when the R package is not installed. This matter is trivial: The package does not exist in your current environment, and simply just install the packages you need and import them using <code>box::use()</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(pkg[func, ...])</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in box::use(pkg) : there is no package called ‘pkg’</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"pkg"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>When the particular imports does not exist in the package namespace or incorrectly name the import:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(dplyr[nonexistent_function])</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in box::use(dplyr[nonexistent_function, slct]) : </span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>     name “nonexistent_function”, “slct” not exported by “dplyr”</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(dplyr[select, filter])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>{box}</code> enforces strict naming. If possible, check out the official documentation of the R package. Check if you are using indeed correct spelled name, and check if the imports does exist in the package namespace</p></li>
+</ol>
+<!-- ## Benefits and history -->
+<!-- The `{box}` package is originally a superset of R package import system. Then the author gradually made some breakthrough editions, by interpolating the module system, something that does exists in other languages, but missed out by R throughout the years. And so, you see, using **{box}** for bringing clean module system in R does offers you these advantages: -->
+<!-- -   Explicit dependency declaration -->
+<!-- -   Better namespace control and reduced conflicts -->
+<!-- In the next chapter, we'll explore how to create and reuse your own modules effectively. -->
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Chapter 2/1-box-fundamentals.html" class="pagination-link" aria-label="2.1 {box} Fundamentals">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">2.1 {box} Fundamentals</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Chapter 2/3-reloading-modules.html" class="pagination-link" aria-label="2.3 Reloading modules">
+        <span class="nav-page-text"><span class="chapter-title">2.3 Reloading modules</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/joshuamarie/modules-in-r/edit/main/Chapter 2/2-imports.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/joshuamarie/modules-in-r/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

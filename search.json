@@ -1,0 +1,677 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Box: Placing module system into R",
+    "section": "",
+    "text": "Preface\nWelcome to the definitive guide to module system in R using {box}! This is the newest\nYou might have wanted another way to import R packages, or just simply sought better ways to write organized and composable R codes, welcome aboard! This book guides you to the re-imagination of how module system in R should have done. This book introduces you the package called {box} (initially started as a {modules} package) by Konrad Rudolph, and a Rust package with a thin CLI wrapper called {carrier} that helps you manage your {box} modules as if you are working with R packages.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Box: Alternative Module System in R</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#what-youll-find-here",
+    "href": "index.html#what-youll-find-here",
+    "title": "Box: Placing module system into R",
+    "section": "What You’ll Find Here",
+    "text": "What You’ll Find Here\nR, especially its users, might have suffered from writing and managing huge R codebases, simply because there’s no clean way to manage such complex pipelines. Do not fret, this problem will potentially cease to exists, as {box} package provides closely equivalent module system to other programming languages like Python, C#, and more.\nThere are many ways to manage R codes, and most solutions out there are subjective. Even though they are subjective, none of the solution hits the level of ergonomicity to actually write and compose reusable R codes. Hence, this definitive guide is written, and what you’ll find here is the following:\n\nAlternative approach to import R codes (i.e. R packages, modules)\nModern approaches to compose and organize R codes\nStep-by-step tutorials for using {box} package\nBest practices for maintainable R code\nThe deterministic introduction of {carrier} Rust package",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Box: Alternative Module System in R</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#why-this-book",
+    "href": "index.html#why-this-book",
+    "title": "Box: Placing module system into R",
+    "section": "Why this book",
+    "text": "Why this book\nThere might have handful of books that actually teaches you to correctly import reusable codes, as well to write reusable, composable, and modular R codes (well, R packages exists). Most of the books teaches you about R, particularly across different fields, but little to no books explains one of the best practices to write and import reusable and composable R code. Most of the books use library() and sometimes through source() (it is bad as a way to import your code but not when you want to execute the whole script), thus you won’t certainly find similar book that teaches modular codes.\nConsequently, R offers various ways to organize R codes, but {box} package offers an ergonomic modern approaches to module system that may significantly improve your R development workflows. This book bridges the gap between basic R programming and professional-grade code organization.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Box: Alternative Module System in R</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use-this-guide",
+    "href": "index.html#how-to-use-this-guide",
+    "title": "Box: Placing module system into R",
+    "section": "How to Use This Guide",
+    "text": "How to Use This Guide\nThe content is structured progressively, building from foundational concepts to deep applications. For the best learning experience:\n\nStart with the introduction to understand the core concepts.\nLearning the fundamentals of import system with {box} package.\nLearning the structures and constructions of reusability of modules, treating them like R packages, and supplied with documentation\nLearning unit testing the modules",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Box: Alternative Module System in R</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#contributing",
+    "href": "index.html#contributing",
+    "title": "Box: Placing module system into R",
+    "section": "Contributing",
+    "text": "Contributing\nContributions are welcome! If you have suggestions or improvements, please open an issue or submit a pull request on the GitHub repository.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Box: Alternative Module System in R</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#license",
+    "href": "index.html#license",
+    "title": "Box: Placing module system into R",
+    "section": "License",
+    "text": "License\nThis book is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). See the LICENSE file for details.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Box: Alternative Module System in R</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#credits",
+    "href": "index.html#credits",
+    "title": "Box: Placing module system into R",
+    "section": "Credits",
+    "text": "Credits\nThis book was created by Joshua Marie.\nSpecial thanks to:\n\nKonrad Rudolph for creating and maintaining the box package\nThe R community for their continued support and feedback\n\nThe book is built with Quarto, hosted on GitHub Pages.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Box: Alternative Module System in R</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/1-intro.html",
+    "href": "Chapter 1/1-intro.html",
+    "title": "Introduction",
+    "section": "",
+    "text": "The Challenge of Code Organization in R\nSome R programmers have long sought elegant ways to organize their code into reusable R codes, maintainable modules, and granular import system. Unfortunately, R lacks ergonomics for a long time, until {box} R package came in as your saving grace, as it offers a fresh approach to module system in your respective projects.\nLet’s look at the common challenges:",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>1.1 Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/1-intro.html#the-challenge-of-code-organization-in-r",
+    "href": "Chapter 1/1-intro.html#the-challenge-of-code-organization-in-r",
+    "title": "Introduction",
+    "section": "",
+    "text": "R has source() function but has several caveats.\nYou have to write an R package just to organize R codes then make those R codes to be reused, but that’s pretty much it. There’s no way to reuse code in any R script files / folders.\nR has no way to explicitly dictates dependencies between different parts of your scripts, aside from creating an R package.\nMaintaining consistency across large codebases can be slow and tedious.\nSharing code between projects categorically.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>1.1 Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/1-intro.html#enter-the-box-package",
+    "href": "Chapter 1/1-intro.html#enter-the-box-package",
+    "title": "Introduction",
+    "section": "Enter the {box} Package",
+    "text": "Enter the {box} Package\nBefore {box}, there are packages out there that actually does a pretty solid job, and those are {conflicted} and {import}. However, {box} package is subjectively but ergonomically more superior than those as it does more: it offers a fresh approach to modular programming within R, bringing better clarity and structure to your projects. It addresses these challenges by introducing a modern, explicit module system that feels natural to both any R veteran and developer coming from other programming languages.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>1.1 Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/1-intro.html#understanding-modular-programming",
+    "href": "Chapter 1/1-intro.html#understanding-modular-programming",
+    "title": "Introduction",
+    "section": "Understanding Modular Programming",
+    "text": "Understanding Modular Programming\nModular programming is a model, a paradigm, that emphasizes the following:\n\nThe ability to break down complexity. When the written program gets larger and larger, there’s a time that you gonna have to divide large programs into smaller, manageable pieces.\nAn encapsulation, which keeps related code together and protecting it from external interference.\n\nCreating clear ways for different parts of your code to interact.\nMaking code easy to reuse across different projects.\nInheriting maintainability, making code easier to understand and modify.\n\nLater, this part explains why a module, in a form of a script or a directory, has a namespace and why they are independent to each other until called.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>1.1 Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/1-intro.html#coding-style",
+    "href": "Chapter 1/1-intro.html#coding-style",
+    "title": "Introduction",
+    "section": "Coding Style",
+    "text": "Coding Style\nIn this guide, we’ll explore {box} using the package author’s preferred coding conventions. While they differ from standard R conventions, most especially the ‘tidyverse style guide’, understanding them might help you grasp the package’s design philosophy. Visit the article for more information about the coding style.\nDon’t worry, if you have another way to write your R code, it’s fine (you could use either other’s coding convention or both of this). You’re free to adapt {box}’s preferred coding style in your own projects. The principles and patterns we’ll learn are independent of specific coding conventions.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>1.1 Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/2-get-started.html",
+    "href": "Chapter 1/2-get-started.html",
+    "title": "Getting Started",
+    "section": "",
+    "text": "Why Box\n{box} is an R package released on CRAN on September 2021. So, before we dive deeper, install {box} from CRAN first:\nor you can install the development version from R-universe:\nPreferably, for the later chapters which involves the {carrier} Rust package, you’ll need the following forked version of this package, considering that the patches under the fork hasn’t made {box} upstream yet, which you can import {box}-{carrier} modules as you do with importing R packages and local modules. To install, do the following:\nFor a long time, most R users compose their R codes in an R package or just a local collection of R scripts and sometimes with a deep nested directory. The reusability is rather not granular — you going to have to use library() to load R packages and source() to read R codes from scripts. As discussed on the introduction, they are mostly a problem in management, most especially when you code gets larger and larger. And as you can see, there’s 2 functions you’re going to use and there’s no singular solution for an easy and ergonomic reusability.\nThat’s why {box} R package is recommended for these because it brings and simplifies modular programming in R for you. As described in its official documentation, it provides two key benefits:\nWith {box}, R users (or useRs) can take advantage of a modern (and correct) module system approach in R.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>1.2 Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/2-get-started.html#why-box",
+    "href": "Chapter 1/2-get-started.html#why-box",
+    "title": "Getting Started",
+    "section": "",
+    "text": "It facilitates modular code writing by treating files and folders as independent, nestable modules, so you don’t need to wrap reusable code into packages.\nIt introduces a more powerful, less error-prone syntax for importing code from packages or modules, enabling explicit control over what names to import and restricting their scope.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>1.2 Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/2-get-started.html#understanding-box-package-functionality",
+    "href": "Chapter 1/2-get-started.html#understanding-box-package-functionality",
+    "title": "Getting Started",
+    "section": "Understanding {box} package functionality",
+    "text": "Understanding {box} package functionality\nBefore starting, you need to understand the field of functions offered by this package first.\n\nWriting modules\nTo write modules with {box} is like writing an R package without the need to switch to other R projects with special package annotation and few boilerplates.\n\n\n\n\n\n\nTipDid you know?\n\n\n\nYou can treat modules like packages. You can take advantage of this package to make your package prototype, before converting this into an actual package. On the recent development of {carrier} in 2026, you can make a package out of those modules with it.\n\n\nHere are the few primary functions to be used when writing modules with {box}:\n\nbox::use()\nbox::file()\nbox::name()\nbox::register_s3_method()\nmod-hooks: Hooks for module events (see for more details)\nMiscellaneous: Roxygen2 documentation, which is beneficial in writing documentation for the R code under the module.\n\n\n\nModule import / usage\nNot just local modules, this also includes R packages.\n\n\n\n\n\n\nNoteHistory\n\n\n\nHistorically, box::use() is initially an alternative approach to import R packages.\n\n\n\n\n\n\n\n\nTipNerdy Fact\n\n\n\n{box} leverages R’s non-standard evaluation (NSE), by writing an expression as if they exist (only in different context). With {box}, you can refer R packages like list objects, then the brackets utilizes the “subset” functionality in R that extracts the exported namespaces: not through numbers and string, but through a literal name. No mapping and programmatic approach, aside from calling a name of the module with box::name(), you have to be explicit by naming the imports.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>1.2 Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/2-get-started.html#understanding-module-paths-and-root-directory",
+    "href": "Chapter 1/2-get-started.html#understanding-module-paths-and-root-directory",
+    "title": "Getting Started",
+    "section": "Understanding Module Paths and Root Directory",
+    "text": "Understanding Module Paths and Root Directory\nBefore proceeding to the next step: importation, one crucial aspect of using {box} is understanding how it locates and imports modules. The package uses a root directory concept to resolve module paths:\n\nRoot Directory: By default, box::file() searches for modules starting from your project’s root directory. Exceedingly, box::file() is also used to search the path within the script file you are working with.\nModule Path Resolution:\n\nPaths starting with ./, e.g. ./module/file, are relative to the current file\nPaths without leading dots, e.g. module/file, are relative to the root directory\nPaths starting with ../ are relative to the parent directory of the current file\nForward slashes (/) are used, even on Windows\n\n\nFurther explanations in chapters 2 to 3.\nKnowing this helps streamline module management with {box}.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>1.2 Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/2-get-started.html#basic-usage-example",
+    "href": "Chapter 1/2-get-started.html#basic-usage-example",
+    "title": "Getting Started",
+    "section": "Basic Usage Example",
+    "text": "Basic Usage Example\nLet’s start with examples. Remember that modules are objects after script files, folders / subfolders, or packages are loaded by box::use().\nTo get started, start a project, with a root directory name of modl/ (a short abbreviation of “module”), then create a script name mod.r / mod.R in the directory from the assumed directory structure:\n# modl/\n# ├── mod.r\nAfter creating mod.r / mod.R script, then try copy this code:\nbox::use(\n    stats[lm]\n)\n\nfit_and_predict = function (data, formula, ...) \n    lm(formula, data, ...)\nand then save the script. After you save the following script, you can now import mod as a module:\nbox::use(./mod)\nThere’s no .r suffix, the name after / refers to a callable module in a form of a directory or an R script. Again, no need to quote the arguments in box::use(), unlike library() which you are allowed to import packages with quotes. After all, {box} package leverages R’s NSE.\nLet’s get deeper. How about this mod.r you just wrote found under much deeper subfolder or subdirectory? To call such script as a module, you are going 1 level deeper and call that subfolder/subdirectory name before /, then call the script. Let’s assume that this is the directory structure:\n# modl/\n# ├── folder1/\n# │   ├──mod.r\n# │   ├── ...this can get deeper \nTo import the script as a module, do the following:\nbox::use(./folder1/mod)\nNow, you have your mod.r script saved into the current environment as an environment called module.\nOnce called, you may now reuse it according to the following:\nmod$fit_and_predict(cars, dist ~ speed)",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>1.2 Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/2-get-started.html#common-import-patterns",
+    "href": "Chapter 1/2-get-started.html#common-import-patterns",
+    "title": "Getting Started",
+    "section": "Common Import Patterns",
+    "text": "Common Import Patterns\nNow that you have written an R code, saved in a script called mod.r, you also learn to import it as a module. You can access its names through $ operator, but there are few (if not several) ways to import mod.r or qualify its names. Here are some typical module import scenarios:\n\nImport an entire script / folder as a module:\nbox::use(\n   ./mod\n)\n\n\n\n\n\n\nNoteInitialization\n\n\n\n\n\nNote: If it is a script, you can directly access the names inside mod, i.e. mod$fobj. On the other hand, if mod is a folder or a directory, you need a file called __init__.r that qualifies the folder as a module, then you can access its names as what you did by importing a script, or else you have to qualify the scripts under mod folder i.e. ./mod/.../.... See Chapter 3 for more details.\n\n\n\nImport specific script in a folder as a module:\nbox::use(\n    ./mod/mod1\n)\nImport specific objects inside a script or an __init__.r-flavored folder being explicitly called as a module:\nbox::use(\n    ./mod[obj1, obj2]\n)\nIf mod is a folder, it can have nested modules, or usually just R objects like functions.\nPutting an alias when importing mod script / folder:\nbox::use(\n    md = ./mod\n)\nRename an object within the index, which treats mod like a list:\nbox::use(\n    ./mod[ob1 = obj1, ob2 = obj2]\n)\n\n\n\n\n\n\nNote\n\n\n\nNote: You don’t really have to put aliases for all the imports:\nbox::use(\n    ./mod[ob1 = obj1, obj2]\n)\n\n\nImport from folders / nested folders\nbox::use(\n    ./mod/mod1,                      # From subdir/module.R\n    ./folder/mod/mod1,               # From deep/nested/module.R\n    ./folder/mod/mod1[ob1 = obj1]   \n)\n\nThis is what other programming languages are proposing you to do. Known programming languages like Python strongly enforces this. The tradeoff is that it requires verbose syntax but the cost is minimal compared to what other solutions has offered.\n\n\n\n\n\n\nNoteRemember\n\n\n\nThis will work if mod is a script, not a folder, unless it has an initialization file named __init__.r.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>1.2 Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/2-get-started.html#troubleshooting-module-imports",
+    "href": "Chapter 1/2-get-started.html#troubleshooting-module-imports",
+    "title": "Getting Started",
+    "section": "Troubleshooting Module Imports",
+    "text": "Troubleshooting Module Imports\nThese are trivial and common issues, and so the solutions are also trivial:\n\nWhen the module is not found, simply:\n\nVerify path is relative to root directory\nEnsure file exists with .R/.r extension\n\nFor resolving the path of the modules:\n\nWrongCorrect\n\n\nMissing required prefixes, e.g. ./, to import the local modules, and wrong syntax are invalid.\nbox::use(modules)                  # Missing ./\nbox::use(\\modules\\my_module)       # Wrong slashes\n\n\n\n\n\n\nNoteTo be discussed…\n\n\n\nIt is important to know that you can import modules through box::use() only if modules is a package (this will be explain in Chapter 2).\n\n\n\n\nThe / is a division operator in R, but box::use() parses it differently, where the left hand side is the relative directory and the right hand side is the module you are going to import.\nbox::use(./modules/my_module)      # Relative to current file\nbox::use(modules/my_module)        # Relative to root (if set)\n\n\n\nIt is much better if you follow best Practices. One example is to use relative paths with ./ for clarity, if not a package. Keep local module files in a dedicated directory. And then, follow some consistent naming conventions, e.g. minimize using special characters that R parses unconventionally like a variable name of fn-1.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>1.2 Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 1/2-get-started.html#common-use-of-syntax",
+    "href": "Chapter 1/2-get-started.html#common-use-of-syntax",
+    "title": "Getting Started",
+    "section": "Common use of syntax",
+    "text": "Common use of syntax\nWhen using {box}, you are hereby using the package through box:: prefixes only. You are not allowed to attach {box} through library(), i.e. library(box), but this is the less of your worries since it is already automatically internally hard-coded.",
+    "crumbs": [
+      "1 Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>1.2 Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/1-box-fundamentals.html",
+    "href": "Chapter 2/1-box-fundamentals.html",
+    "title": "Fundamentals of import system with {box} package",
+    "section": "",
+    "text": "Discussion at Chapter 2\nR already has library() to load packages you installed in R, then attaches the namespace onto the global namespace / environment, so the namespace from that package you load will be utilized globally. Now, you may ask: What’s the point of using {box} when there’s built-in library()? Well, you’ll learn enough that {box} offers best practices and ergnomics, something that R misses. R’s module system is NOT the actual modular programming that other programming languages do, and with {box}, it blows the import system from R out of the water.\n{box}‘s ergonomics and most convenient features is its approach to reuse / import R packages, scripts, or folders’ namespace. Consequently, there are no consistent module system in native R at all. But {box} does more than importing which will be discussed on the later chapters.\nWithin Chapter 2, the fundamentals of {box} package, the import system with box::use() is discussed.",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>2.1 {box} Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/1-box-fundamentals.html#discussion-at-chapter-2",
+    "href": "Chapter 2/1-box-fundamentals.html#discussion-at-chapter-2",
+    "title": "Fundamentals of import system with {box} package",
+    "section": "",
+    "text": "1 Loading packages\nUnlike the traditional way to load R packages through library(), {box} is more explicit, more declarative, and more granular to import R packages, and it is more consistent to work with path directories.\n# Base R \nlibrary(dplyr)\n\n# {box} package\nbox::use(dplyr[...])\nThe rest will be discussed under Array of Imports with Monikers.\n\n\n2 Loading scripts / folders\nWith {box} modules, scripts and folders can be loaded and reused, as long as the namespace is defined. They are contained in an environment data structure as a module. It’s good since the import system of {box} using box::use() supersedes source() and then box::file() supersedes setwd(). For more details, the rest will be discussed under Array of Imports with Monikers.\n\n\n3 Reloading modules\nMostly applied for modules from scripts and folders. When the script or folders are imported as modules, the initial imports is cached. This means that changes you make to your module’s code won’t automatically take effect until you explicitly reload it. The rest will be discussed under Chapter 2.1: Array of Imports with Monikers",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>2.1 {box} Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/1-box-fundamentals.html#some-restrictions",
+    "href": "Chapter 2/1-box-fundamentals.html#some-restrictions",
+    "title": "Fundamentals of import system with {box} package",
+    "section": "Some restrictions",
+    "text": "Some restrictions\nWhile {box} package provides different approach to organize and import R code in an ergonomic way, there are some restrictions to be aware of. Specifically, {box} does not functionally do the following:\n\nAttaching meta-packages such as {tidyverse} and {tidymodels}.\nUsing library() / require() inside a module when writing a module.",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>2.1 {box} Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/1-box-fundamentals.html#base-packages",
+    "href": "Chapter 2/1-box-fundamentals.html#base-packages",
+    "title": "Fundamentals of import system with {box} package",
+    "section": "Base Packages",
+    "text": "Base Packages\nThe author explicitly separates {base} package from other base R packages to be imported. Which means, when you construct a module, you don’t have to load {base} package, e.g. box::use(base[mean, sum]). The rest of base R packages, like {stats} and {utils}, are required to be called when constructing a module, unless it is just an executable script.",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>2.1 {box} Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/2-imports.html",
+    "href": "Chapter 2/2-imports.html",
+    "title": "Array of Imports with Monikers",
+    "section": "",
+    "text": "Importing R Packages and scripts / folders\nThere are variety of import patterns in box::use(). The specific pattern: mod[...] allows specific qualification of imports, similar to how indexing in R works. Let’s first compare the traditional R approach with {box}. Here’s the following table:\nOh, and there’s also require() function, an “evil-ler” twin of library() function, where it won’t just attach the entire namespace to the search path, it returns boolean (TRUE if the package exists; FALSE if it doesn’t) when executed. There’s an inconsistency: it fails silently (“fails silently” means that a function fails without stopping the program or showing a clear error message).\nIf the table is not enough to you, this section will further explain. Let’s explore the different importing methods:",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>2.2 Array of imports and monikers</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/2-imports.html#importing-r-packages-and-scripts-folders",
+    "href": "Chapter 2/2-imports.html#importing-r-packages-and-scripts-folders",
+    "title": "Array of Imports with Monikers",
+    "section": "",
+    "text": "Basic Imports\nChapter 1 already shows you the basic ways to import modules using box::use(). This function allows multiple imports at once, whether that module is a package, a local module, or packages managed by {carrier}. This is not different from the ellipsis (...) that allows passing multiple arguments, similar to Python’s *args and **kwargs. Differently, there’s a feature in box::use()’s bracketing method mod[] called “wildcard” in the form of ..., e.g. mod[...], which will attach all the names under that namespace.\nSince this allows you to import multiple packages and their functions in a single call, separated by comma, you don’t have to bother yourself calling multiple calls, like:\n\nbox::use(\n    # Packages\n    dplyr, ggplot2, stats,\n    dplyr[filter, select, mutate], \n    ggplot2[ggplot, geom_point], \n    stats[lm], \n    \n    # Local modules\n    ./mod, ./folder/mod, \n    ./mod[fn1, ...], \n    ./folder/mod[fn1, ...], \n    \n    # Carrier modules\n    mod, mod/submodule, \n    mod[fn1, ...], \n    mod/submodule[fn1, ...]\n)\n\nWhen importing scripts and modules, you are going to provide the name of the path (should be a literal name, not a string), and/or add prefix ./ that indicates the current path. The use of ../ is allowed as well, but this will be discussed in Chapter 3.4. The rules applied on {box}-{carrier} modules except you are not allowed to place a prefix since they are packages, not a local module.\n\n\nImporting the entirety\nDo not confuse this with library(), where it attaches the entire namespace to the search path. Throwing all the exports into the search path is often subjectively (or objectively?) bad and is being discouraged in best software engineering practices. {box} has a different: This is the same as Python’s import math semantics, where instead of loading the package goes to the global environment, the namespace of the package and scripts / folders, including the functions and other objects, such as data frames or constants like pi from base R, are encapsulated as environments, (another data structure, similar to lists but mutable) with its name, and then the imports are accessed directly with $ subset operator.\nbox::use(\n    dplyr,\n    ./mod1, \n    ./mod2\n)  \n\ndplyr$select(data, col1, col2)\nmod1$fn1(mod2$fn3(5))\nHow beautiful this may be? The entire package namespace becomes available as an environment. All functions are (and must) be accessed using the package name as a prefix and $ operator. This is nice as it prevents namespace pollution while maintaining access to all functions. This might not sound useful since you already did that with pkg:: in base R, this is still useful, especially for local modules and {box}-{carrier} modules, where you don’t want to allow to qualify their names.\nThe use of aliases also allowed:\nbox::use(\n    dpr = dplyr, \n    tdr = tidyr, \n    md1 = ./module1,\n    md2 = ./module2\n)  \n\n# Usage:\ndpr$filter(data, col1 &gt; 0) |&gt; \n    tdr$pivot_longer(cols = col2)\n\nmd1$fn1(md2$fn3(5))\n\n\nGranular Imports with Aliases {spec-imports}\n{box} absolves namespace clashes, which commonly occur when different packages have functions with the same name.\nAs you import the names, you are allowed to spice up things a little bit by renaming the original names during the imports. This is superbly useful when you have 2 packages to be used and you want to use them both at once. For instance, the {dplyr}‘s filter() function, and as you attach the {dplyr} namespace, it will mask the existing functions from the global namespace, namely the {stats}’ filter() function. This induces namespace clash, and there are times you may not want this happening.\nFortunately with {box}, you can load the filter() function from the {dplyr} namespace through the following:\nbox::use(\n    dplyr[keep_when = filter],  # dplyr's `filter()` becomes `keep_when()`\n    stats[filter_ts = filter]   # stats' filter becomes filter_ts\n)\n\ndata |&gt; keep_when(col &gt; 0)      \nAirPassengers |&gt; filter_ts()      \n\n\n\n\n\n\nNote\n\n\n\nGranular imports in R’s library() also allowed using include.only parameter.\nFor example:\nlibrary(dplyr, include.only = c(\"select\", \"filter\"))\nBut still no alias gimmicks and doesn’t even leverage non-standard evaluation, where it treats include.only arguments as an object, called as a name, unlike box::use().\nR version 4.4 and above has a shorthand of library(pkg, include.only = c('fn1', 'fn2')): Introducing the base::use().\nExample usage:\nuse(dplyr, c(\"select\", \"filter\"))\nThis is inconsistent, as well, and generally not recommendable..\n\n\n\n\nImporting non-syntactic names\nThe infix operators like %&gt;% from {magrittr} are considered non-syntactic names. In R, operators and functions that use special characters (like +, *, %&gt;%, %in%, %*%, etc.) are called infix operators but internally parsed as the usual call in R, e.g. add(a, b). These operators require special handling when importing with {box}. By the way, yes, these are still functions.\nTo import functions with special characters, you need to wrap them in backticks:\n\nbox::use(\n    magrittr[`%&gt;%`, `%T&gt;%`], \n    dplyr[group_by, summarise],\n    stats[sd, median]\n)\n\niris %&gt;% \n    group_by(Species) %&gt;% \n    summarise(\n        mu = mean(Sepal.Length, na.rm = TRUE), \n        sigma = sd(Sepal.Length, na.rm = TRUE),\n        md = median(Sepal.Length, na.rm = TRUE)\n    )\n\n# A tibble: 3 × 4\n  Species       mu sigma    md\n  &lt;fct&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 setosa      5.01 0.352   5  \n2 versicolor  5.94 0.516   5.9\n3 virginica   6.59 0.636   6.5\n\n\n\n\nWildcard import\nThe true equivalent of library(pkg) is through box::use(pkg[...]). Yet again, ... are called “ellipsis”. The use of ... sets as a “wildcard”, and this, while being granular, imports all the namespace within the package (or modules). The Python’s equivalent would be from pkg import *.\nFor example:\nbox::use(\n    dplyr[...]\n)",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>2.2 Array of imports and monikers</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/2-imports.html#imports-within-the-function-function-call",
+    "href": "Chapter 2/2-imports.html#imports-within-the-function-function-call",
+    "title": "Array of Imports with Monikers",
+    "section": "Imports within the function / function call",
+    "text": "Imports within the function / function call\nWhen we import packages / scripts / folders as modules or import their namespace, did you know the imports are enclosed within the scope?\nAccording to the official documentation:\n\nthe effects of box::use() are restricted to the current scope: we can load and attach names inside a function, and this will not affect the calling scope (or elsewhere).\n\nHere’s an example:\n\n\nCode\nmtcars |&gt; \n    dplyr::reframe(\n        {    \n            box::use(\n                stats[linear_reg = lm, pearson_r = cor],\n                purrr[imap_dfc, set_names],\n                tibble[tbl = tibble]\n            ) \n            \n            model = linear_reg(mpg ~ wt)\n            coefs = coef(model)\n            coef_table = imap_dfc(coefs, \\(bi, nm) {\n                result = tbl(bi)\n                set_names(result, nm)\n            })\n            \n            corr = pearson_r(wt, mpg)\n            \n            test = summary(model)\n            tbl(\n                coef_table, \n                corr = corr, \n                rsq = test$r.squared,\n                adj_rsq = test$adj.r.squared\n            )\n        },\n        \n        .by = cyl\n    )\n#&gt;   cyl (Intercept)        wt       corr       rsq   adj_rsq\n#&gt; 1   6    28.40884 -2.780106 -0.6815498 0.4645102 0.3574122\n#&gt; 2   4    39.57120 -5.647025 -0.7131848 0.5086326 0.4540362\n#&gt; 3   8    23.86803 -2.192438 -0.6503580 0.4229655 0.3748793\n\n\n\n\n\n\n\n\nTipThis code (freely skip this)\n\n\n\n\n\nThis code is made to study the type-I error by examining how true the linear relationship between wt and mpg variables from mtcars data, when performing statistical analysis. Here, this code imports within dplyr::reframe() function call without making side-effect the current environment. This is great if you create a function with external dependencies available from R packages, or within your scripts / folders.",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>2.2 Array of imports and monikers</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/2-imports.html#best-practices-for-package-imports",
+    "href": "Chapter 2/2-imports.html#best-practices-for-package-imports",
+    "title": "Array of Imports with Monikers",
+    "section": "Best Practices for Package Imports",
+    "text": "Best Practices for Package Imports\nBut, of course, R packages have strengths, but don’t forget their flaws. I will enumerate the do’s in {box} package:\n\nBe Specific with Imports\nPlease, do not import everything, unless there’s a good use case. The use of wildcards, i.e. the “ellipsis” ... within the granular imports through [...] is a shortcut to import the namespace, but you are importing everything here.\nbox::use(\n    dplyr[...]\n)\nDon’t just do this in actual practice, or it will create a mess in the global namespace, just like library(). As the Zen of Python said: “Explicit is better than implicit.”\nInstead, import only what you need. Of course, in several times, you only import specific parts of the package only. For instance, when you are aggregating data frame with {dplyr}, you often only needs filter(), select(), mutate(), group_by(), and summarise(). Mind you that there are a total of 293 exported namespaces (will be less than that if you don’t count the pseudo-functions, such as across() and where()) within {dplyr} package, and for your aggregation task, you only need 5 out of the total exports.\nThis approach is better because it is explicit and you can even rename those imports:\nbox::use(\n    dplyr[filter_df = filter, select, mutate, group_by, summarise]\n)\n\n\n\n\n\n\nTipExample (Click to expand)\n\n\n\n\n\nLet’s take an example, where you want to calculate the sample size, mean, standard deviation, standard error, and the coefficient of variation across the numeric columns in iris dataset:\n\nbox::use(\n    dplyr[n, mutate, relocate, group_by, summarise], \n    tidyr[melt = pivot_longer, spread = pivot_wider]\n)\n\niris |&gt; \n    summarise(\n        across(\n            where(is.numeric), \n            list(\n                mu = \\(x) mean(x, na.rm = TRUE), \n                sigma = \\(x) sd(x, na.rm = TRUE)\n            ), \n            .names = \"{.col}..{.fn}\"\n        ), \n        n = n()\n    ) |&gt; \n    melt(\n        cols = everything() & !n,\n        names_pattern = \"^(.*)\\\\.\\\\.(.*)$\",\n        names_to = c(\"Variable\", \"Statistics\"),\n        values_to = \"Est\"\n    ) |&gt; \n    spread(\n        names_from = Statistics, \n        values_from = Est\n    ) |&gt; \n    mutate(\n        se = sigma / sqrt(n), \n        cv = sigma / mu\n    ) |&gt; \n    relocate(\n        n, .after =  Variable\n    )\n\n# A tibble: 4 × 6\n  Variable         n    mu sigma     se    cv\n  &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;\n1 Sepal.Length   150  5.84 0.828 0.0676 0.142\n2 Sepal.Width    150  3.06 0.436 0.0356 0.143\n3 Petal.Length   150  3.76 1.77  0.144  0.470\n4 Petal.Width    150  1.20 0.762 0.0622 0.636\n\n\n\n\n\nGroup Related Imports\nThis is just an opinion. For better clarity, you can explain the imports you are making within the function call box::use() with comments #. This is not unusual, sometimes this is common. Since comments are allowed, you can group the imports by functionality.\nbox::use(\n    # Simple aggregation\n    dplyr[filter_df = filter, select, mutate, group_by, summarise],\n    tidyr[pivot_longer, pivot_wider],\n\n    # To run linear regression and t-test\n    stats[linear_reg = lm, welch_ttest = t.test],\n\n    # To visualize outputs from linear regression and t-test\n    ggplot2[ggplot, geom_point, geom_smooth, geom_box, theme_minimal, aes]\n)\n\n\n\nHandle Naming Conflicts\nAs discussed here, you are allowed to place an alias within the imports, so that the namespace clash will be resolved.\nThe most prominent example is dplyr::filter() and stats::filter().\nbox::use(\n    dplyr[keep_when = filter],\n    stats[filter_ts = filter]\n)\nRename them whatever you want to employ clarity.\n\n\nOtherwise\n\n\n\n\n\n\nWarningOtherwise\n\n\n\nTrust me, I’ve been this a long time ago: not following any of those practices. So, if you don’t do the following practices, you’ll create inconsistent and unpredictable flaws. Keep up the good work and do the best practices.",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>2.2 Array of imports and monikers</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/2-imports.html#troubleshooting-package-imports",
+    "href": "Chapter 2/2-imports.html#troubleshooting-package-imports",
+    "title": "Array of Imports with Monikers",
+    "section": "Troubleshooting Package Imports",
+    "text": "Troubleshooting Package Imports\nFrankly, I will show you solutions if you have similar errors like the following. The common issues to be found when importing packages happen are:\n\nObviously, when the R package is not installed. This matter is trivial: The package does not exist in your current environment, and simply just install the packages you need and import them using box::use().\nbox::use(pkg[func, ...])\n#&gt; Error in box::use(pkg) : there is no package called ‘pkg’\n\ninstall.packages(\"pkg\")\nWhen the particular imports does not exist in the package namespace or incorrectly name the import:\nbox::use(dplyr[nonexistent_function])\n#&gt; Error in box::use(dplyr[nonexistent_function, slct]) : \n     name “nonexistent_function”, “slct” not exported by “dplyr”\n\nbox::use(dplyr[select, filter])\n{box} enforces strict naming. If possible, check out the official documentation of the R package. Check if you are using indeed correct spelled name, and check if the imports does exist in the package namespace",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>2.2 Array of imports and monikers</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/3-reloading-modules.html",
+    "href": "Chapter 2/3-reloading-modules.html",
+    "title": "Reloading modules",
+    "section": "",
+    "text": "How {box} caches modules\nWhen working with modules during development, you’ll frequently modify the source code, and need those changes to reflect in your current R session. Understanding how {box} handles module reloading to increase development workflow efficiency.\nThis section primarily applies to modules created from scripts and folders, not R packages loaded from CRAN or other repositories.\nBy default, {box} caches modules after the first import. This improves performance but means changes to your module files won’t automatically appear in your current session.\nIn this example, imagine you have ./utils/helpers:\nThen eventually, you made some modification to helpers.r and run the import again in the same session:\nHere’s the problem: second import that uses box::use(), uses cached version, and the changes you made in ./utils/helpers will NOT be reflected.\nThere are some reasons why caching happens:",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>2.3 Reloading modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/3-reloading-modules.html#how-box-caches-modules",
+    "href": "Chapter 2/3-reloading-modules.html#how-box-caches-modules",
+    "title": "Reloading modules",
+    "section": "",
+    "text": "box::use(./utils/helpers)\n\nhelpers$my_function()  # Works as expected\n\nbox::use(./utils/helpers)\n\nhelpers$my_function()  # Still uses old version!\n\n\n\nImproves performance by avoiding redundant file reads and code parsing\nPrevents unnecessary re-execution of initialization code\nMaintains consistency within a single R session\n\n\n\n\n\n\n\nNote\n\n\n\nThis behavior mirrors how R packages work - once loaded with library(), they remain in memory until the session restarts.",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>2.3 Reloading modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/3-reloading-modules.html#manual-reloading",
+    "href": "Chapter 2/3-reloading-modules.html#manual-reloading",
+    "title": "Reloading modules",
+    "section": "Manual reloading",
+    "text": "Manual reloading\nAfter you load ./utils/helpers as a helpers module, reload helpers with box::reload().\nTo see changes made to a module without restarting R, see what I mean:\n\nYou already did an initial import of ./utils/helpers, saved as ./helpers module:\nbox::use(./utils/helpers)\nMake some changes in ./utils/helpers whatever you want\nReload ./helpers to modify the cached module\nbox::reload(helpers)",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>2.3 Reloading modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/3-reloading-modules.html#reloading-scenarios",
+    "href": "Chapter 2/3-reloading-modules.html#reloading-scenarios",
+    "title": "Reloading modules",
+    "section": "Reloading scenarios",
+    "text": "Reloading scenarios\nThe practical examples are provided below that you can replicate in your current sessions somewhere. First, create ./utils/ folder then create an R script named helpers.r. Once ./utils/helpers is loaded through box::use(./utils/helpers), helpers module is now loaded and cached into the current environment.\nTo be enlightened, here’s three (3) scenarios when you made some changes and then reload the helpers module:\n\nScenario 1: Modifying a function\nHere’s what ./utils/helpers is made of:\n\n\nCode\nsum = function (x) {\n    S = 0\n    \n    for (i in x) {\n        S = S + i\n    }\n    \n    S\n}\n\n\nThen, in your R session:\nbox::use(./utils/helpers)\nx = 1 : 10\nhelpers$sum(x) \nThen, suddenly you changed your mind because you figured out that it will not work once the vector x contains missing values NA. So, you made another modification:\n\n\nCode\nbox::use(\n    stats[na.omit]\n)\n\nsum = function (x, na.rm = FALSE) {\n    if (na.rm) {\n        x = na.omit(x)\n    }\n    \n    S = 0\n    for (i in x) {\n        S = S + i\n    }\n    \n    S\n}\n\n\nInstead of loading the module through box::use() again, reload helpers to utilize the changes made instead:\nbox::reload(helpers)\nx = 1 : 10\nx[4] = NA\n\nhelpers$sum(x) \n#&gt; 51\n\n\nScenario 2: Updating namespace\nOriginally, ./utils/helpers contains only 1 function. How about we made changes in helpers module by adding new functions?\nFor example, you want a new function ./utils/helpers that calculates the mean:\n\n\nCode\nbox::use(\n    stats[na.omit]\n)\n\nsum = function (x, na.rm = FALSE) {\n    if (na.rm) {\n        x = na.omit(x)\n    }\n    \n    S = 0\n    for (i in x) {\n        S = S + i\n    }\n    \n    S\n}\n\nmean = function (x, na.rm = FALSE) {\n    if (na.rm) {\n        x = na.omit(x)\n    }\n  \n    S = sum(x)\n    n = length(x)\n    \n    out = S / n\n    out\n}\n\n\nSince it caches the recent ./utils/helpers import, mean() from helpers won’t be available, thus a simple error.\nx = 1 : 10\nx[4] = NA\n\nhelpers$mean(x, na.rm = TRUE)\n#&gt; Error in helpers$mean : name 'mean' not found in 'helpers'\nOnce again, reload helpers module:\nbox::reload(helpers)\nAnd helpers$mean() is now available:\nx = 1 : 10\nx[4] = NA\n\nhelpers$mean(x, na.rm = TRUE)\n#&gt; [1] 5.7\n\n\nScenario 3: Changing exported items\nWhat if we only export mean() from ./utils/helpers? By the way, box::export() is used to explicitly declare module exports, but fortunately, {box} borrows Roxygen2 API, and this includes #' @export.\n\n\nCode\nbox::use(\n    stats[na.omit]\n)\n\nsum = function (x, na.rm = FALSE) {\n    if (na.rm) {\n        x = na.omit(x)\n    }\n    \n    S = 0\n    for (i in x) {\n        S = S + i\n    }\n    \n    S\n}\n\n#' @export\nmean = function (x, na.rm = FALSE) {\n    if (na.rm) {\n        x = na.omit(x)\n    }\n  \n    S = sum(x)\n    n = length(x)\n    \n    out = S / n\n    out\n}\n\n\nReload helpers with box::reload() and sum() is not one of the exports from helpers module now. To see what it means:\nbox::reload(helpers)\n\nx = 1 : 10\nx[4] = NA\n\nhelpers$mean(x, na.rm = TRUE)\n#&gt; [1] 5.7\n\nhelpers$sum(x, na.rm = TRUE)\n#&gt; Error in helpers$sum : name 'sum' not found in 'helpers'",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>2.3 Reloading modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/3-reloading-modules.html#some-pitfalls",
+    "href": "Chapter 2/3-reloading-modules.html#some-pitfalls",
+    "title": "Reloading modules",
+    "section": "Some pitfalls",
+    "text": "Some pitfalls\nThe function box::reload() ONLY reloads the module, not the functions or objects under the namespace of the module. Trying to reload function will throw an error saying Error in box::reload(custom_mean) : \"reload” expects a module object, got “fun”, which is of type “function” instead\nbox::use(\n    ./utils/helpers[custom_mean = mean]\n)\n\nbox::reload(custom_mean)\n#&gt; Error in box::reload(custom_mean) : \n#&gt;    “reload” expects a module object, got “custom_mean”, which is of type “function” instead\nThe best solution is to restart the session, and the environment/s created by box::use() will absolve, and once again, the current environment is now cleansed.",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>2.3 Reloading modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 2/3-reloading-modules.html#compared-to-restarting-r-session",
+    "href": "Chapter 2/3-reloading-modules.html#compared-to-restarting-r-session",
+    "title": "Reloading modules",
+    "section": "Compared to restarting R session",
+    "text": "Compared to restarting R session\nTo be frank, an R session is simply just a running instance of the R interpreter. The environment where R executes code, stores objects, and manages the workspace. When you start R (via terminal, RStudio, VS Code, or any other interface), you are launching a fresh R session.\nThe question is, when to use box::reload() versus restarting your R session?\n\nUse box::reload() when:\n\nMaking changes in the source code\nFixing bugs or typos in module code\nAdding something new to existing modules\nTesting changes quickly without losing workspace variables\nIterating on function logic during development\n\nRestart R session when:\n\nYou are instead restart the entire sessione, in which they cannot be reloaded with box::use(), only accepting modules.\nRefreshing R sessions loses the (nested) environment from the current environment, then start another fresh imports with box::use().\n\n\n\n\n\n\n\n\nTipRStudio Shortcut\n\n\n\nIn RStudio, restart R with Ctrl/Cmd + Shift + F10. This clears everything and gives you a fresh start without closing RStudio.",
+    "crumbs": [
+      "2 Fundamentals of import system in {box} package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>2.3 Reloading modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/1-struct-module.html",
+    "href": "Chapter 3/1-struct-module.html",
+    "title": "3 Employment of Modules: Structures and constructions",
+    "section": "",
+    "text": "Module Basics\nFrom the previous chapter, the guide thoroughly explains how to import R packages and scripts / folders using box::use(), the fundamentals of {box} package, and why it is such convenient in having more control on how you attach the namespace, between bulky and granular imports, and how {box} absolves namespace conflicts in the current environment.\nIn this chapter, we will dive deeper into the composability, organization, and reusability of modules using {box}. By structuring your code into reusable modules, you can make your R projects more manageable, scalable, and long-term maintainable.\nIn {box}, a module is simply between an imported R package, R scripts, or a folder that contains an R script that encapsulates related functions, variables, and objects, forming a cohesive unit of functionality. Think of a module as a container of reusable code, and must be containing a namespace, similar to how Python packages work. This design encompasses module system for R, something that is less robust in R, where you organize your code into logically separated units, making it easy to maintain and reuse across different projects.",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>3 Employment of Modules: Structures and constructions</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/2-struct-module-1.html",
+    "href": "Chapter 3/2-struct-module-1.html",
+    "title": "3.1 Structuring and constructing modules part 1: Initialization",
+    "section": "",
+    "text": "3.1.1 The structure\nI’ll start on how to construct a module preliminarily. To demonstrate how to construct modules, let’s work with an example folder named {./module}. Each script or subfolder within this directory will serve as a separate module or submodule. The files are expected to be empty, since I’ll be addressing some of them, or you can visit {./module} to view the pre-written code.\nHere’s the structure of the {./module} folder I initialize:",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>3.1 Structuring and constructing modules part 1: Initialization</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/2-struct-module-1.html#the-structure",
+    "href": "Chapter 3/2-struct-module-1.html#the-structure",
+    "title": "3.1 Structuring and constructing modules part 1: Initialization",
+    "section": "",
+    "text": "module/\n├── __init__.r\n├── convert.r\n├── hello_world.r\n├── matrix_ops.r              \n├── not_func.r\n├── tables.r                  \n└── statistics/\n    ├── __init__.r\n    ├── cor.r\n    ├── corrr.r\n    ├── time_series.r\n    └── models/               \n        ├── __init__.r\n        ├── linear.r\n        ├── logistic.r\n        └── baseline_logit.r\n\n3.1.1.1 Initialization\nThe __init__.r file is a special file, acts as the initialization file which marks {./module} folder as a package, in which will be executed once you import {./module} as a module.\n\nReally beneficial because you don’t need to explicitly load the script as modules, repetitively.\nIt can be used to load or expose specific functions or objects from the submodules within this folder.\nYou’ll be always using this special file to treat folders as modules, equivalent to what made Python modules.\n\n\n\n\n\n\n\nImportant\n\n\n\nEvery folder at every level that you want to treat as a module must contain an __init__.r file. This applies to:\n\nThe root module folder (module/)\nAny subfolders (statistics/)\nAny nested subfolders (statistics/models/)\n\nWithout __init__.r, {box} won’t recognize the folder as a module.\n\n\n\n\n3.1.1.2 Scripts from root folder\nThe root module/ folder contains several scripts that can be directly imported:\n\nhello_world.r: A simple demonstration script using examples from the official {box} documentation. This showcases basic module functionality and serves as a “Hello World” introduction to module creation.\nconvert.r: Contains utility functions for temperature conversion:\n\ncelsius_to_fahrenheit(): Converts Celsius to Fahrenheit\nfahrenheit_to_celsius(): Converts Fahrenheit to Celsius\n\nThese functions demonstrate how standalone utility functions can be organized in modules.\nmatrix_ops.r: Contains matrix operation functions and operators:\n\nCustom matrix multiplication operators\nMatrix transformation utilities\n\nThis script demonstrates how to export functions with special characters (operators like * or ^).\ntables.r: Contains table formatting and display functions:\n\ndraw_table(): Displays data frames as table in terminal.\n\nnot_func.r: Demonstrates that modules aren’t limited to functions. This script contains various data structures that can be exported:\n\nAtomic vectors\nLists\nMatrices\nData frames\nN-dimensional arrays\nConstants or configuration values\n\nThis shows that any R object can be part of a module’s namespace, not just functions.\n\n\n3.1.1.3 Subfolders (Submodules)\nThe module structure includes organized subfolders that group related functionality:\n\nStatistical Analysis Submodule statistics/\nA subfolder dedicated to statistical functions. When imported, this becomes the {statistics} submodule. Subfolders like this help categorically group related functionalities within a larger module structure.\n\n__init__.r: Required initialization file. This marks statistics/ as a submodule and controls which functions or scripts are exposed when someone imports the statistics module. Without this file, the folder cannot function as a module.\ncor.r: Contains basic correlation functions:\n\nSimple correlation coefficient calculations\nDemonstrates fundamental statistical operations\n\ncorrr.r: An extended correlation module that builds on cor.r:\n\nDepends on stats::cor() for computation\nUses {tidyverse} APIs for data manipulation\nIncludes nonparametric correlation methods (Spearman, Kendall)\nShows how modules can have dependencies on other modules and packages\n\ntime_series.r: Contains time series analysis functions:\n\nMoving averages\nTrend analysis\nSeasonal decomposition\nOther time series utilities\n\nGroups all time series functionality under one module for easy access.\n\n\n\nStatistical modelling nested submodule - statistics/models/\nA nested subfolder (two levels deep) for organizing machine learning and statistical modeling functions. This demonstrates {box}’s support for hierarchical module organization.\n\n__init__.r: Required initialization file. Even though this folder is nested inside another module, it still needs its own __init__.r to be recognized as a submodule.\nlinear.r: Linear regression functions.\nlogistic.r: Logistic regression functions\n\n\n\n\n\n\n\nNoteModule Hierarchy\n\n\n\nNotice how models/ is nested inside statistics/, creating a hierarchy: - module/ (root) - statistics/ (submodule) - models/ (nested submodule)\nEach level requires its own __init__.r file. This organization allows you to access functions like: - module$statistics$models$linear$fit_regression() - Or with aliases: lm_models$fit_regression()",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>3.1 Structuring and constructing modules part 1: Initialization</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/2-struct-module-1.html#importing-.module",
+    "href": "Chapter 3/2-struct-module-1.html#importing-.module",
+    "title": "3.1 Structuring and constructing modules part 1: Initialization",
+    "section": "3.1.2 Importing {./module}",
+    "text": "3.1.2 Importing {./module}\nNow that you’ve seen the structure of the {./module} folder, you can reuse my codes, by forking {./module}, found at the source code of this book, into any specified directory. Let’s recall what is on about throughout Chapter 2: Fundamentals of import system in {box} package. In this example, we are importing scripts / folders from {./module} folder, as modules instead.\n\n3.1.2.1 Valid imports\nHere are the valid imports:\n\nWith alias\nbox::use(\n    md = ./module\n)\nIt’s up to you if you want another name, besides md.\nWithout alias\nbox::use(\n    ./module\n)\nLoad specific subfolder as a module\nbox::use(\n    md_stats = ./module[statistics]\n)\nThis is equivalent to:\nbox::use(\n    md_stats = ./module/statistics\n)\nas long as {./module} has an initialization file.\nLoad specific script as a module\nbox::use(\n    md_dt = ./module[not_func]\n)\nNote: This is not entirely equivalent to:\nbox::use(\n    md_dt = ./module/not_func\n)\nbecause it will append another environment in the current environment, specifically under {./module} environment. Additionally, it will create md_dt module, which loads the entire {./module}, only if you did the former.\n\n\n\n\n\n\n\n\nNote\n\n\n\nDo not forget to put ./ prefix to load specific modules in your project workspace. The lack of ./ prefix is only valid for R packages. For the deep nested modules, this will be deeply tackled in Chapter 3.4: Accessing modules in any depths.",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>3.1 Structuring and constructing modules part 1: Initialization</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/2-struct-module-1.html#reloading-modules",
+    "href": "Chapter 3/2-struct-module-1.html#reloading-modules",
+    "title": "3.1 Structuring and constructing modules part 1: Initialization",
+    "section": "3.1.3 Reloading modules",
+    "text": "3.1.3 Reloading modules\nDuring development, most particularly when you import a particular module, you’ll sometimes modify its source code — for example, tweaking functions or adding new ones. However, {box} modules are cached after their first import. This means that changes you make to your module’s code won’t automatically take effect until you explicitly reload it.\n\n3.1.3.1 Basic Reloading\nTo reload a module, {box} provides the function box::reload(). This clears the cached version and re-imports the module, ensuring that the latest code changes are applied.\nIf you’ve imported the module, such as:\nbox::use(\n    md = ./module\n)\nand you made some changes within its source code, you can reload it simply by:\nbox::reload(md)\nAnd note: This is not allowed to reload submodules under md module:\nbox::reload(md$statistics)\n\n\n3.1.3.2 Reload benefits\nReloading is particularly useful when:\n\nYou’re iteratively developing and testing module code\nYou’ve edited scripts that are already imported\nYou want to ensure that any updates to exported objects are reflected in your current R session\n\nMy advise for production code, however, you generally don’t need to always use box::reload() — modules should be stable and imported once.",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>3.1 Structuring and constructing modules part 1: Initialization</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/3-struct-module-2.html",
+    "href": "Chapter 3/3-struct-module-2.html",
+    "title": "3.2 Structuring and constructing modules part 2: Package-like Modules",
+    "section": "",
+    "text": "3.2.1 Create modules from the root folder\nThe previous part teaches you on how to import / export data from module, and in this part, you’ll learn on how to create a module that mimics the package system in R and package system in other languages such as Python. One of the strengths of {box} is that you don’t need to create an R package just to store the R codes and make it accessible to other end-users. Because of this package, you can mimic the way on how Python packages are created. It’s modular, maintainable, and accessible.\nRecall the not_func.r script. Keep it and this time, create another scripts named convert.r and hello_world.r.\nAnd access them like:\nbox::use(\n    ./module/convert, \n    greet = ./module/hello_world\n)\n\ntemperature = 212\n\nglue::glue(\n    \"{temperature} degrees Fahrenheit is equivalent to {convert$fahrenheit_to_celsius(temperature)} degrees Celsius\"\n)\n\n212 degrees Fahrenheit is equivalent to 100 degrees Celsius\n\ngreet$hello(\"Amy\")\nIf you have __init__.r initialization file already, you can do the following:\nbox::use(\n    md = ./module\n)\n\ntemperature = 212\n\nglue::glue(\n    \"{temperature} degrees Fahrenheit is equivalent to {md$convert$fahrenheit_to_celsius(temperature)} degrees Celsius\"\n)\n\n212 degrees Fahrenheit is equivalent to 100 degrees Celsius\n\nmd$hello_world$hello(\"Amy\")\nAnd by the way, you can apply aliases for the script accessed as a module, not limited to functions and any objects:",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>3.2 Structuring and constructing modules part 2: Package-like Modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/3-struct-module-2.html#create-modules-from-the-root-folder",
+    "href": "Chapter 3/3-struct-module-2.html#create-modules-from-the-root-folder",
+    "title": "3.2 Structuring and constructing modules part 2: Package-like Modules",
+    "section": "",
+    "text": "TipDid you know?\n\n\n\nRecall that #' @export is only necessary when you are exporting specific part of the assigned R code into the namespace. When #' @export is placed, it triggers the Roxygen2 functionality, where it keeps the public namespace into the private namespace.\n\n\n\nConverting temperaturesSimple greetings\n\n\nCopy this code:\ncelsius_to_fahrenheit = function (celsius) {\n    fahrenheit = (celsius * 9/5) + 32\n    fahrenheit\n}\n\nfahrenheit_to_celsius = function (fahrenheit) {\n    celsius = (fahrenheit - 32) * 5/9\n    celsius\n}\n\n\nThis example is an example code from the official documentation of {box} package.\n#' @export\nhello = function (name) {\n    message('Hello, ', name, '!')\n}\n\n#' @export\nbye = function (name) {\n    message('Goodbye ', name, '!')\n}\n\n\n\n\n\n\n\n\nbox::use(\n    ./module[hw = hello_world],\n    ./module[cv = convert], \n    ./module[nf = not_func]\n)",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>3.2 Structuring and constructing modules part 2: Package-like Modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/3-struct-module-2.html#create-a-module-from-subfolders",
+    "href": "Chapter 3/3-struct-module-2.html#create-a-module-from-subfolders",
+    "title": "3.2 Structuring and constructing modules part 2: Package-like Modules",
+    "section": "3.2.2 Create a module from subfolders",
+    "text": "3.2.2 Create a module from subfolders\nUnder the {./module}, let’s create a subfolder named statistics, where the small set of statistical functions are contained in separate scripts. Don’t forget the __init__.r initialization file.\nHere is the structure:\nstatistics/\n├── __init__.r\n├── cor.r\n├── corrr.r\n└── time_series.r\nSee the source code of each script here: https://github.com/joshuamarie/modules-in-r/tree/main/module/statistics\nAccess all of the modules within statistics by:\n\nbox::use(\n    md_sts = ./module/statistics\n)\n\nExample:\n\nwith(cars, md_sts$cor$custom_cor(speed, dist))\n\n[1] 0.8068949\n\ncor_pipe = md_sts$corrr$cor_pipe\n\nmtcars |&gt; \n    cor_pipe(mpg, hp, disp, qsec)\n\n            mpg         hp       disp       qsec\nmpg   1.0000000 -0.7761684 -0.8475514  0.4186840\nhp   -0.7761684  1.0000000  0.7909486 -0.7082234\ndisp -0.8475514  0.7909486  1.0000000 -0.4336979\nqsec  0.4186840 -0.7082234 -0.4336979  1.0000000\n\nmas = md_sts$time_series$moving_average(AirPassengers, win = 3)\n\nplot(\n    seq_along(AirPassengers),\n    AirPassengers, \n    type = \"l\",\n    col = \"blue\", \n    lwd = 2, \n    xlab = \"Time Index\", \n    ylab = \"Passengers\", \n    main = \"AirPassengers with Moving Averages\"\n)\n\nlines(mas, col = \"red\")\n\n\n\n\n\n\n\n\nThe {statistics} submodule is accessible:\nbox::use(\n    ./module/statistics\n)\nIf __init__.r file under {statistics} subfolder is initialized through:\n#' @export\nbox::use(\n    ./cor_nse,\n    ./cor,\n    ./moving_average\n)\nI’ll explain about nested modules in the Chapter 3.4.\n\n\n\n\n\n\nTipRecall Chapter 3.1.2\n\n\n\nIf you access {statistics} subfolder as a module, under {./module} folder like this:\n\nbox::use(\n    ./module[st = statistics]\n)\n\nThe {st} module will not be loaded into the current (root) environment, but loaded under {./module} environment",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>3.2 Structuring and constructing modules part 2: Package-like Modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/4-add-data.html",
+    "href": "Chapter 3/4-add-data.html",
+    "title": "3.3 Structuring and constructing modules part 3: Reading and adding data",
+    "section": "",
+    "text": "3.3.1 Creating a module for the data\nWhen constructing modules, sometimes you a built-in data frame, or any object outside from functions. Let’s explore how to effectively import / export and manage different types of data using {box}. It could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on.\nIn this guide, especially for data frames later, I’ll be using the mpg dataset from {ggplot2} package, and saved it as mpg.rds to load it via readRDS() function within the module.\nThe steps are trivial, (almost) every steps are similar to the process in R packages.",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>3.3 Structuring and constructing modules part 3: Reading and adding data</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/4-add-data.html#creating-a-module-for-the-data",
+    "href": "Chapter 3/4-add-data.html#creating-a-module-for-the-data",
+    "title": "3.3 Structuring and constructing modules part 3: Reading and adding data",
+    "section": "",
+    "text": "3.3.1.1 File “extension”\nThere’s a script under {./module} folder named not_func.r, where non-functions are contained.\nUnder {./module} folder, copy and paste this code:\nbox::use(\n    tibble[as_tibble]\n)\n\n#' @export\npi = pi\n\n#' @export\niris = as_tibble(datasets::iris)\n\n#' @export\nsales = readRDS(box::file('data/sales.rda'))\n\n\n\n\n\n\nNote\n\n\n\nNo need to place #' @export as the code were being exported into namespace of the modules anyways. Only use #' @export if you preferred to specifically export some saved R codes into the namespace of the module. When you load external packages or modules with box::use(), only what’s inside the namespace of the package to be exported.\n\n\nSave that script and then load the module:\nbox::use(\n    module/not_func\n)\nIf you have the initial file, you can import {./module/not_func.r} as {not_func} module within []. For example:\nbox::use(\n    md_dt = ./module[not_func]\n)\nBut remember, it will append another environment in the current environment, specifically under {./module} environment for {not_func}, and then create {md_dt} to load the entire {./module} afterwards.\n\n3.3.1.2 Loading an object\nIf you did the following:\nbox::use(\n    md_dt = ./module[not_func]\n)\nyou can now access the data like this:\nnot_func$pi\nnot_func$iris\nhead(not_func$mpg, 5)\nIf it is the other way around:\nbox::use(\n    md_dt = ./module/not_func\n)\nyou are allowed to do this:\nmd_dt$pi\nmd_dt$iris\nhead(md_dt$mpg, 5)\nDon’t forget that granular imports are allowed:\nbox::use(\n    ./module/not_func[pi, iris, sales]\n)\nAnd access freely in R:\npi\niris\nhead(sales, 5)\nJust don’t forget to maintain your current environment to avoid conflicts.\nAnd that’s how it is done. I hope you followed the steps so that you can proceed to the next part.",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>3.3 Structuring and constructing modules part 3: Reading and adding data</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/5-nested-modules.html",
+    "href": "Chapter 3/5-nested-modules.html",
+    "title": "3.4 Structuring and constructing modules part 4: Accessing modules in any depths",
+    "section": "",
+    "text": "3.4.1 Multi-level folder structures\nOne of the good parts about {box} package is it allows accessing deep nested scripts / folders in any depth as modules.\nBuilding on what you learned in the previous section about creating modules from subfolders, {box} doesn’t limit you to just one level of nesting. You can organize your code into multiple layers of directories, creating a hierarchical structure that makes sense for your project’s complexity and organization needs.\nLet’s update {./module} folder from Chapter 3.1, by updating (or just copy and paste the source code of {./module} in GitHub) matrix_ops.r to store functions that rewrites * for matrix multiplication and overrides ^ where a specific value, ^-1, implies the inverse of the matrix, and tables.r to store functions for displaying tables in R REPL, and extending the {./module/statistics} subfolder by adding another level of organization, e.g. you want to add statistical model utilities organized by model type, saved as {./module/statistics/models}* subfolder.\nIn this structure, {./module/statistics/models}* is nested two levels deep from the root {./module} folder. Each directory still requires its own __init__.r file to be recognized as a module.\nUnder {./module/statistics/models}* subfolder, place this in __init__.r file:\nAnd since we are adding another module within {./module/statistics}, update its __init__.r initialization file:",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>3.4 Structuring and constructing modules part 4: Accessing modules in any depths</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/5-nested-modules.html#multi-level-folder-structures",
+    "href": "Chapter 3/5-nested-modules.html#multi-level-folder-structures",
+    "title": "3.4 Structuring and constructing modules part 4: Accessing modules in any depths",
+    "section": "",
+    "text": "module/\n├── __init__.r\n├── convert.r\n├── hello_world.r\n├── matrix_ops.r              # &lt;------------- Under root **{./module}** folder\n├── not_func.r\n├── tables.r                  # &lt;------------- Under root **{./module}** folder\n└── statistics/\n    ├── __init__.r\n    ├── cor.r\n    ├── corrr.r\n    ├── time_series.r\n    └── models/               # &lt;------------- Subfolder within subfolder\n        ├── __init__.r\n        ├── linear.r\n        ├── logistic.r\n        └── baseline_logit.r\n\n\n\n\n\n\n\nNote\n\n\n\nRemember that every folder you want to treat as a module must contain an __init__.r file, regardless of its depth in the folder hierarchy.\n\n\n\n#' @export\nbox::use(\n    ./linear,\n    ./logistic,\n    ./baseline_logit\n)\n\n#' @export\nbox::use(\n    ./cor,\n    ./corrr,\n    ./time_series, \n    ./models\n)",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>3.4 Structuring and constructing modules part 4: Accessing modules in any depths</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/5-nested-modules.html#accessing-deeply-nested-modules",
+    "href": "Chapter 3/5-nested-modules.html#accessing-deeply-nested-modules",
+    "title": "3.4 Structuring and constructing modules part 4: Accessing modules in any depths",
+    "section": "3.4.2 Accessing deeply nested modules",
+    "text": "3.4.2 Accessing deeply nested modules\nYou can access these deeply nested modules using the same syntax patterns you’ve already learned in the previous chapter, just with longer paths:\n\nbox::use(\n    ./module/statistics/time_series\n)\n\ntime_series$ACF(AirPassengers)\n\n [1] 1.0000000 0.9480473 0.8755748 0.8066812 0.7526254 0.7137700 0.6817336\n [8] 0.6629044 0.6556105 0.6709483 0.7027199\n\n\nOr you can use the parent module and traverse through the hierarchy:\n\n# Access through the parent module\nbox::use(\n    md = ./module\n)\n\n# Navigate through the nested structure\nmd$statistics$time_series$ACF(AirPassengers)\n\n [1] 1.0000000 0.9480473 0.8755748 0.8066812 0.7526254 0.7137700 0.6817336\n [8] 0.6629044 0.6556105 0.6709483 0.7027199\n\n\n\n\n\n\n\n\nTipSource code\n\n\n\nThe code for some script is too long. Navigate the source code by clicking each hyperlinked text:\n\nUnder {./module}\n\nmatrix_ops.r\ntables.r\n\nUnder {module/statistics/models}\n\nlinear.r\nlogistic.r\nbaseline_logit.r",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>3.4 Structuring and constructing modules part 4: Accessing modules in any depths</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/5-nested-modules.html#navigating-up-the-directory-tree-with-..",
+    "href": "Chapter 3/5-nested-modules.html#navigating-up-the-directory-tree-with-..",
+    "title": "3.4 Structuring and constructing modules part 4: Accessing modules in any depths",
+    "section": "3.4.3 Navigating up the directory tree with ../",
+    "text": "3.4.3 Navigating up the directory tree with ../\nThe use of ./ prefix is limited to the root directory only, but how about accessing a script / folder when it is located in parent directories, one level up or more? Just like in file systems, {box} allows you to navigate up to parent directories using ../. This is particularly useful when you have scripts in different folders that need to access modules from sibling or parent directories.\nHere’s the syntax pattern:\n\nAccess a script 1 step up \\(\\rightarrow\\) use prefix ../\nAccess a script 2 steps up \\(\\rightarrow\\) use prefix ../../\nAccess a script 3 steps up \\(\\rightarrow\\) use prefix ../../../\n…and so on\n\n\n3.4.3.1 Example: Accessing modules from nested directories\nUnder linear.r, logistic.r, and baseline_logit.r scripts from {statistics/models}, there’s an import that tries to access the namespace under matrix_ops.r and tables.r scripts, where both scripts are found 2 steps upper from the current directory of linear.r, logistic.r, and baseline_logit.r scripts:\nbox::use(\n    ../../matrix_ops[`*`, `^`],\n    ../../tables[draw_table]\n)\nHere’s the visual representation:\nmodule/\n├── __init__.r\n├── convert.r\n├── hello_world.r\n├── matrix_ops.r              # ◄─── Target module\n├── not_func.r\n├── tables.r                  # ◄─── Target module\n└── statistics/                       ▲\n    ├── __init__.r                    │\n    ├── cor.r                         │\n    ├── corrr.r                       │ 2 directories up\n    ├── time_series.r                 │\n    └── models/                       │  \n        ├── __init__.r                \n        ├── linear.r          # ◄─── Current location\n        ├── logistic.r        # ◄─── Current location\n        └── baseline_logit.r  # ◄─── Current location\n\n\n\n\n\n\nWarning\n\n\n\nThe prefix ../ is quite a solution, however, using too many levels (e.g., ../../../) can make your eye sore, and potentially makes your code harder to understand and maintain. If you find yourself going up many levels, consider reorganizing your folder structure or using absolute paths from the project root.\n\n\n\n\n\n\n\n\nNotePractice Question\n\n\n\n\n\nSuppose you have this structure:\nmodule/\n├── __init__.r\n├── script1.r\n├── script2.r\n├── submodule1/\n│   ├── __init__.r                           \n│   ├── script1.r                      \n│   └── script2.r          \n└── submodule2/\n    ├── __init__.r                           \n    ├── script1.r                      \n    ├── script2.r               \n    └── subsubmodule1/                    \n        ├── __init__.r \n        ├── script1.r          \n        └── script2.r  \nAnd imagine you are in script1.r under {submodule2/subsubmodule1}. Is it possible to access script2.r under {submodule1}?\nI’ll help you visualize:\nmodule/\n├── __init__.r\n├── script1.r\n├── script2.r\n├── submodule1/\n│   ├── __init__.r                           \n│   ├── script1.r                      \n│   └── script2.r         # ◄─── Target: Access this  \n└── submodule2/\n    ├── __init__.r                           \n    ├── script1.r                      \n    ├── script2.r               \n    └── subsubmodule1/                    \n        ├── __init__.r \n        ├── script1.r     # ◄─── You are here     \n        └── script2.r   \n\nShort answer: Yes Long answer: It is possible. You just need to go up 2 directories to reach the {./module} level, then navigate into {submodule1}:\n\n\n\nShow solution\nbox::use(\n    ../../submodule1/script1,\n    tgt = ../../submodule1/script2    # If you prefer with alias\n)\n\ntgt$some_function()",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>3.4 Structuring and constructing modules part 4: Accessing modules in any depths</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 3/5-nested-modules.html#best-practices-for-deep-nesting",
+    "href": "Chapter 3/5-nested-modules.html#best-practices-for-deep-nesting",
+    "title": "3.4 Structuring and constructing modules part 4: Accessing modules in any depths",
+    "section": "3.4.4 Best practices for deep nesting",
+    "text": "3.4.4 Best practices for deep nesting\nWhile {box} allows you to nest modules at any depth, here are some of my software engineering principles to consider when organizing your code:\n\nKeep it reasonable: Deeply nested structures can make navigation more complex. Most projects benefit from a relatively flat hierarchy, though the optimal depth depends on your project’s size and complexity.\nOrganize by functionality: Group related functions in a way that makes sense for your workflow. For example, keeping all model-related functions under {./module/statistics/models}, organized by algorithm type.\nUse meaningful names: Choose folder names that clearly indicate their contents, making it easier to locate specific functionality.\nDocument your structure: A README file or comments explaining your module organization can help collaborators (and future you) understand the project layout.\nBe mindful with ../: Frequent use of parent directory navigation might suggest opportunities to reorganize your structure.\n\n\n\n\n\n\n\nNote\n\n\n\nThere’s no strict rule about module depth. The {box} package itself doesn’t impose limitations on nesting levels. Organize your modules in whatever way makes your code most maintainable and understandable for your specific project needs.",
+    "crumbs": [
+      "3 Employment of Modules: Structures and constructions",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>3.4 Structuring and constructing modules part 4: Accessing modules in any depths</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/1-testing-modules.html",
+    "href": "Chapter 4/1-testing-modules.html",
+    "title": "4 Unit Testing Modules",
+    "section": "",
+    "text": "Advantages\nOne of the significant advantages of modular code is that it’s easier to test. When your code is organized into discrete modules with clear interfaces, you can verify each piece works correctly in isolation before integrating everything together. This chapter explores practical approaches to testing your {box} modules effectively.\nUnlike traditional R package development where tests live in a separate tests / directory far from your implementation code, {box} modules encourage a different pattern: keeping tests close to the code they verify. This co-location makes it easier to maintain tests alongside the source code of your module, and it follows conventions used in many modern programming languages like JavaScript, Python, and Rust.\nWell, according to the official documentation of {box} package, it is “agnostic”, meaning it doesn’t matter which frameworks you are applying to measure the robustness of the modules. The most widely package for unit testing: {testthat}, works with modules quite well. In this chapter, {testthat} is the main framework we are using.",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>4 Unit Testing Modules</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/2-testthat-1.html",
+    "href": "Chapter 4/2-testthat-1.html",
+    "title": "4.1 Setting Up Module Tests",
+    "section": "",
+    "text": "4.1.1 Getting Started\nThe {box} package works seamlessly with {testthat}, R’s most popular testing framework. While you can use other testing frameworks, this guide focuses on testthat because of its widespread adoption and excellent integration with RStudio.\nLet us revisit the {./module} directory from what Chapter 3.1 is on about, and let us test the robustness of {./module/matrix_ops.r}, where it overloads * and ^ from base R for matrix operations. Update {./module} by creating another subfolder named __tests__/, next to your module file. The double underscores make it clear this is special infrastructure code, not a regular module.\nThis is the structure should look like:\nThe {./module/tests/init.r} file serves as the test runner. It’s minimal but essential:\nThe .on_load hook ensures tests run automatically when the __tests__ module loads. Using box::file() gives us the current directory path.\nThe {./module/tests/helper-module.r} file loads the namespace of the module you want to test into the test environment. In our case, we choose {./module/matrix_ops.r}:\nThe [...] syntax attaches all exported functions, and we are applying this to make the exports of the module namespace available in tests without prefixes.",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>4.1 Setting Up Module Tests</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/2-testthat-1.html#getting-started",
+    "href": "Chapter 4/2-testthat-1.html#getting-started",
+    "title": "4.1 Setting Up Module Tests",
+    "section": "",
+    "text": "module/\n├── __init__.r\n├── convert.r\n├── hello_world.r\n├── matrix_ops.r               # ◄─── Test this\n├── __tests__/                 # ◄─── Add this\n│   ├── __init__.r\n│   ├── helper-module.r\n│   └── test-matrix_ops.r\n├── not_func.r\n├── tables.r\n└── statistics/\n    ├── __init__.r\n    ├── cor.r\n    ├── corrr.r\n    ├── time_series.r\n    └── models/\n        ├── __init__.r\n        ├── linear.r\n        ├── logistic.r\n        └── baseline_logit.r\n\nbox::use(testthat[...])\n\n.on_load = function (ns) {\n    test_dir(box::file(), reporter = 'progress')\n}\n\nbox::export()\n\n\nbox::use(../matrix_ops[...])",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>4.1 Setting Up Module Tests</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/2-testthat-1.html#making-modules-testable",
+    "href": "Chapter 4/2-testthat-1.html#making-modules-testable",
+    "title": "4.1 Setting Up Module Tests",
+    "section": "4.1.2 Making Modules Testable",
+    "text": "4.1.2 Making Modules Testable\nSuppose you want to verify that {module/matrix_ops.r} works correctly. This script contains R source code that overloads the * operator from base R to enable intelligent matrix multiplication, and ^ to take the exponentiation of the matrices, except when ^-1, which takes the (square) matrix its inverse.\nTake a look of the source code:\n#' Matrix Multiplication\n#' \n#' @export\n`*` = function (e1, e2) UseMethod(\"*\")\n\n`*.default` = function (e1, e2) base::`*`(e1, e2)\n\n`*.matrix` = function (e1, e2) {\n    if (is.matrix(e1) && is.matrix(e2)) {\n        # Check dimensions for matrix multiplication\n        if (ncol(e1) == nrow(e2)) {\n            return(base::`%*%`(e1, e2))\n        } else if (ncol(e2) == nrow(e1)) {\n            # Try the other way around if dimensions match\n            return(base::`%*%`(e2, e1))\n        } else {\n            # If neither multiplication works, do element-wise\n            return(base::`*`(e1, e2))\n        }\n    } else {\n        return(base::`*`(e1, e2))\n    }\n}\n\n# ... Truncated ...\n\nbox::register_S3_method(\"^\", \"default\")\nbox::register_S3_method(\"^\", \"matrix\")\nbox::register_S3_method(\"^\", \"array\")\nbox::register_S3_method(\"^\", \"data.frame\")\nTo make this module testable, append the following code at the bottom of {module/matrix_ops.r}:\nif (is.null(box::name())) {\n    box::use(./`__tests__`)\n}\nand it becomes:\n#' Matrix Multiplication\n#' \n#' @export\n`*` = function (e1, e2) UseMethod(\"*\")\n\n`*.default` = function (e1, e2) base::`*`(e1, e2)\n\n`*.matrix` = function (e1, e2) {\n    if (is.matrix(e1) && is.matrix(e2)) {\n        # Check dimensions for matrix multiplication\n        if (ncol(e1) == nrow(e2)) {\n            return(base::`%*%`(e1, e2))\n        } else if (ncol(e2) == nrow(e1)) {\n            # Try the other way around if dimensions match\n            return(base::`%*%`(e2, e1))\n        } else {\n            # If neither multiplication works, do element-wise\n            return(base::`*`(e1, e2))\n        }\n    } else {\n        return(base::`*`(e1, e2))\n    }\n}\n\n# ... The rest are truncated\n\nbox::register_S3_method(\"^\", \"default\")\nbox::register_S3_method(\"^\", \"matrix\")\nbox::register_S3_method(\"^\", \"array\")\nbox::register_S3_method(\"^\", \"data.frame\")\n\nif (is.null(box::name())) {\n    box::use(./`__tests__`)\n}\nThis conditional check distinguishes between two scenarios: when you execute Rscript module/matrix_ops.r directly from the command line, box::name() returns NULL and the test suite runs. However, when another module imports it using box::use(module/matrix_ops), the condition evaluates to false and tests are skipped.\n\n\n\n\n\n\nNote\n\n\n\nThe backticks around __tests__ — R doesn’t normally allow identifiers starting with underscores, so backticks tell R to treat it as a literal name.\n\n\nAfter that, update the {./module/tests/test-matrix_ops.r} file that contains the actual tests:\n\n\nCode\n# ---Matrix Multiplication---\n\ntest_that('matrix multiplication works correctly', {\n    m1 = matrix(c(1, 2, 3, 4), nrow = 2)\n    m2 = matrix(c(5, 6, 7, 8), nrow = 2)\n\n    result = m1 * m2\n    expected = m1 %*% m2\n\n    expect_equal(result, expected)\n})\n\ntest_that('matrix multiplication with dimension mismatch tries reverse order', {\n    m1 = matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)\n    m2 = matrix(c(7, 8), nrow = 2, ncol = 1)\n\n    expect_error(m1 * m2)\n    expect_error(m2 %*% m1)\n})\n\ntest_that('matrix multiplication works with scalar', {\n    m1 = matrix(c(1, 2, 3, 4), nrow = 2)\n    scalar = 2\n\n    result = m1 * scalar\n    expected = base::`*`(m1, scalar)\n\n    expect_equal(result, expected)\n})\n\n# ---Exponentiation---\ntest_that('matrix inverse (^-1) works correctly', {\n    m = rbind(c(2, 7), c(5, -4))\n    \n    result = m ^ -1\n    expected = solve(m)\n    \n    expect_equal(result, expected)\n})\n\n# ---Solving system of linear equation---\n# ---An example from https://www.youtube.com/watch?v=cblHUeq3bkE---\ntest_that('combined operations work (inverse then multiply)', {\n    A = rbind(c(2, 7), c(5, -4))\n    b = cbind(c(34, -1))\n    \n    result = A ^ -1 * b\n    expected = matrix(c(3, 4), ncol = 1)\n    \n    expect_equal(result, expected)\n})",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>4.1 Setting Up Module Tests</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/2-testthat-1.html#tests-execution",
+    "href": "Chapter 4/2-testthat-1.html#tests-execution",
+    "title": "4.1 Setting Up Module Tests",
+    "section": "4.1.3 Tests Execution",
+    "text": "4.1.3 Tests Execution\nYou have several options for running tests:\n\nIf you are using the terminal:\nRscript module/matrix_ops.r\nand when all five executable tests passed the unit test, you’ll get . being tallied:\n$ Rscript module/matrix_ops.r\n✔ | F W  S  OK | Context\n⠏ |          0 | matrix_ops\n✔ |          6 | matrix_ops\n\n══ Results ════════════════════════════════════════════════════════════════\n[ FAIL 0 | WARN 0 | SKIP 0 | PASS 6 ]\n\nYou rock!\nThis depends on what reporter argument you are placing. In this case, \"progress\" is chosen, because in my opinion, this is easier to read.\nSee Chapter 4.2 to talk about more about diagnostics.\n\n\n\n\n\n\nImportant\n\n\n\nMake sure you are in the current directory where {./module} is found.\n\n\nIn RStudio, locate {./module/tests/test-matrix_ops.r}. Click the file, and click “Run Tests”.\n\n\n\n\n\n\n\nImportant\n\n\n\nDon’t use RStudio’s “Source” button! It reuses the current R session, and box caches loaded modules. You might end up testing old code without realizing it. Always run tests in a fresh session to ensure you’re testing the current version of your code.",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>4.1 Setting Up Module Tests</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/2-testthat-1.html#testing-nested-modules",
+    "href": "Chapter 4/2-testthat-1.html#testing-nested-modules",
+    "title": "4.1 Setting Up Module Tests",
+    "section": "4.1.4 Testing Nested Modules",
+    "text": "4.1.4 Testing Nested Modules\nHow about testing nested modules? We want modules from {./module/statistics} to be tested as well. The problem is they found deeply from the parent folder {./module}. Updating {./module/tests}, and prepare some scripts for unit testing the source code of nested scripts / folders, is a mistake. Instead, each subfolder has __tests__ to be prepared.\nThe testing pattern from {./module} works for nested modules, such as {./module/statistics} and {./module/statistics/models}.\nLet us test both module/statistics/models/linear.r and module/statistics/models/logistic.r, for example:\nmodule/statistics/models/\n├── __init__.r\n├── linear.r                 # ◄─── Test this\n├── logistic.r               # ◄─── Test this\n├── __tests__/               # ◄─── Add\n│   ├── __init__.r\n│   ├── helper-module.r\n│   ├── test-linear.r\n│   └── test-logistic.r\n└── baseline_logit.r\nThe helper-module.r file from {./module/statistics/models} adjusts the relative path:\nbox::use(\n    ../linear[linear_reg], \n    ../logistic[logistic_reg]\n)\nAnd {./module/statistics/models/tests/test-linear-reg.r} contains tests linear_reg() function:\n\n\nCode\ntest_that('Linear Regression from formula S3 method works', {\n    model = linear_reg(mpg ~ wt + hp, mtcars, vif = TRUE)\n    \n    expect_s3_class(model, \"linear_reg\")\n    expect_true(\"out\" %in% names(model))\n    expect_true(\"fitted\" %in% names(model))\n    expect_true(all(c(\"terms\", \"coefficients\", \"std_err\", \"t_statistic\", \"pval\", \"vif\", \"tolerance\") %in% names(model$out)))\n    expect_equal(nrow(model$out), 3)\n    expect_equal(model$out$terms, c(\"beta0\", \"wt\", \"hp\"))\n})\n\ntest_that('Linear Regression from data frame S3 method works', {\n    model = \n        mtcars |&gt; \n        linear_reg(mpg ~ wt + hp, vif = TRUE)\n    \n    expect_s3_class(model, \"linear_reg\")\n    expect_equal(nrow(model$out), 3)\n})\n\ntest_that('Linear Regression calculates correct coefficients', {\n    # Compare with base R lm()\n    model = linear_reg(mpg ~ wt + hp, mtcars)\n    base_model = lm(mpg ~ wt + hp, mtcars)\n    \n    expect_equal(model$out$coefficients, as.vector(coef(base_model)), tolerance = 1e-6)\n})\n\ntest_that('Linear Regression with column selection works', {\n    model =\n        mtcars |&gt; \n        linear_reg(c(wt, hp), mpg)\n    \n    expect_s3_class(model, \"linear_reg\")\n    expect_equal(nrow(model$out), 3)\n    \n    # Without vif flag, should not have vif columns\n    expect_false(\"vif\" %in% names(model$out))\n})\n\n\nAs well as {./module/statistics/models/tests/test-logistic-reg.r} to tests logistic_reg() function:\n\n\nCode\ntest_that('Logistic Regression from formula S3 method works', {\n    model = logistic_reg(am ~ wt + hp, mtcars, vif = TRUE)\n    \n    expect_s3_class(model, \"logistic_reg\")\n    expect_true(\"out\" %in% names(model))\n    expect_true(\"fitted\" %in% names(model))\n    expect_true(\"levels\" %in% names(model))\n    expect_true(\"reference\" %in% names(model))\n    expect_true(all(c(\"terms\", \"coefficients\", \"odds_ratio\", \"std_err\", \"z_statistic\", \"pval\", \"vif\", \"tolerance\") %in% names(model$out)))\n    expect_equal(nrow(model$out), 3)\n    expect_equal(model$out$terms, c(\"beta0\", \"wt\", \"hp\"))\n})\n\ntest_that('Logistic Regression from data frame S3 method works', {\n    model = \n        mtcars |&gt; \n        logistic_reg(am ~ wt + hp, vif = TRUE)\n    \n    expect_s3_class(model, \"logistic_reg\")\n    expect_equal(nrow(model$out), 3)\n})\n\ntest_that('Logistic Regression calculates correct coefficients', {\n    # Compare with base R glm()\n    model = logistic_reg(am ~ wt + hp, mtcars)\n    base_model = glm(am ~ wt + hp, data = mtcars, family = binomial(link = \"logit\"))\n    \n    expect_equal(model$out$coefficients, as.vector(coef(base_model)), tolerance = 1e-4)\n})\n\n\ntest_that('Logistic Regression with column selection works', {\n    model = \n        mtcars |&gt; \n        logistic_reg(c(wt, hp), am)\n    \n    expect_s3_class(model, \"logistic_reg\")\n    expect_equal(nrow(model$out), 3)\n    \n    # Without vif flag, should not have vif columns\n    expect_false(\"vif\" %in% names(model$out))\n})",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>4.1 Setting Up Module Tests</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/3-testthat-2.html",
+    "href": "Chapter 4/3-testthat-2.html",
+    "title": "4.2 Unit Test Diagnostics",
+    "section": "",
+    "text": "4.2.1 Understanding Test Reporters\nWhen tests fail—and they will—you need clear, actionable information about what went wrong. The {testthat} package provides several reporting formats that help you understand test results at different levels of detail.\nTest reporters control how {testthat} displays test results. You configure them in your {tests/init.r} file through the reporter parameter in test_dir():\nHere are different types of reporter:",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>4.2 Unit Test Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/3-testthat-2.html#understanding-test-reporters",
+    "href": "Chapter 4/3-testthat-2.html#understanding-test-reporters",
+    "title": "4.2 Unit Test Diagnostics",
+    "section": "",
+    "text": "box::use(testthat[...])\n\n.on_load = function (ns) {\n    test_dir(box::file(), reporter = \"progress\")  # or \"summary\", \"check\", etc.\n}\n\nbox::export()\n\n\nMinimalProgressCheckSummary\n\n\nThe default reporter shows only dots and failures:\n$ Rscript module/matrix_ops.r\n.....\nEach . represents a passing test. If a test fails, you’ll see F, where the test failed happened:\n...F..\nThis is perfect for quick checks during development when you just want to know if everything still works.\n\n\nFor slightly more detail, use reporter = \"progress'\":\n.on_load = function (ns) {\n    test_dir(box::file(), reporter = 'progress')\n}\nOutput:\n$ Rscript module/matrix_ops.r\n✔ | F W S  OK | Context\n✔ |         5 | matrix_ops\n\n══ Results ═════════════════════════════════════════════════\nDuration: 0.1 s\n\n[ FAIL 0 | WARN 0 | SKIP 0 | PASS 5 ]\nThis shows a summary table with pass/fail counts per context, making it easier to spot which test files have issues.\nAnd by the way, this is the default reporter of test_dir().\n\n\nThe check reporter provides the most readable output for development:\n.on_load = function (ns) {\n    test_dir(box::file(), reporter = 'check')\n}\nOutput:\n$ Rscript module/statistics/models/linear.r\n\n[ FAIL 0 | WARN 0 | SKIP 0 | PASS 26 ]\nEach test’s description appears on its own line, making it immediately clear which specific assertions passed or failed.\n\n\nFor comprehensive reporting, especially in CI/CD pipelines, use reporter = 'summary':\n.on_load = function (ns) {\n    test_dir(box::file(), reporter = 'summary')\n}\nThis gives you:\n$ Rscript module/statistics/models/linear.r\nlinear-reg: ............\nlogistic-reg: ..............\n\n══ DONE ═══════════════════════════════════════════════════════════════════════\nand you’ll see a number if the test fails.",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>4.2 Unit Test Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/3-testthat-2.html#reading-test-failures",
+    "href": "Chapter 4/3-testthat-2.html#reading-test-failures",
+    "title": "4.2 Unit Test Diagnostics",
+    "section": "4.2.2 Reading Test Failures",
+    "text": "4.2.2 Reading Test Failures\nUnderstanding failure messages is crucial for efficient debugging. Here’s what a typical failure looks like:\n$ Rscript module/statistics/models/linear.r\n\n── Failure ('test-linear.r:15:5'): Linear Regression calculates correct coefficients ──\n`model$out$coefficients` not equal to `as.vector(coef(base_model))`.\n\nComponent \"coefficients\": Mean relative difference: 0.0523\n\nBacktrace:\n 1. testthat::expect_equal(...)\n      at test-linear.r:15:4\n\n[ FAIL 1 | WARN 0 | SKIP 0 | PASS 3 ]\nLet’s break down this failure message:\n\nLocation: 'test-linear.r:15:5' tells you exactly where the failure occurred—line 15, column 5\nContext: The test description helps identify what functionality broke\nExpectation: Shows what you expected vs. what you got\nDetails: Specific information about the mismatch (e.g., “Mean relative difference: 0.0523”)\nBacktrace: The call stack leading to the failure",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>4.2 Unit Test Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/3-testthat-2.html#common-failure-patterns",
+    "href": "Chapter 4/3-testthat-2.html#common-failure-patterns",
+    "title": "4.2 Unit Test Diagnostics",
+    "section": "4.2.3 Common Failure Patterns",
+    "text": "4.2.3 Common Failure Patterns\n\n4.2.3.1 Numerical Precision Concern\nFloating-point arithmetic can cause unexpected failures:\ntest_that('matrix operations match', {\n    sols = A ^ -1 * b\n    expected = solve(A) %*% b\n    \n    # This might fail!\n    expect_equal(sols, expected)\n})\nThe solution is quick and meticulous: Use tolerance for floating-point comparisons.\nFor example:\ntest_that('matrix operations match', {\n    sols = A ^ -1 * b\n    expected = solve(A) %*% b\n    \n    # This accounts for rounding errors\n    expect_equal(sols, expected, tolerance = 1e-6)\n})\n\n\n4.2.3.2 Dimension Mismatches\nMatrix operations are particularly sensitive to dimensions:\ntest_that('matrix multiplication with dimension mismatch tries reverse order', {\n    m1 = matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)\n    m2 = matrix(c(7, 8), nrow = 2, ncol = 1)\n\n    result = m1 * m2\n    expected = m2 %*% m1\n    \n    expect_equal(result, expected)\n})\nIf this fails with a dimension error, check:\n\nAre you multiplying in the right order?\nDo the matrix dimensions actually allow multiplication?\nIs your operator overloading logic handling edge cases?\n\n\n\n4.2.3.3 Type Coercion Concern\nR’s automatic type conversion can cause subtle bugs:\ntest_that('data frame conversion works', {\n    df = data.frame(a = c(1, 2), b = c(3, 4))\n    result = df * 2\n    \n    # Might fail if df isn't properly converted to matrix\n    expect_s3_class(result, \"matrix\")\n})",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>4.2 Unit Test Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/3-testthat-2.html#testing-best-practices",
+    "href": "Chapter 4/3-testthat-2.html#testing-best-practices",
+    "title": "4.2 Unit Test Diagnostics",
+    "section": "4.2.4 Testing Best Practices",
+    "text": "4.2.4 Testing Best Practices\n\nWrite Descriptive Test Names\nGood test names explain what is being tested and why it matters.\n\nBad description\ntest_that('test 1', { ... })\ntest_that('it works', { ... })\nGood description\ntest_that('matrix inverse (^-1) works correctly', { ... })\ntest_that('combined operations work (inverse then multiply)', { ... })\n\n\n\nTest Both Success and Failure Cases\nDon’t just test the happy path, must test where it shouldn’t be done.\nFor example, the logistic_reg() implementation must have the response variable limited to factor / binary (contains 0 and 1) data type, 1 variable only, and 2 unique classes only. It must not be\n\nOther than factor / binary data types like numeric data\nHave 2 or more variables\nThe number of unique classes must not have 3 or more classes, within the response variable.\n\n# Test success\ntest_that('binary response works with 0/1', {\n    model = logistic_reg(am ~ wt, data = mtcars)\n    expect_s3_class(model, \"logistic_reg\")\n})\n\n# Test failure\ntest_that('error thrown for non-binary response', {\n    test_data = mtcars\n    test_data$multi_class1 = sample(c(\"A\", \"B\", \"C\"), nrow(test_data), replace = TRUE)\n    test_data$multi_class2 = sample(c(\"A\", \"B\", \"C\"), nrow(test_data), replace = TRUE)\n    \n    expect_error(\n        logistic_reg(cbind(multi_class1, multi_class2) ~ wt + hp, data = test_data),\n        \"must be binary with exactly 2 unique values\"\n    )\n    \n    expect_error(\n        logistic_reg(mpg ~ wt + hp, data = test_data),\n        \"must be binary with exactly 2 unique values or a factor class\"\n    )\n})",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>4.2 Unit Test Diagnostics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter 4/3-testthat-2.html#continuous-integration",
+    "href": "Chapter 4/3-testthat-2.html#continuous-integration",
+    "title": "4.2 Unit Test Diagnostics",
+    "section": "4.2.5 Continuous Integration",
+    "text": "4.2.5 Continuous Integration\nR is also used for production, you see. For production code, I recommend integrating your tests into a CI/CD pipeline.\nHere’s a simple GitHub Actions workflow:\n# .github/workflows/test.yml\nname: Run Tests\n\non: [push, pull_request]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v2\n      \n      - uses: r-lib/actions/setup-r@v2\n        with:\n          r-version: '4.3.0'\n      \n      - name: Install dependencies\n        run: |\n          install.packages(c(\"box\", \"testthat\", \"dplyr\", \"purrr\", \"rlang\"))\n        shell: Rscript {0}\n      \n      - name: Test matrix_ops\n        run: Rscript module/matrix_ops.r\n      \n      - name: Test linear regression\n        run: Rscript module/statistics/models/linear.r\n      \n      - name: Test logistic regression\n        run: Rscript module/statistics/models/logistic.r",
+    "crumbs": [
+      "4 Testing Modules",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>4.2 Unit Test Diagnostics</span>"
+    ]
+  }
+]

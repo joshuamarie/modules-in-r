@@ -1,0 +1,196 @@
+/* Additional custom styles */
+
+/* Navbar style */
+.navbar {
+  border-bottom: 1px solid #d0d7de;
+}
+
+.navbar-dark {
+  border-bottom-color: #30363d;
+}
+
+/* Sidebar navigation */
+.sidebar nav[role="doc-toc"] {
+  font-size: 0.875rem;
+}
+
+.sidebar nav[role="doc-toc"] > ul {
+  padding-left: 0;
+}
+
+.sidebar nav[role="doc-toc"] ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sidebar nav[role="doc-toc"] ul ul {
+  padding-left: 1rem;
+}
+
+.sidebar .chapter-number {
+  color: #57606a;
+  margin-right: 0.5rem;
+}
+
+/* TOC sidebar */
+.sidebar.sidebar-navigation.toc-active {
+  width: 300px;
+}
+
+#quarto-margin-sidebar {
+  width: 300px;
+  padding-left: 2rem;
+  padding-right: 3rem;
+}
+
+#quarto-margin-sidebar .toc-actions {
+  padding-left: 0;
+}
+
+#quarto-margin-sidebar nav[role="doc-toc"] {
+  padding-left: 0;
+}
+
+/* Part headings in sidebar */
+.sidebar .sidebar-section-header {
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  color: inherit;
+}
+
+/* Search box styling */
+#quarto-search {
+  border-radius: 6px;
+}
+
+.aa-Input {
+  border-radius: 6px !important;
+}
+
+/* Theme toggle button */
+.quarto-color-scheme-toggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hide default icons and use custom ones */
+.quarto-color-scheme-toggle .bi {
+  display: none !important;
+}
+
+/* Light mode icon (sun) - shown when in light mode */
+.quarto-color-scheme-toggle::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2324292f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'%3E%3C/circle%3E%3Cpath d='M12 2v2'%3E%3C/path%3E%3Cpath d='M12 20v2'%3E%3C/path%3E%3Cpath d='m4.93 4.93 1.41 1.41'%3E%3C/path%3E%3Cpath d='m17.66 17.66 1.41 1.41'%3E%3C/path%3E%3Cpath d='M2 12h2'%3E%3C/path%3E%3Cpath d='M20 12h2'%3E%3C/path%3E%3Cpath d='m6.34 17.66-1.41 1.41'%3E%3C/path%3E%3Cpath d='m19.07 4.93-1.41 1.41'%3E%3C/path%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Dark mode icon (moon) - shown when in dark mode */
+html[data-bs-theme="dark"] .quarto-color-scheme-toggle::before,
+body.quarto-dark .quarto-color-scheme-toggle::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23c9d1d9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'%3E%3C/path%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Force inline code styling in light mode */
+html[data-bs-theme="light"] code:not(pre code),
+body.quarto-light code:not(pre code) {
+  background-color: #f6f8fa !important;
+  color: #24292f !important;
+  border: 1px solid #d0d7de !important;
+}
+
+/* Code block styling */
+.sourceCode {
+  border-radius: 6px;
+}
+
+/* Copy button styling */
+.code-copy-button {
+  border-radius: 4px;
+}
+
+/* Footer styling */
+.nav-footer {
+  border-top: 1px solid #d0d7de;
+  margin-top: 3rem;
+}
+
+.nav-footer-dark {
+  border-top-color: #30363d;
+}
+
+/* Page navigation */
+.page-navigation {
+  padding-top: 2rem;
+  border-top: 1px solid #d0d7de;
+}
+
+html[data-theme="dark"] .page-navigation {
+  border-top-color: #30363d;
+}
+
+/* Callout boxes */
+.callout {
+  border-radius: 6px;
+  border-left-width: 4px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  #quarto-content {
+    padding: 1rem;
+  }
+  
+  .sidebar {
+    font-size: 0.9rem;
+  }
+}
+
+/* Remove default margin on first heading */
+#quarto-content > h1:first-child {
+  margin-top: 0;
+}
+
+/* Better link styling in content */
+#quarto-content a:not(.btn) {
+  color: inherit;
+}
+
+#quarto-content a:not(.btn):hover {
+  color: #0969da;
+}
+
+html[data-theme="dark"] #quarto-content a:not(.btn):hover {
+  color: #58a6ff;
+}
+
+/* Sidebar item hover effect */
+.sidebar-item a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+html[data-theme="dark"] .sidebar-item a:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Smooth transitions */
+a, .sidebar-item {
+  transition: all 0.15s ease;
+}
