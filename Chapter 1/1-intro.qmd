@@ -1,6 +1,6 @@
 # 1 Introduction
 
-Some R programmers have long sought elegant ways to organize their code into reusable R codes, maintainable modules, and granular import system. Unfortunately, R lacks ergnomics for a long time, but [{box}](https://github.com/klmr/box) R package will be your saving grace, as it offers a fresh approach to module system in your respective projects.
+Some R programmers have long sought elegant ways to organize their code into reusable R codes, maintainable modules, and granular import system. Unfortunately, R lacks ergonomics for a long time, until [{box}](https://github.com/klmr/box) R package came in as your saving grace, as it offers a fresh approach to module system in your respective projects.
 
 ---
 
@@ -14,9 +14,9 @@ Let's look at the common challenges:
 -   Maintaining consistency across large codebases can be slow and tedious. 
 -   Sharing code between projects categorically. 
 
-## Enter the Box Package
+## Enter the {box} Package
 
-Before `{box}`, there are packages out there that actually does a pretty solid job, and those are `{conflicted}` and `{import}`. However, `{box}` package is subjectively but ergonomically superior as it does more: it offers a fresh approach to modular programming within R, bringing clarity and structure to your projects. It addresses these challenges by introducing a modern, explicit module system that feels natural to both any R veteran and developer coming from other programming languages.
+Before `{box}`, there are packages out there that actually does a pretty solid job, and those are `{conflicted}` and `{import}`. However, `{box}` package is subjectively but ergonomically more superior than those as it does more: it offers a fresh approach to modular programming within R, bringing better clarity and structure to your projects. It addresses these challenges by introducing a modern, explicit module system that feels natural to both any R veteran and developer coming from other programming languages.
 
 ## Understanding Modular Programming
 

@@ -1,6 +1,6 @@
-# 1.1 Getting Started
+# 2 Getting Started
 
-Before we dive deeper, install `{box}` from CRAN first:
+`{box}` is an R package released on CRAN on September 2021. So, before we dive deeper, install `{box}` from CRAN first:
 
 ``` r
 install.packages("box")
@@ -12,7 +12,7 @@ or you can install the development version from R-universe:
 install.packages('box', repos = 'https://klmr.r-universe.dev')
 ```
 
-Preferably, for the later chapters which involves the `{carrier}` Rust package, you'll need the following forked version of this package, considering that the patches under the fork hasn't made `{box}` upstream yet. To install, do the following:
+Preferably, for the later chapters which involves the `{carrier}` Rust package, you'll need the following forked version of this package, considering that the patches under the fork hasn't made `{box}` upstream yet, which you can import `{box}`-`{carrier}` modules as you do with importing R packages and local modules. To install, do the following:
 
 ``` r
 # Install the package through GitHub
@@ -26,86 +26,89 @@ pak::pak(
 )
 ```
 
----
+------------------------------------------------------------------------
 
-## 1.1.1 Why Box
+## Why Box
 
-I often recommend **{box}** package because it brings and simplifies modular programming in R. As described in its official documentation, it provides two key benefits:
+For a long time, most R users compose their R codes in an R package or just a local collection of R scripts and sometimes with a deep nested directory. The reusability is rather not granular — you going to have to use `library()` to load R packages and `source()` to read R codes from scripts. As discussed on the [introduction](), they are mostly a problem in management, most especially when you code gets larger and larger. And as you can see, there's 2 functions you're going to use and there's no singular solution for an easy and ergonomic reusability.
+
+That's why `{box}` R package is recommended for these because it brings and simplifies modular programming in R for you. As described in its official documentation, it provides two key benefits:
 
 1.  It facilitates modular code writing by treating files and folders as independent, nestable modules, so you don’t need to wrap reusable code into packages.
 
 2.  It introduces a more powerful, less error-prone syntax for importing code from packages or modules, enabling explicit control over what names to import and restricting their scope.
 
-With **{box}**, R users (or useRs) can take advantage of a module system approach in R. 
+With `{box}`, R users (or useRs) can take advantage of a modern (and correct) module system approach in R.
 
-## 1.1.2 Understanding **{box}** package functionality
+## Understanding {box} package functionality
 
-Before starting, you need to understand the field of functions offered by this package first. 
-
----
+Before starting, you need to understand the field of functions offered by this package first.
 
 ### Writing modules
 
-To write modules with **{box}** is like writing an R package *without* the need to switch to other R projects with special *package* annotation. 
+To write modules with `{box}` is like writing an R package *without* the need to switch to other R projects with special *package* annotation and few boilerplates.
 
 ::: {.callout-tip title="Did you know?"}
-You can treat modules like packages. I already take advantage of this package to make my own package prototype, before converting this into an actual package.
+You can treat modules like packages. You can take advantage of this package to make your package prototype, before converting this into an actual package. On the recent development of [`{carrier}`](https://joshuamarie.com/carrier) in 2026, you can make a package out of those modules with it.
 :::
 
-Tools to be used when writing modules with **{box}**:
+Here are the few primary functions to be used when writing modules with `{box}`:
 
--  `box::file()`
--  `box::name()`
--  `box::register_s3_method()`
--  `mod-hooks`: Hooks for module events
--  Miscellaneous: Roxygen2 documentation, which is beneficial in writing documentation for the R code to be reused. 
+-   `box::use()`
+-   `box::file()`
+-   `box::name()`
+-   `box::register_s3_method()`
+-   `mod-hooks`: Hooks for module events (see for more [details](https://klmr.me/box/reference/mod-hooks.html))
+-   Miscellaneous: Roxygen2 documentation, which is beneficial in writing documentation for the R code under the module.
 
 ### Module import / usage
 
-Not just modules, this also includes R packages. 
+Not just local modules, this also includes R packages.
 
 ::: {.callout-note title="History"}
-Historically, `box::use()` is initially an alternative approach to import R packages. 
+Historically, `box::use()` is initially an alternative approach to import R packages.
 :::
 
-In contrast, **{box}** leverages R's non-standard evaluation (NSE): writing an expression as if they exist (only in different context). With **{box}**, you can refer R packages like list objects, then the brackets utilizes the "subset" functionality in R that extracts the exported namespaces: not through numbers and string, but through a *literal name*. No mapping and programmatic approach, aside from calling a name of the module with `box::name()`, you have to be explicit by naming the imports. 
+::: {.callout-tip title="Nerdy Fact"}
+`{box}` leverages R's non-standard evaluation (NSE), by writing an expression as if they exist (only in different context). With `{box}`, you can refer R packages like list objects, then the brackets utilizes the "subset" functionality in R that extracts the exported namespaces: not through numbers and string, but through a *literal name*. No mapping and programmatic approach, aside from calling a name of the module with `box::name()`, you have to be explicit by naming the imports.
+:::
 
----
+------------------------------------------------------------------------
 
-## 1.1.3 Understanding Module Paths and Root Directory
+## Understanding Module Paths and Root Directory
 
-Before proceeding to the next step: importation, one crucial aspect of using box is understanding how it locates and imports modules. The package uses a root directory concept to resolve module paths:
+Before proceeding to the next step: importation, one crucial aspect of using `{box}` is understanding how it locates and imports modules. The package uses a root directory concept to resolve module paths:
 
-1.  Root Directory: By default, `box::file()` searches for modules starting from your project's root directory. Exceedingly, `box::file()` is also used to search the path *within* the script file you are working with. 
+1.  Root Directory: By default, `box::file()` searches for modules starting from your project's root directory. Exceedingly, `box::file()` is also used to search the path *within* the script file you are working with.
 
 2.  Module Path Resolution:
 
-    -   Paths starting with `./`, e.g. `./module/file`,  *are relative to the current file*
+    -   Paths starting with `./`, e.g. `./module/file`, *are relative to the current file*
 
     -   Paths without leading dots, e.g. `module/file`, *are relative to the root directory*
 
     -   Paths starting with `../` are relative to the parent directory of the current file
-    
+
     -   Forward slashes (`/`) are used, even on Windows
 
-*Further explanation in chapter 2 to 3. *
+*Further explanations in chapters 2 to 3.*
 
-Knowing this helps streamline module management with **{box}**.
+Knowing this helps streamline module management with `{box}`.
 
----
+------------------------------------------------------------------------
 
-## 1.1.4 Basic Usage Example
+## Basic Usage Example
 
-Let's start with examples for greenhorns. Remember that modules refers to script files or folders / subfolders loaded using `box::use()`.
+Let's start with examples. Remember that modules are objects after script files, folders / subfolders, or packages are loaded by `box::use()`.
 
-To get started, create a script name `mod.r / mod.R` in the directory from the assumed directory structure:
+To get started, start a project, with a root directory name of `modl/` (a short abbreviation of "module"), then create a script name `mod.r / mod.R` in the directory from the assumed directory structure:
 
 ``` bash
-# my_project/
+# modl/
 # ├── mod.r
 ```
 
-After creating `mod.r / mod.R` script, then copy this code:
+After creating `mod.r / mod.R` script, then try copy this code:
 
 ``` r
 box::use(
@@ -116,163 +119,158 @@ fit_and_predict = function (data, formula, ...)
     lm(formula, data, ...)
 ```
 
-and then save the script. After you save the script, you can now import `mod` as a module:
+and then save the script. After you save the following script, you can now import `mod` as a module:
 
 ``` r
-box::use(
-    ./mod
-)
+box::use(./mod)
 ```
 
-No need to quote the arguments in `box::use()`, by the way. As what I said, the **{box}** package leverages R's NSE. 
+There's no `.r` suffix, the name after `/` refers to a callable module in a form of a directory or an R script. Again, no need to quote the arguments in `box::use()`, unlike `library()` which you are allowed to import packages with quotes. After all, `{box}` package leverages R's NSE.
 
-To call the script, let's say, the script you saved is under the folder of the root directory, you need to call the `./`, then the name of the folder, then the name of the script. Let's assume that this is the directory structure:
+Let's get deeper. How about this `mod.r` you just wrote found under much deeper subfolder or subdirectory? To call such script as a module, you are going 1 level deeper and call that subfolder/subdirectory name before `/`, then call the script. Let's assume that this is the directory structure:
 
 ``` bash
-# my_project/
+# modl/
 # ├── folder1/
 # │   ├──mod.r
+# │   ├── ...this can get deeper 
 ```
 
-To call the module from the script, you can do the following:
+To import the script as a module, do the following:
 
-```r
-box::use(
-    ./folder1/mod
-)
+``` r
+box::use(./folder1/mod)
 ```
 
-and the `mod.r` script is saved into the [*current environment*](https://rlang.r-lib.org/reference/stack.html), called as a *module*.
+Now, you have your `mod.r` script saved into the [*current environment*](https://rlang.r-lib.org/reference/stack.html) as an environment called *module*.
 
 Once called, you may now reuse it according to the following:
 
 ``` r
-fit_and_predict(cars, dist ~ speed)
+mod$fit_and_predict(cars, dist ~ speed)
 ```
 
----
+------------------------------------------------------------------------
 
-## 1.1.5 Common Import Patterns
+## Common Import Patterns
 
-Let's assume you have a script `mod.r`. Here are some typical module import scenarios:
+Now that you have written an R code, saved in a script called `mod.r`, you also learn to import it as a module. You can access its names through `$` operator, but there are few (if not several) ways to import `mod.r` or qualify its names. Here are some typical module import scenarios:
 
-1.  Import entire script / folder as a module:
+1.  Import an entire script / folder as a module:
 
-``` r
-box::use(
-   ./mod
-)
-```
-
-::: {.callout-note title="Initialization" collapse="true"}
-Note: If it is a script, you can directly call the object inside `mod`, i.e. `mod$fobj`. While `mod` is a folder, you can't call it unless you have an initialization file, typically saved into `__init__.r` file. Thus, you might have to call the script inside the folder, i.e. `./mod/.../...[...]` in order to be able to use it like this: `mod$mod1$obj`. For further details, I'll explain this in Chapter 3.
-:::
+    ``` r
+    box::use(
+       ./mod
+    )
+    ```
+    
+    ::: {.callout-note title="Initialization" collapse="true"}
+    Note: If it is a script, you can directly access the names inside `mod`, i.e. `mod$fobj`. On the other hand, if `mod` is a folder or a directory, you need a file called [`__init__.r`]{.underline} that qualifies the folder as a module, then you can access its names as what you did by importing a script, or else you have to qualify the scripts under `mod` folder i.e. `./mod/.../...`. See Chapter 3 for more details. 
+    :::
 
 2.  Import specific script in a folder as a module:
 
-``` r
-box::use(
-    ./mod/mod1
-)
-```
+    ``` r
+    box::use(
+        ./mod/mod1
+    )
+    ```
 
-3.  Import specific objects inside a script being explicitly called as a module:
+3.  Import specific objects inside a script or an `__init__.r`-flavored folder being explicitly called as a module:
 
-``` r
-box::use(
-    ./mod[obj1, obj2]
-)
-```
+    ``` r
+    box::use(
+        ./mod[obj1, obj2]
+    )
+    ```
 
-If it is a folder, it has nested modules, sometimes R objects like functions.
+    If `mod` is a folder, it can have nested modules, or usually just R objects like functions.
 
-4.  Putting an alias when importing `mod.r`:
+4.  Putting an alias when importing `mod` script / folder:
 
-``` r
-box::use(
-    md = ./mod
-)
-```
+    ``` r
+    box::use(
+        md = ./mod
+    )
+    ```
 
+5.  Rename an object within the index, which treats `mod` like a list: 
 
-5.  Rename an object within the index, which treats modules like lists
+    ``` r
+    box::use(
+        ./mod[ob1 = obj1, ob2 = obj2]
+    )
+    ```
 
-``` r
-box::use(
-    ./mod[ob1 = obj1, ob2 = obj2]
-)
-```
-
-::: {.callout-note}
-Note: You don't really have to put aliases for all the imports:
-
-``` r
-box::use(
-    ./mod[ob1 = obj1, obj2]
-)
-```
-
-:::
+    ::: callout-note
+    Note: You don't really have to put aliases for all the imports:
+    
+    ``` r
+    box::use(
+        ./mod[ob1 = obj1, obj2]
+    )
+    ```
+    :::
 
 6.  Import from folders / nested folders
 
-``` r
-box::use(
-    ./mod/mod1,                      # From subdir/module.R
-    ./folder/mod/mod1                # From deep/nested/module.R
-)
-```
+    ``` r
+    box::use(
+        ./mod/mod1,                      # From subdir/module.R
+        ./folder/mod/mod1,               # From deep/nested/module.R
+        ./folder/mod/mod1[ob1 = obj1]   
+    )
+    ```
 
-In my opinion, this is the most optimized solution but requires verbose syntax to perform.
+This is what other programming languages are proposing you to do. Known programming languages like Python strongly enforces this. The tradeoff is that it requires verbose syntax but the cost is minimal compared to what other solutions has offered.
 
-::: {.callout-warning}
-Remember, this will work if `mod` is a script, not a folder, unless it has an initialization file named `__init__.r`.
+::: {.callout-note title="Remember"}
+This will work if `mod` is a script, not a folder, unless it has an initialization file named `__init__.r`.
 :::
 
----
+------------------------------------------------------------------------
 
-## 1.1.6 Troubleshooting Module Imports
+## Troubleshooting Module Imports
 
-Common issues and solutions:
+These are trivial and common issues, and so the solutions are also trivial:
 
-### 1. Module Not Found:
+1.  When the module is not found, simply: 
 
--   Verify path is relative to root directory
+    -   Verify path is relative to root directory
+    
+    -   Ensure file exists with `.R/.r` extension
 
--   Ensure file exists with `.R/.r` extension
+2.  For resolving the path of the modules:
 
-### 2. Path Resolution:
+    :::: panel-tabset
+    #### Wrong
+    
+    Missing required prefixes, e.g. `./`, to import the local modules, and wrong syntax are invalid. 
+    
+    ``` r
+    box::use(modules)                  # Missing ./
+    box::use(\modules\my_module)       # Wrong slashes
+    ```
+    
+    ::: {.callout-note title="To be discussed..."}
+    It is important to know that you can import `modules` through `box::use()` only if `modules` is a package (this will be explain in Chapter 2).
+    :::
+    
+    #### Correct
+    
+    The `/` is a division operator in R, but `box::use()` parses it differently, where the left hand side is the relative directory and the right hand side is the module you are going to import. 
+    
+    ``` r
+    box::use(./modules/my_module)      # Relative to current file
+    box::use(modules/my_module)        # Relative to root (if set)
+    ```
+    
+    ::::
 
-:::: panel-tabset
+3.  It is much better if you follow best Practices. One example is to use relative paths with `./` for clarity, if not a package. Keep local module files in a dedicated directory. And then, follow some consistent naming conventions, e.g. minimize using special characters that R parses unconventionally like a variable name of `fn-1`.
 
+------------------------------------------------------------------------
 
-#### Wrong
+## Common use of syntax
 
-``` r
-box::use(modules)                  # Missing ./
-box::use(\modules\my_module)       # Wrong slashes
-```
-
-::: {.callout-note title="To be discussed..."}
-It is important to know that you can do `box::use(modules)` only if `modules` is a package (this will be explain in Chapter 2).
-:::
-
-#### Correct
-
-``` r
-box::use(./modules/my_module)      # Relative to current file
-box::use(modules/my_module)        # Relative to root (if set)
-```
-
-::::
-
-### 3. Best Practices:
-
-Use relative paths with `./` for clarity, if not a package. Keep module files in a dedicated directory. And then, follow some consistent naming conventions. 
-
----
-
-## 1.1.7 Common use of syntax
-
-When using **{box}**, you are hereby dictated to refer `box::` only. Do not use like `library(box)`, we highly discouraged this. 
-
+When using `{box}`, you are hereby using the package through `box::` prefixes only. You are not allowed to attach `{box}` through `library()`, i.e. `library(box)`, but this is the less of your worries since it is already automatically internally hard-coded.
