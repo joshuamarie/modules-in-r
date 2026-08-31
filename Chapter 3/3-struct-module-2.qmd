@@ -1,27 +1,26 @@
 # Structuring and constructing modules part 2: Package-like Modules
 
-The previous part teaches you on how to import / export data from a module,. In this section, you'll learn on how to write a module that mimics the modular programming paradigm in other languages such as Python. One of the strengths of `{box}` is that it requires less boilerplate to write a module just to compose and store the R codes and make it accessible to other end-users. Because of this package, you can mimic the way on how Python packages are created. It's modular, maintainable, and accessible.
+The previous parts teach you on how to import a module (whether that module is a package or a local scripts/folders) and declare exports from a module. In this section, you'll learn on how to write a module that emulates the modular programming paradigm in other languages such as Python. One of the strengths of `{box}` is that, unlike R packages, it requires less boilerplate to write a module just to make R codes reusable and make it accessible to other end-users. By composing a module, this feels like you are writing a package without requiring another boilerplates. It's modular, maintainable, and accessible.
 
 ---
 
-## 3.2.1 Create modules from the root folder 
+## Get started: modules from the root folder 
 
-Recall the `not_func.r` script. Keep it and this time, create another scripts named `convert.r` and `hello_world.r`. 
+Recall the `not_func.r` script on the previous part of Chapter 3. Keep it and this time, create another scripts named `convert.r` and `hello_world.r`. 
 
 ::: {.callout-tip title="Did you know? "}
 
-*Recall that `#' @export` is only necessary when you are exporting specific part of the assigned R code into the namespace.*
-When `#' @export` is placed, it triggers the Roxygen2 functionality, where it keeps the public namespace into the private namespace. 
+Also recall that `#' @export` is a borrowed syntax from Roxygen2 and is used if necessary when you declare exports of the module on specific part of the assigned R code into the namespace. There's `box::export()` but the `#' @export` tag is more preferred than it. When `#' @export` is placed, it triggers the Roxygen2 functionality, where it keeps the public namespace from the private namespace. 
 
 :::
 
 ::: panel-tabset
 
-###  Converting temperatures
+### `convert.r` 
 
-Copy this code:
+Here are the codes containing functions for converting temperatures. Copy this code:
 
-```r
+``` r
 celsius_to_fahrenheit = function (celsius) {
     fahrenheit = (celsius * 9/5) + 32
     fahrenheit
@@ -33,9 +32,9 @@ fahrenheit_to_celsius = function (fahrenheit) {
 }
 ```
 
-### Simple greetings
+### `hello_world.r` Simple greetings
 
-This example is an example code from the official documentation of **{box}** package. 
+These examples are "simple greetings" function, and they are example codes from the official documentation of `{box}` package. 
 
 ``` r
 #' @export
@@ -51,7 +50,7 @@ bye = function (name) {
 
 :::
 
-And access them like:
+As you can see, the composability is that simple. To declare the exports, choose either `#' @export` tag or through `box::export()`, e.g. `box::export(celsius_to_fahrenheit, fahrenheit_to_celsius)`, `box::export(hello, bye)`. To reuse them, simply refer their relative paths in valid bare names, not on quotes, under `box::use()` call. 
 
 ```{r}
 box::use(
@@ -68,7 +67,20 @@ glue::glue(
 greet$hello("Amy")
 ```
 
-If you have `__init__.r` initialization file already, you can do the following:
+Assuming you have `__init__.r` initialization file already but still empty. If empty and when `./module` is imported on `box::use()`, you'll get nothing. `__init__.r` must contain some exports to mark `./module` as a package. Here's an example `__init__.r`:
+
+``` r
+#' @export
+box::use(
+    ./hello_world,
+    ./not_func,
+    ./convert, 
+)
+
+# box::export(hello_world, not_func) # only when `#' @export` tag is not used
+```
+
+Then try the following:
 
 ```{r}
 box::use(
@@ -84,7 +96,19 @@ glue::glue(
 md$hello_world$hello("Amy")
 ```
 
-And by the way, you can apply aliases for the script accessed as a module, not limited to functions and any objects:
+If you want functions from `hello_world.r` to be directly accessible, i.e. no deep `$` extract, just from `module` itself, but `hello_world` is not a module under `./module` anymore, then do the following: 
+
+``` r
+#' @export
+box::use(
+    ./hello_world[...],
+    ./not_func,
+    ./convert, 
+)
+# box::export(hello, bye, not_func, convert)
+```
+
+And by the way, when you are on interactive session (say, on your R console), you can apply aliases for the script accessed as a module, not limited to functions and any objects:
 
 ``` r
 box::use(
@@ -94,13 +118,13 @@ box::use(
 )
 ```
 
-## 3.2.2 Create a module from subfolders
+## Subfolders as modules
 
-Under the **{./module}**, let's create a subfolder named `statistics`, where the small set of statistical functions are contained in separate scripts. Don't forget the `__init__.r` initialization file. 
+Under `./module`, let's create a subfolder named `statistics/`, where the small set of statistical functions are contained in separate scripts. Don't forget the `__init__.r` initialization file to mark whole `statistics/` as a module. 
 
 Here is the structure:
 
-```bash
+``` bash
 statistics/
 ├── __init__.r
 ├── cor.r
@@ -108,13 +132,15 @@ statistics/
 └── time_series.r
 ```
 
-*See the source code of each script here: https://github.com/joshuamarie/modules-in-r/tree/main/module/statistics*
+*Get the source code of each script [here](https://github.com/joshuamarie/modules-in-r/tree/main/module/statistics)*
 
-Access all of the modules within `statistics` by:
+Access all of the modules within `statistics/` by:
 
 ```{r}
 box::use(
-    md_sts = ./module/statistics
+    ./module/statistics, 
+    md_sts = ./module/statistics,
+    ./module/statistics[cor_pipe, moving_average],
 )
 ```
 
@@ -123,12 +149,10 @@ Example:
 ```{r}
 with(cars, md_sts$cor$custom_cor(speed, dist))
 
-cor_pipe = md_sts$corrr$cor_pipe
-
 mtcars |> 
     cor_pipe(mpg, hp, disp, qsec)
 
-mas = md_sts$time_series$moving_average(AirPassengers, win = 3)
+mas = moving_average(AirPassengers, win = 3)
 
 plot(
     seq_along(AirPassengers),
@@ -144,18 +168,9 @@ plot(
 lines(mas, col = "red")
 ```
 
+If you want everything under `statistics/` subfolder as a module, here's what `__init__.r` file should looks like:
 
-The **{statistics}** *submodule* is accessible: 
-
-```r
-box::use(
-    ./module/statistics
-)
-```
-
-If `__init__.r` file under **{statistics}** subfolder is initialized through:
-
-```r
+``` r
 #' @export
 box::use(
     ./cor_nse,
@@ -164,11 +179,20 @@ box::use(
 )
 ```
 
-*I'll explain about nested modules in the Chapter 3.4.*
+And when you try want the every function directly accessible when `statistics/` subfolder is directly imported, this is what `__init__.r` should looks like:
+
+``` r
+#' @export
+box::use(
+    ./cor_nse[...],
+    ./cor[...],
+    ./moving_average[...]
+)
+```
 
 ::: {.callout-tip title="Recall Chapter 3.1.2"}
 
-If you access **{statistics}** subfolder as a module, under **{./module}** folder like this:
+Assuming you also declare `statistics/` subfolder as an export from the `./module`, you can also do the following: 
 
 ```{r}
 box::use(
@@ -176,8 +200,16 @@ box::use(
 )
 ```
 
-The **{st}** module will not be loaded into the current (root) environment, but loaded under **{./module}** environment
+Although this doesn't differ from the following:
 
-![](Images/img-c3.2.2.jpg)
+``` r
+box::use(
+    st = ./module/statistics
+)
+```
+
+This is still good to know. 
+
+![](../Images/img-c3.3.2.jpg)
 
 :::

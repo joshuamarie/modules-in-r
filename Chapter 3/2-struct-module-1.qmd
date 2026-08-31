@@ -1,6 +1,6 @@
 # Structuring and constructing modules part 1: Initialization
 
-Let's start on how to construct a module *preliminarily*. To demonstrate how to construct modules, let’s work with an example folder named `./module/`. Each script or subfolder within this directory will serve as a separate module or submodule. The files are expected to be *empty*, since I'll be addressing some of them, or you can visit [./module](https://github.com/joshuamarie/modules-in-r/module) to view the pre-written code.
+Let's start on how to construct a module preliminarily. To demonstrate how to write modules, let’s work with an example folder named `./module/`. Each script or subfolder within this directory will serve as a separate module (or even a submodule). In this guide, the files under `./module` are expected to be *empty*, or visit [./module](https://github.com/joshuamarie/modules-in-r/module) that contains the source code to view the pre-written code.
 
 ---
 
@@ -28,19 +28,17 @@ module/
         └── baseline_logit.r
 ```
 
-If you observed, it has 2 levels deep nested modules, and it still can have multiple subdirectories inside `module/` and, once again, it can go deeper than 2 levels for each subdirectory. This is how module system should look like. 
+Observe that it has 2 levels deep nested modules, and it still can have multiple subdirectories inside `module/`. Once again, it can go deeper than 2 levels for each subdirectory. This is how module system should look like. 
 
 ### Initialization
 
-The `__init__.r` file is a special file, acts as the initialization file which marks `./module` folder as a *"package"*, in which will be executed once you import `./module` as a *module*. Once you have it, it is really beneficial because once you declare exports under `__init__.r`, that folder now acts like a module itself and you don't need to explicitly load the script as modules, repetitively. 
+The `__init__.r` file is a special file, acts as the initialization file which marks `./module` folder as a *"package"*, in which will be executed once you import `./module` as a *module*. Once you have it, it is really beneficial because once you declare exports under `__init__.r`, that folder now acts like a module itself and you don't need to explicitly load the script as modules, repetitively. This `__init__.r` file feels too familiar to you when you came from Python. 
 
 Since you have `__init__.r` as an entry point, you load or expose specific functions or objects out from the submodules within this folder. You'll be always using this special file to treat folders as modules, equivalent to what made Python modules. 
 
 ::: {.callout-important}
 
-*Every folder at every level* that you want to treat as a module must contain an `__init__.r` file. This applies to the (1) root module folder (`module/`), (2) any subfolders (`statistics/`), or even any nested subfolders (`statistics/models/`)
-
-Without `__init__.r`, `{box}` won't recognize the folder as a module.
+*Every folder at every level* that you want to treat as a module must contain an `__init__.r` file. This applies to the (1) root module folder (`module/`), (2) any subfolders (`statistics/`), or even any nested subfolders (`statistics/models/`). Without `__init__.r`, `{box}` won't recognize the folder as a module.
 
 :::
 

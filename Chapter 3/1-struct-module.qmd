@@ -6,6 +6,6 @@ In this chapter, we will dive deeper into the composability, organization, and r
 
 ---
 
-## Module Basics
+## Recall on Module Basics
 
-In `{box}`, a module is simply between an imported R package, R scripts, or a folder that contains an R script that encapsulates related functions, variables, and objects, forming a cohesive unit of functionality. Think of a module as a container of reusable code, and must be containing a namespace, similar to how Python packages work. This design encompasses module system for R, something that is less robust in R, where you organize your code into logically separated units, making it easy to maintain and reuse across different projects.
+In `{box}`, a module is simply between an imported R package, R scripts, or a folder that contains an R script that encapsulates related functions, variables, and objects, forming a cohesive unit of functionality. Think of a module as a container of reusable code, and is containing a namespace, similar to how Python packages work. This design encompasses what module system for R should be, where you organize your code into logically separated units, making it easy to maintain and reuse across different projects. It's not like R doesn't have this, it just lacks the ergonomics on composability, reusability, and organization. 

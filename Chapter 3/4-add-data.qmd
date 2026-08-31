@@ -1,8 +1,8 @@
 # Structuring and constructing modules part 3: Reading and adding data
 
-When constructing modules, sometimes you a built-in data frame, or any object outside from functions. Let's explore how to effectively import / export and manage different types of data using **{box}**. It could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on. 
+When constructing modules, there are times you need a built-in data frames on those modules, list/atomic vectors, arrays/matrices, or any object outside from functions that represents the constant. Let's explore how to effectively import / export and manage different types of data using `{box}`. Again, it could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on. 
 
-In this guide, especially for data frames later, I'll be using the `mpg` dataset from **{ggplot2}** package, and saved it as `mpg.rds` to load it via `readRDS()` function within the module.
+In this guide, especially for data frames later, let us use `mpg` dataset from the `{ggplot2}` package, and saved it as `mpg.rds` to load it via `readRDS()` function within the module.
 
 ---
 
