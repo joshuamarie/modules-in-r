@@ -17,7 +17,7 @@ test_that('Linear Regression from data frame S3 method works', {
         linear_reg(mpg ~ wt + hp, vif = TRUE)
     
     expect_s3_class(model, "linear_reg")
-    expect_error(nrow(model$out), 3)
+    expect_equal(nrow(model$out), 3L)
 })
 
 test_that('Linear Regression calculates correct coefficients', {
