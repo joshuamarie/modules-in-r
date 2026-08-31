@@ -47,6 +47,7 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           target: gh-pages
+          render: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
