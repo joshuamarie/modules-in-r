@@ -658,7 +658,7 @@ This shows that *any R object* can be part of a module's namespace, not just fun
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module<span class="sc">/</span>not_func</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Here, <code>md_dt</code> is loaded as a module that carries the whole <code>./module</code> folder, not the <code>not_func</code> script. On the other hand, the second code will load <code>not_func</code> script as a module under <code>md_dt</code> name.</p>
-<p><img src="Images/img-c3.1.2.jpg" class="img-fluid"></p></li>
+<p><img src="../Images/img-c3.1.2.jpg" class="img-fluid"></p></li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -682,9 +682,9 @@ Note
 <h3 class="anchored" data-anchor-id="basic-reloading">Basic Reloading</h3>
 <p>To reload a module, <code>{box}</code> provides the function <code>box::reload()</code>. This clears the cached version and re-imports the module, ensuring that the latest code changes are applied.</p>
 <p>If you’ve imported the module, such as:</p>
-<pre><code>box::use(
-    md = ./module
-)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md =</span> .<span class="sc">/</span>module</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>and you made some changes within its source code, you can reload it simply by:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>And note: Reloading <em>submodules</em> under <code>md</code> module is not valid, even though <code>statistics</code> here is a module.</p>
