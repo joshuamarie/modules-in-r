@@ -25,6 +25,7 @@ jobs:
             knitr
             rmarkdown
             tidyverse
+            testthat
             downlit
             xml2
             jsonlite
