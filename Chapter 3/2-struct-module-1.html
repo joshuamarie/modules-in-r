@@ -529,32 +529,33 @@ Important
 <p>The root <code>module/</code> folder contains few (if not several) scripts that can be directly imported:</p>
 <ol type="1">
 <li><p><code>hello_world.r</code>: A simple demonstration script using examples from the official <code>{box}</code> documentation. This showcases basic module functionality and serves as a “Hello World” introduction to module creation.</p></li>
-<li><p><code>convert.r</code>: Contains utility functions for temperature conversion:</p></li>
+<li><p><code>convert.r</code>: Contains utility functions for temperature conversion:</p>
+<ul>
+<li><code>celsius_to_fahrenheit()</code>: Converts Celsius to Fahrenheit</li>
+<li><code>fahrenheit_to_celsius()</code>: Converts Fahrenheit to Celsius</li>
+</ul>
+<p>These functions demonstrate how standalone utility functions can be organized in modules.</p></li>
+<li><p><code>matrix_ops.r</code>: Comprises with overloaded matrix operation functions and operators:</p>
+<ul>
+<li>Custom matrix multiplication operators</li>
+<li>Matrix transformation utilities</li>
+</ul>
+<p>This script demonstrates how to export functions with special characters (operators like <code>*</code> or <code>^</code>).</p></li>
+<li><p><code>tables.r</code>: Contains table formatting and display functions:</p></li>
 </ol>
-<pre><code>- `celsius_to_fahrenheit()`: Converts Celsius to Fahrenheit
-- `fahrenheit_to_celsius()`: Converts Fahrenheit to Celsius
-
-These functions demonstrate how standalone utility functions can be organized in modules.</code></pre>
-<ol start="3" type="1">
-<li><code>matrix_ops.r</code>: Comprises with overloaded matrix operation functions and operators:</li>
-</ol>
-<pre><code>- Custom matrix multiplication operators
-- Matrix transformation utilities
-
-This script demonstrates how to export functions with special characters (operators like `*` or `^`).</code></pre>
-<p>4 <code>tables.r</code>: Contains table formatting and display functions:</p>
-<pre><code>- `draw_table()`: Displays data frames as table in terminal. </code></pre>
+<pre><code>-   `draw_table()`: Displays data frames as table in terminal.</code></pre>
 <ol start="5" type="1">
-<li><code>not_func.r</code>: Contains the exports that are not functions. This simply demonstrates that modules aren’t limited to functions. This script contains various data structures that can be exported:</li>
+<li><p><code>not_func.r</code>: Contains the exports that are not functions. This simply demonstrates that modules aren’t limited to functions. This script contains various data structures that can be exported:</p>
+<ul>
+<li>Atomic vectors</li>
+<li>Lists</li>
+<li>Matrices</li>
+<li>Data frames</li>
+<li>N-dimensional arrays</li>
+<li>Constants or configuration values</li>
+</ul>
+<p>This shows that <em>any R object</em> can be part of a module’s namespace, not just functions.</p></li>
 </ol>
-<pre><code>- Atomic vectors
-- Lists
-- Matrices
-- Data frames
-- N-dimensional arrays
-- Constants or configuration values
-
-This shows that *any R object* can be part of a module's namespace, not just functions.</code></pre>
 <section id="subfolders-submodules" class="level4">
 <h4 class="anchored" data-anchor-id="subfolders-submodules">Subfolders (Submodules)</h4>
 <p>The module structure includes organized subfolders that group related functionality:</p>
@@ -632,31 +633,31 @@ This shows that *any R object* can be part of a module's namespace, not just fun
 <p>Here are the valid imports:</p>
 <ol type="1">
 <li><p>With alias</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md =</span> .<span class="sc">/</span>module</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md =</span> .<span class="sc">/</span>module</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Note: It’s up to you if you want another name, besides <code>md</code>.</em></p></li>
 <li><p>Without alias</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>module</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>module</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Load specific subfolder as a module</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_stats =</span> .<span class="sc">/</span>module[statistics]</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_stats =</span> .<span class="sc">/</span>module[statistics]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is equivalent to:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_stats =</span> .<span class="sc">/</span>module<span class="sc">/</span>statistics</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_stats =</span> .<span class="sc">/</span>module<span class="sc">/</span>statistics</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>As long as the <code>statistics/</code> subfolder is publicly exported under the initialization <code>__init__.r</code> file.</p></li>
 <li><p>Load specific script as a module</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module[not_func]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module[not_func]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note: This is not entirely equivalent to:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module<span class="sc">/</span>not_func</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module<span class="sc">/</span>not_func</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Here, <code>md_dt</code> is loaded as a module that carries the whole <code>./module</code> folder, not the <code>not_func</code> script. On the other hand, the second code will load <code>not_func</code> script as a module under <code>md_dt</code> name.</p>
 <p><img src="../Images/img-c3.1.2.jpg" class="img-fluid"></p></li>
 </ol>
@@ -682,17 +683,17 @@ Note
 <h3 class="anchored" data-anchor-id="basic-reloading">Basic Reloading</h3>
 <p>To reload a module, <code>{box}</code> provides the function <code>box::reload()</code>. This clears the cached version and re-imports the module, ensuring that the latest code changes are applied.</p>
 <p>If you’ve imported the module, such as:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md =</span> .<span class="sc">/</span>module</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md =</span> .<span class="sc">/</span>module</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>and you made some changes within its source code, you can reload it simply by:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>And note: Reloading <em>submodules</em> under <code>md</code> module is not valid, even though <code>statistics</code> here is a module.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bad</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md<span class="sc">$</span>statistics)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Good</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bad</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md<span class="sc">$</span>statistics)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Good</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">reload</span>(md)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
