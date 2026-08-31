@@ -473,13 +473,12 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#multi-level-folder-structures" id="toc-multi-level-folder-structures" class="nav-link active" data-scroll-target="#multi-level-folder-structures">3.4.1 Multi-level folder structures</a></li>
-  <li><a href="#accessing-deeply-nested-modules" id="toc-accessing-deeply-nested-modules" class="nav-link" data-scroll-target="#accessing-deeply-nested-modules">3.4.2 Accessing deeply nested modules</a></li>
-  <li><a href="#navigating-up-the-directory-tree-with-.." id="toc-navigating-up-the-directory-tree-with-.." class="nav-link" data-scroll-target="#navigating-up-the-directory-tree-with-..">3.4.3 Navigating up the directory tree with <code>../</code></a>
+  <li><a href="#multi-level-folder-structures" id="toc-multi-level-folder-structures" class="nav-link active" data-scroll-target="#multi-level-folder-structures">Multi-level folder structures</a></li>
+  <li><a href="#accessing-deeply-nested-modules" id="toc-accessing-deeply-nested-modules" class="nav-link" data-scroll-target="#accessing-deeply-nested-modules">Accessing deeply nested modules</a></li>
+  <li><a href="#navigating-up-the-directory-tree-with-.." id="toc-navigating-up-the-directory-tree-with-.." class="nav-link" data-scroll-target="#navigating-up-the-directory-tree-with-..">Navigating up the directory tree with <code>../</code></a>
   <ul class="collapse">
-  <li><a href="#example-accessing-modules-from-nested-directories" id="toc-example-accessing-modules-from-nested-directories" class="nav-link" data-scroll-target="#example-accessing-modules-from-nested-directories">3.4.3.1 Example: Accessing modules from nested directories</a></li>
+  <li><a href="#example-accessing-modules-from-nested-directories" id="toc-example-accessing-modules-from-nested-directories" class="nav-link" data-scroll-target="#example-accessing-modules-from-nested-directories">Example: Accessing modules from nested directories</a></li>
   </ul></li>
-  <li><a href="#best-practices-for-deep-nesting" id="toc-best-practices-for-deep-nesting" class="nav-link" data-scroll-target="#best-practices-for-deep-nesting">3.4.4 Best practices for deep nesting</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/joshuamarie/modules-in-r/edit/main/Chapter 3/5-nested-modules.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/joshuamarie/modules-in-r/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -506,19 +505,18 @@ window.Quarto = {
 </header>
 
 
-<p>One of the good parts about <strong>{box}</strong> package is it allows accessing deep nested scripts / folders in any depth as modules.</p>
-<p>Building on what you learned in the previous section about creating modules from subfolders, <strong>{box}</strong> doesn’t limit you to just one level of nesting. You can organize your code into multiple layers of directories, creating a hierarchical structure that makes sense for your project’s complexity and organization needs.</p>
+<p>One of the good parts about module systems in modular programming, which applied by <code>{box}</code> package fortunately, is they allow deep nested scripts / folders in any depth as modules, then import these modules with deep nesting. On the previous section in Chapter 3, we talk about <code>statistics/</code> subfolder, in which this folder is 1 level deep from the <code>./module</code>. <code>{box}</code> doesn’t limit you to just 1 level of nesting only. You can organize your code into multiple layers of directories, creating a hierarchical structure that makes sense for your project’s complexity and organization needs.</p>
 <hr>
 <section id="multi-level-folder-structures" class="level2">
-<h2 class="anchored" data-anchor-id="multi-level-folder-structures">3.4.1 Multi-level folder structures</h2>
-<p>Let’s update <strong>{./module}</strong> folder from Chapter 3.1, by updating (or just copy and paste the source code of <strong>{./module}</strong> in GitHub) <code>matrix_ops.r</code> to store functions that rewrites <code>*</code> for matrix multiplication and overrides <code>^</code> where a specific value, <code>^-1</code>, implies the inverse of the matrix, and <code>tables.r</code> to store functions for displaying tables in R REPL, and extending the <strong>{./module/statistics}</strong> subfolder by adding another level of organization, e.g.&nbsp;you want to add statistical model utilities organized by model type, saved as <strong>{./module/statistics/models}</strong>* subfolder.</p>
+<h2 class="anchored" data-anchor-id="multi-level-folder-structures">Multi-level folder structures</h2>
+<p>From the previous <code>./module</code>, let’s spice it up a bit by updating (or just get the source code of <code>./module</code> in GitHub) <code>matrix_ops.r</code> to store functions that rewrites <code>*</code> for matrix multiplication and overrides <code>^</code> where a specific value, <code>^-1</code>, implies the inverse of the matrix, and <code>tables.r</code> to store functions for displaying tables in R, and extending the <code>./module/statistics</code> subfolder by adding another level of organization, e.g.&nbsp;you want to add statistical model utilities organized by model type, saved them in R scripts under <code>./module/statistics/models</code> subfolder.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module/</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> __init__.r</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> convert.r</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> hello_world.r</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> matrix_ops.r              <span class="co"># &lt;------------- Under root **{./module}** folder</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> matrix_ops.r              <span class="co"># &lt;------------- Under root `./module` folder</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> not_func.r</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> tables.r                  <span class="co"># &lt;------------- Under root **{./module}** folder</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> tables.r                  <span class="co"># &lt;------------- Under root `./module` folder</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> statistics/</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> __init__.r</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">├──</span> cor.r</span>
@@ -529,39 +527,39 @@ window.Quarto = {
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> linear.r</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> logistic.r</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="ex">└──</span> baseline_logit.r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>In this structure, <strong>{./module/statistics/models}</strong>* is nested two levels deep from the root <strong>{./module}</strong> folder. Each directory still requires its own <code>__init__.r</code> file to be recognized as a module.</p>
-<div class="callout callout-style-default callout-note callout-titled">
+<p>In this structure, <code>./module/statistics/models</code> is nested two (2) levels deep from the root <code>./module</code> folder. Each directory still requires its own <code>__init__.r</code> file to be recognized as a module.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="About `__init__.r`">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Note
+<span class="screen-reader-only">Warning</span>About <code>__init__.r</code>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Remember that every folder you want to treat as a module must contain an <code>__init__.r</code> file, regardless of its depth in the folder hierarchy.</p>
+<p>Just don’t forget that every folder you want to treat as a module must contain an <code>__init__.r</code> file, regardless of its depth in the folder hierarchy.</p>
 </div>
 </div>
-<p>Under <strong>{./module/statistics/models}</strong>* subfolder, place this in <code>__init__.r</code> file:</p>
+<p>Under <code>./module/statistics/models</code> subfolder, place this in <code>__init__.r</code> file:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>linear,</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>logistic,</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>baseline_logit</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>And since we are adding another module within <strong>{./module/statistics}</strong>, update its <code>__init__.r</code> initialization file:</p>
+<p>And since we are adding another module within <code>./module/statistics</code>, update its <code>__init__.r</code> initialization file:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>cor,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>corrr,</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>time_series, </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>models</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>models             <span class="co"># The new export for `statistics` module</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="accessing-deeply-nested-modules" class="level2">
-<h2 class="anchored" data-anchor-id="accessing-deeply-nested-modules">3.4.2 Accessing deeply nested modules</h2>
-<p>You can access these deeply nested modules using the same syntax patterns you’ve already learned in the previous chapter, just with longer paths:</p>
+<h2 class="anchored" data-anchor-id="accessing-deeply-nested-modules">Accessing deeply nested modules</h2>
+<p>You can import these deeply nested modules using the same syntax patterns you’ve already learned in the previous chapter, just with longer paths:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>module<span class="sc">/</span>statistics<span class="sc">/</span>time_series</span>
@@ -575,13 +573,12 @@ Note
 </div>
 <p>Or you can use the parent module and traverse through the hierarchy:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access through the parent module</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">md =</span> .<span class="sc">/</span>module</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate through the nested structure</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>md<span class="sc">$</span>statistics<span class="sc">$</span>time_series<span class="sc">$</span><span class="fu">ACF</span>(AirPassengers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md =</span> .<span class="sc">/</span>module</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate through the nested structure</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>md<span class="sc">$</span>statistics<span class="sc">$</span>time_series<span class="sc">$</span><span class="fu">ACF</span>(AirPassengers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 1.0000000 0.9480473 0.8755748 0.8066812 0.7526254 0.7137700 0.6817336
  [8] 0.6629044 0.6556105 0.6709483 0.7027199</code></pre>
@@ -599,12 +596,12 @@ Note
 <div class="callout-body-container callout-body">
 <p>The code for some script is too long. Navigate the source code by clicking each hyperlinked text:</p>
 <ol type="1">
-<li><p>Under <strong>{./module}</strong></p>
+<li><p>Under <code>./module</code>:</p>
 <ul>
 <li><a href="https://github.com/joshuamarie/modules-in-r/tree/main/module/matrix_ops.r"><code>matrix_ops.r</code></a></li>
 <li><a href="https://github.com/joshuamarie/modules-in-r/tree/main/module/tables.r"><code>tables.r</code></a></li>
 </ul></li>
-<li><p>Under <strong>{module/statistics/models}</strong></p>
+<li><p>Under <code>./module/statistics/models</code>:</p>
 <ul>
 <li><a href="https://github.com/joshuamarie/modules-in-r/tree/main/module/statistics/models/linear.r"><code>linear.r</code></a></li>
 <li><a href="https://github.com/joshuamarie/modules-in-r/tree/main/module/statistics/models/logistic.r"><code>logistic.r</code></a></li>
@@ -615,8 +612,8 @@ Note
 </div>
 </section>
 <section id="navigating-up-the-directory-tree-with-.." class="level2">
-<h2 class="anchored" data-anchor-id="navigating-up-the-directory-tree-with-..">3.4.3 Navigating up the directory tree with <code>../</code></h2>
-<p>The use of <code>./</code> prefix is limited to the root directory only, but how about accessing a script / folder when it is located in parent directories, one level up or more? Just like in file systems, <strong>{box}</strong> allows you to navigate up to parent directories using <code>../</code>. This is particularly useful when you have scripts in different folders that need to access modules from sibling or parent directories.</p>
+<h2 class="anchored" data-anchor-id="navigating-up-the-directory-tree-with-..">Navigating up the directory tree with <code>../</code></h2>
+<p>The use of <code>./</code> prefix is limited to the root directory only, but how about depending to the scripts / folders when they are located in parent directories, one level up or more? Just like in file systems, <code>{box}</code> allows you to navigate up to parent directories using <code>../</code>. This is particularly useful when you have scripts in different folders that need to access modules from sibling or parent directories.</p>
 <p>Here’s the syntax pattern:</p>
 <ul>
 <li>Access a script <em>1 step up</em> <span class="math inline">\(\rightarrow\)</span> use prefix <code>../</code></li>
@@ -625,8 +622,8 @@ Note
 <li>…and so on</li>
 </ul>
 <section id="example-accessing-modules-from-nested-directories" class="level3">
-<h3 class="anchored" data-anchor-id="example-accessing-modules-from-nested-directories">3.4.3.1 Example: Accessing modules from nested directories</h3>
-<p>Under <code>linear.r</code>, <code>logistic.r</code>, and <code>baseline_logit.r</code> scripts from <strong>{statistics/models}</strong>, there’s an import that tries to access the namespace under <code>matrix_ops.r</code> and <code>tables.r</code> scripts, where both scripts are found 2 steps upper from the current directory of <code>linear.r</code>, <code>logistic.r</code>, and <code>baseline_logit.r</code> scripts:</p>
+<h3 class="anchored" data-anchor-id="example-accessing-modules-from-nested-directories">Example: Accessing modules from nested directories</h3>
+<p>Under <code>linear.r</code>, <code>logistic.r</code>, and <code>baseline_logit.r</code> scripts from <code>statistics/models/</code>, there’s an import declaration that tries to access the namespace under <code>matrix_ops.r</code> and <code>tables.r</code> scripts, where both scripts are found 2 steps upper from the current directory of <code>linear.r</code>, <code>logistic.r</code>, and <code>baseline_logit.r</code> scripts:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>..<span class="sc">/</span>matrix_ops[<span class="st">`</span><span class="at">*</span><span class="st">`</span>, <span class="st">`</span><span class="at">^</span><span class="st">`</span>],</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>..<span class="sc">/</span>tables[draw_table]</span>
@@ -659,7 +656,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The prefix <code>../</code> is quite a solution, however, using too many levels (e.g., <code>../../../</code>) can make your eye sore, and potentially makes your code harder to understand and maintain. If you find yourself going up many levels, consider reorganizing your folder structure or using absolute paths from the project root.</p>
+<p>This is an opinion: The prefix <code>../</code> is quite a solution, indeed, however, using too many levels (e.g., <code>../../../</code>) can make your eye sore, and potentially makes your code a little bit harder to understand and maintain. If you find yourself going up many levels, consider reorganizing your folder structure or using absolute paths from the project root.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
@@ -691,8 +688,8 @@ Warning
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> __init__.r </span>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> script1.r          </span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        <span class="ex">└──</span> script2.r  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>And imagine you are in <code>script1.r</code> under <strong>{submodule2/subsubmodule1}</strong>. Is it possible to access <code>script2.r</code> under <strong>{submodule1}</strong>?</p>
-<p>I’ll help you visualize:</p>
+<p>Let’s assume you are from <code>script1.r</code> under <code>submodule2/subsubmodule1</code>. Is it possible to get <code>script2.r</code> under <code>submodule1/</code>? If yes, how to get there?</p>
+<p>Here’s the visualization of the structure:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module/</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> __init__.r</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> script1.r</span>
@@ -710,7 +707,7 @@ Warning
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> script1.r     <span class="co"># ◄─── You are here     </span></span>
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        <span class="ex">└──</span> script2.r   </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <blockquote class="blockquote">
-<p>Short answer: Yes Long answer: It is possible. You just need to go up 2 directories to reach the <strong>{./module}</strong> level, then navigate into <strong>{submodule1}</strong>:</p>
+<p>Short answer: Yes Long answer: It is possible. You just need to go up 2 directories to reach the <code>./module</code> level, then navigate into <code>submodule1/</code>:</p>
 </blockquote>
 <div class="cell">
 <details class="code-fold">
@@ -726,33 +723,19 @@ Warning
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="best-practices-for-deep-nesting" class="level2">
-<h2 class="anchored" data-anchor-id="best-practices-for-deep-nesting">3.4.4 Best practices for deep nesting</h2>
-<p>While <strong>{box}</strong> allows you to nest modules at any depth, here are some of my software engineering principles to consider when organizing your code:</p>
-<ul>
-<li><p><strong>Keep it reasonable</strong>: Deeply nested structures can make navigation more complex. Most projects benefit from a relatively flat hierarchy, though the optimal depth depends on your project’s size and complexity.</p></li>
-<li><p><strong>Organize by functionality</strong>: Group related functions in a way that makes sense for your workflow. For example, keeping all model-related functions under <strong>{./module/statistics/models}</strong>, organized by algorithm type.</p></li>
-<li><p><strong>Use meaningful names</strong>: Choose folder names that clearly indicate their contents, making it easier to locate specific functionality.</p></li>
-<li><p><strong>Document your structure</strong>: A README file or comments explaining your module organization can help collaborators (and future you) understand the project layout.</p></li>
-<li><p><strong>Be mindful with <code>../</code></strong>: Frequent use of parent directory navigation might suggest opportunities to reorganize your structure.</p></li>
-</ul>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>There’s no strict rule about module depth. The <strong>{box}</strong> package itself doesn’t impose limitations on nesting levels. Organize your modules in whatever way makes your code most maintainable and understandable for your specific project needs.</p>
-</div>
-</div>
+<!-- ## Best practices for deep nesting -->
+<!-- While **{box}** allows you to nest modules at any depth, here are some of my software engineering principles to consider when organizing your code: -->
+<!-- -   **Keep it reasonable**: Deeply nested structures can make navigation more complex. Most projects benefit from a relatively flat hierarchy, though the optimal depth depends on your project's size and complexity. -->
+<!-- -   **Organize by functionality**: Group related functions in a way that makes sense for your workflow. For example, keeping all model-related functions under **{./module/statistics/models}**, organized by algorithm type. -->
+<!-- -   **Use meaningful names**: Choose folder names that clearly indicate their contents, making it easier to locate specific functionality. -->
+<!-- -   **Document your structure**: A README file or comments explaining your module organization can help collaborators (and future you) understand the project layout. -->
+<!-- -   **Be mindful with `../`**: Frequent use of parent directory navigation might suggest opportunities to reorganize your structure. -->
+<!-- ::: {.callout-note} -->
+<!-- There's no strict rule about module depth. The **{box}** package itself doesn't impose limitations on nesting levels. Organize your modules in whatever way makes your code most maintainable and understandable for your specific project needs. -->
+<!-- ::: -->
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

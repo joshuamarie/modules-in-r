@@ -593,6 +593,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> <span class="fu">keep_when</span>(col <span class="sc">&gt;</span> <span class="dv">0</span>)      </span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>AirPassengers <span class="sc">|&gt;</span> <span class="fu">filter_ts</span>()      </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>But wait, there’s another thing you need to know. When you declare an import under <code>box::use()</code>, something like <code>box::use(pkg = package[fn1])</code>, two things will happen: this imports <code>pkg</code> carrying the namespace <code>package</code>, and at the same time will attach <code>fn1</code> under <code>package</code> namespace.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

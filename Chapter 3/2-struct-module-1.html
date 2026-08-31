@@ -483,7 +483,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Let’s start on how to construct a module <em>preliminarily</em>. To demonstrate how to construct modules, let’s work with an example folder named <code>./module/</code>. Each script or subfolder within this directory will serve as a separate module or submodule. The files are expected to be <em>empty</em>, since I’ll be addressing some of them, or you can visit <a href="https://github.com/joshuamarie/modules-in-r/module">./module</a> to view the pre-written code.</p>
+<p>Let’s start on how to construct a module preliminarily. To demonstrate how to write modules, let’s work with an example folder named <code>./module/</code>. Each script or subfolder within this directory will serve as a separate module (or even a submodule). In this guide, the files under <code>./module</code> are expected to be <em>empty</em>, or visit <a href="https://github.com/joshuamarie/modules-in-r/module">./module</a> that contains the source code to view the pre-written code.</p>
 <hr>
 <section id="the-structure" class="level2">
 <h2 class="anchored" data-anchor-id="the-structure">The structure</h2>
@@ -505,10 +505,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> linear.r</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="ex">├──</span> logistic.r</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="ex">└──</span> baseline_logit.r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If you observed, it has 2 levels deep nested modules, and it still can have multiple subdirectories inside <code>module/</code> and, once again, it can go deeper than 2 levels for each subdirectory. This is how module system should look like.</p>
+<p>Observe that it has 2 levels deep nested modules, and it still can have multiple subdirectories inside <code>module/</code>. Once again, it can go deeper than 2 levels for each subdirectory. This is how module system should look like.</p>
 <section id="initialization" class="level3">
 <h3 class="anchored" data-anchor-id="initialization">Initialization</h3>
-<p>The <code>__init__.r</code> file is a special file, acts as the initialization file which marks <code>./module</code> folder as a <em>“package”</em>, in which will be executed once you import <code>./module</code> as a <em>module</em>. Once you have it, it is really beneficial because once you declare exports under <code>__init__.r</code>, that folder now acts like a module itself and you don’t need to explicitly load the script as modules, repetitively.</p>
+<p>The <code>__init__.r</code> file is a special file, acts as the initialization file which marks <code>./module</code> folder as a <em>“package”</em>, in which will be executed once you import <code>./module</code> as a <em>module</em>. Once you have it, it is really beneficial because once you declare exports under <code>__init__.r</code>, that folder now acts like a module itself and you don’t need to explicitly load the script as modules, repetitively. This <code>__init__.r</code> file feels too familiar to you when you came from Python.</p>
 <p>Since you have <code>__init__.r</code> as an entry point, you load or expose specific functions or objects out from the submodules within this folder. You’ll be always using this special file to treat folders as modules, equivalent to what made Python modules.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -520,8 +520,7 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><em>Every folder at every level</em> that you want to treat as a module must contain an <code>__init__.r</code> file. This applies to the (1) root module folder (<code>module/</code>), (2) any subfolders (<code>statistics/</code>), or even any nested subfolders (<code>statistics/models/</code>)</p>
-<p>Without <code>__init__.r</code>, <code>{box}</code> won’t recognize the folder as a module.</p>
+<p><em>Every folder at every level</em> that you want to treat as a module must contain an <code>__init__.r</code> file. This applies to the (1) root module folder (<code>module/</code>), (2) any subfolders (<code>statistics/</code>), or even any nested subfolders (<code>statistics/models/</code>). Without <code>__init__.r</code>, <code>{box}</code> won’t recognize the folder as a module.</p>
 </div>
 </div>
 </section>

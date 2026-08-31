@@ -444,9 +444,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#creating-a-module-for-the-data" id="toc-creating-a-module-for-the-data" class="nav-link active" data-scroll-target="#creating-a-module-for-the-data">3.3.1 Creating a module for the data</a>
+  <li><a href="#creating-a-module-for-the-data" id="toc-creating-a-module-for-the-data" class="nav-link active" data-scroll-target="#creating-a-module-for-the-data">Creating a module for the data</a>
   <ul class="collapse">
-  <li><a href="#file-extension" id="toc-file-extension" class="nav-link" data-scroll-target="#file-extension">3.3.1.1 File “extension”</a></li>
+  <li><a href="#file-extension" id="toc-file-extension" class="nav-link" data-scroll-target="#file-extension">File “extension”</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/joshuamarie/modules-in-r/edit/main/Chapter 3/4-add-data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/joshuamarie/modules-in-r/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -474,28 +474,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>When constructing modules, sometimes you a built-in data frame, or any object outside from functions. Let’s explore how to effectively import / export and manage different types of data using <strong>{box}</strong>. It could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on.</p>
-<p>In this guide, especially for data frames later, I’ll be using the <code>mpg</code> dataset from <strong>{ggplot2}</strong> package, and saved it as <code>mpg.rds</code> to load it via <code>readRDS()</code> function within the module.</p>
+<p>When constructing modules, there are times you need a built-in data frames on those modules, list/atomic vectors, arrays/matrices, or any object outside from functions that represents the constant. Let’s explore how to effectively import / export and manage different types of data using <code>{box}</code>. Again, it could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on. The basics of loading the data with <code>{box}</code> here is not rather lazy, unlike traditional R packages, the basics show you that you have to eagerly import them.</p>
+<p>In this guide, especially for data frames later, let us use <code>mpg</code> dataset from the <code>{ggplot2}</code> package, and saved it as <code>mpg.rds</code> under <code>data/</code> from <code>./module</code> to load it via <code>readRDS()</code> function within the module.</p>
 <hr>
 <section id="creating-a-module-for-the-data" class="level2">
-<h2 class="anchored" data-anchor-id="creating-a-module-for-the-data">3.3.1 Creating a module for the data</h2>
-<p>The steps are trivial, (almost) every steps are similar to the process in R packages.</p>
+<h2 class="anchored" data-anchor-id="creating-a-module-for-the-data">Creating a module for the data</h2>
+<p>The steps are trivial, (almost) every steps are similar to how R packages handle the data.</p>
 <section id="file-extension" class="level3">
-<h3 class="anchored" data-anchor-id="file-extension">3.3.1.1 File “extension”</h3>
-<p>There’s a script under <strong>{./module}</strong> folder named <code>not_func.r</code>, where non-functions are contained.</p>
-<p>Under <strong>{./module}</strong> folder, copy and paste this code:</p>
+<h3 class="anchored" data-anchor-id="file-extension">File “extension”</h3>
+<p>There’s an R script under <code>./module</code> folder named <code>not_func.r</code>, where objects that are non-functions are contained. Use this code and save it on <code>not_func.r</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    tibble[as_tibble]</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pi <span class="ot">=</span> pi</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">=</span> <span class="fu">as_tibble</span>(datasets<span class="sc">::</span>iris)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>sales <span class="ot">=</span> <span class="fu">readRDS</span>(box<span class="sc">::</span><span class="fu">file</span>(<span class="st">'data/sales.rda'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    tibble[as_tibble],</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    datasets[iris]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>pi <span class="ot">=</span> pi</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">=</span> <span class="fu">as_tibble</span>(iris)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>sales <span class="ot">=</span> <span class="fu">readRDS</span>(box<span class="sc">::</span><span class="fu">file</span>(<span class="st">'data/sales.rda'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -506,25 +506,25 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>No need to place <code>#' @export</code> as the code were being exported into namespace of the modules anyways. Only use <code>#' @export</code> if you preferred to specifically export some saved R codes into the namespace of the module. When you load external packages or modules with <code>box::use()</code>, only what’s inside the namespace of the package to be exported.</p>
+<p>Considering all of the assigned objects under the module namespace are exported, no need to place <code>#' @export</code>. Only use <code>#' @export</code> if you preferred to specifically export some assigned objects under the namespace of the module. When you load external packages or modules with <code>box::use()</code>, only what’s inside the namespace of the package to be exported.</p>
 </div>
 </div>
-<p>Save that script and then load the module:</p>
+<p>Save that script and then try load the module:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    module<span class="sc">/</span>not_func</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>module<span class="sc">/</span>not_func</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If you have the initial file, you can import <strong>{./module/not_func.r}</strong> as <strong>{not_func}</strong> module within <code>[]</code>. For example:</p>
+<p>If you have the initial file <code>__init__.r</code> under <code>./module</code> which publicly exports <code>not_func</code>, you are allowed to import <code>not_func.r</code> as a module through the following:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module[not_func]</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>But remember, it will append another environment in the current environment, specifically under <strong>{./module}</strong> environment for <strong>{not_func}</strong>, and then create <strong>{md_dt}</strong> to load the entire <strong>{./module}</strong> afterwards.</p>
-<section id="loading-an-object" class="level4">
-<h4 class="anchored" data-anchor-id="loading-an-object">3.3.1.2 Loading an object</h4>
-<p>If you did the following:</p>
+<p>This is a bit trickier. While this import declaration will write <code>md_dt</code> module environment within the current environment, containing the namespace of <code>./module</code>, this will also load/attach <code>not_func</code> module at the same time. This was already discussed on “Granular Imports with Aliases” in <strong>Chapter 2: Array of Imports with Monikers</strong>.</p>
+<section id="attaching-an-object" class="level4">
+<h4 class="anchored" data-anchor-id="attaching-an-object">Attaching an object</h4>
+<p>The granular import semantics still applies to assigned objects that are not limited to function. So, if you do the following:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module[not_func]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>module[not_func]</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>you can now access the data like this:</p>
+<p>Then try access the data under <code>not_func</code> module like this:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>not_func<span class="sc">$</span>pi</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>not_func<span class="sc">$</span>iris</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(not_func<span class="sc">$</span>mpg, <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -532,15 +532,15 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">md_dt =</span> .<span class="sc">/</span>module<span class="sc">/</span>not_func</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>you are allowed to do this:</p>
+<p>The logic stays the same, just the syntax is a bit different:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>md_dt<span class="sc">$</span>pi</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>md_dt<span class="sc">$</span>iris</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(md_dt<span class="sc">$</span>mpg, <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Don’t forget that granular imports are allowed:</p>
+<p>Don’t forget that specified granular imports are allowed:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>module<span class="sc">/</span>not_func[pi, iris, sales]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>And access freely in R:</p>
+<p>Then access them freely in R:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pi</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>iris</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sales, <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
