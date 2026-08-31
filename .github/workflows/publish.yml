@@ -40,7 +40,8 @@ jobs:
           Rscript -e 'pak::pak("joshuamarie/box@feature/carrier-module-support")'
 
       - name: Render
-        run: quarto render
+        # run: quarto render
+        run: quarto render --to html
 
       - uses: quarto-dev/quarto-actions/publish@v2
         if: github.event_name != 'pull_request'
