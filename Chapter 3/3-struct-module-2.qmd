@@ -140,7 +140,7 @@ Access all of the modules within `statistics/` by:
 box::use(
     ./module/statistics, 
     md_sts = ./module/statistics,
-    ./module/statistics[cor_pipe, moving_average],
+    ./module/statistics/corrr[cor_pipe, moving_average],
 )
 ```
 
