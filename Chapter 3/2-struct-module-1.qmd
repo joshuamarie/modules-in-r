@@ -198,7 +198,7 @@ Here are the valid imports:
     
     Here, `md_dt` is loaded as a module that carries the whole `./module` folder, not the `not_func` script. On the other hand, the second code will load `not_func` script as a module under `md_dt` name. 
     
-    ![](Images/img-c3.1.2.jpg)
+    ![](../Images/img-c3.1.2.jpg)
 
 ::: callout-note
 Do not forget to put `./` prefix to load specific local modules in your own workspace. The lack of `./` prefix is only valid for R packages. For the deep nested modules, this will be deeply tackled in [Chapter 3.4: Accessing modules in any depths](./5-nested-modules.qmd). 
@@ -214,7 +214,7 @@ To reload a module, `{box}` provides the function `box::reload()`. This clears t
 
 If you’ve imported the module, such as:
 
-```
+``` r
 box::use(
     md = ./module
 )
