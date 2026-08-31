@@ -737,7 +737,7 @@ Important
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>statistics<span class="sc">/</span>models<span class="sc">/</span>linear[linear_reg], </span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>statistics<span class="sc">/</span>models<span class="sc">/</span>logistic[logistic_reg], </span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Then write the following unit tests below. Else, do the following steps below. Let us test both <code>module/statistics/models/linear.r</code> and <code>module/statistics/models/logistic.r</code>, for example:</p>
+<p>Then copy the following unit tests, both <code>test-linear-reg.r</code> and <code>test-logistic-reg.r</code>, below. Else, do the following steps below. Let us test both <code>module/statistics/models/linear.r</code> and <code>module/statistics/models/logistic.r</code>. First, here’s the structure:</p>
 <pre><code>module/statistics/models/
 ├── __init__.r
 ├── linear.r                 # ◄─── Test this
@@ -745,8 +745,8 @@ Important
 ├── __tests__/               # ◄─── Add
 │   ├── __init__.r
 │   ├── helper-module.r
-│   ├── test-linear.r
-│   └── test-logistic.r
+│   ├── test-linear-reg.r
+│   └── test-logistic-reg.r
 └── baseline_logit.r</code></pre>
 <p>The <code>helper-module.r</code> file from <code>./module/statistics/models</code> adjusts the relative path:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>

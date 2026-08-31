@@ -443,20 +443,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#understanding-test-reporters" id="toc-understanding-test-reporters" class="nav-link active" data-scroll-target="#understanding-test-reporters">4.2.1 Understanding Test Reporters</a></li>
-  <li><a href="#reading-test-failures" id="toc-reading-test-failures" class="nav-link" data-scroll-target="#reading-test-failures">4.2.2 Reading Test Failures</a></li>
-  <li><a href="#common-failure-patterns" id="toc-common-failure-patterns" class="nav-link" data-scroll-target="#common-failure-patterns">4.2.3 Common Failure Patterns</a>
+  <li><a href="#understanding-test-reporters" id="toc-understanding-test-reporters" class="nav-link active" data-scroll-target="#understanding-test-reporters">Understanding Test Reporters</a></li>
+  <li><a href="#reading-test-failures" id="toc-reading-test-failures" class="nav-link" data-scroll-target="#reading-test-failures">Reading Test Failures</a></li>
+  <li><a href="#common-failure-patterns" id="toc-common-failure-patterns" class="nav-link" data-scroll-target="#common-failure-patterns">Common Failure Patterns</a>
   <ul class="collapse">
-  <li><a href="#numerical-precision-concern" id="toc-numerical-precision-concern" class="nav-link" data-scroll-target="#numerical-precision-concern">4.2.3.1 Numerical Precision Concern</a></li>
-  <li><a href="#dimension-mismatches" id="toc-dimension-mismatches" class="nav-link" data-scroll-target="#dimension-mismatches">4.2.3.2 Dimension Mismatches</a></li>
-  <li><a href="#type-coercion-concern" id="toc-type-coercion-concern" class="nav-link" data-scroll-target="#type-coercion-concern">4.2.3.3 Type Coercion Concern</a></li>
+  <li><a href="#numerical-precision-concern" id="toc-numerical-precision-concern" class="nav-link" data-scroll-target="#numerical-precision-concern">Numerical Precision Concern</a></li>
+  <li><a href="#dimension-mismatches" id="toc-dimension-mismatches" class="nav-link" data-scroll-target="#dimension-mismatches">Dimension Mismatches</a></li>
+  <li><a href="#type-coercion-concern" id="toc-type-coercion-concern" class="nav-link" data-scroll-target="#type-coercion-concern">Type Coercion Concern</a></li>
   </ul></li>
-  <li><a href="#testing-best-practices" id="toc-testing-best-practices" class="nav-link" data-scroll-target="#testing-best-practices">4.2.4 Testing Best Practices</a>
+  <li><a href="#testing-best-practices" id="toc-testing-best-practices" class="nav-link" data-scroll-target="#testing-best-practices">Testing Best Practices</a>
   <ul class="collapse">
   <li><a href="#write-descriptive-test-names" id="toc-write-descriptive-test-names" class="nav-link" data-scroll-target="#write-descriptive-test-names">Write Descriptive Test Names</a></li>
   <li><a href="#test-both-success-and-failure-cases" id="toc-test-both-success-and-failure-cases" class="nav-link" data-scroll-target="#test-both-success-and-failure-cases">Test Both Success and Failure Cases</a></li>
   </ul></li>
-  <li><a href="#continuous-integration" id="toc-continuous-integration" class="nav-link" data-scroll-target="#continuous-integration">4.2.5 Continuous Integration</a></li>
+  <li><a href="#continuous-integration" id="toc-continuous-integration" class="nav-link" data-scroll-target="#continuous-integration">Continuous Integration</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/joshuamarie/modules-in-r/edit/main/Chapter 4/3-testthat-2.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/joshuamarie/modules-in-r/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -483,10 +483,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>When tests fail—and they will—you need clear, actionable information about what went wrong. The <strong>{testthat}</strong> package provides several reporting formats that help you understand test results at different levels of detail.</p>
+<p>Most of the diagnostics covered by this book using <code>{testthat}</code> package are applied on what you did when making R packages, so whatever you did on R packages, you will apply them when composing <code>{box}</code> modules. When tests fail — and they will — you need clear, actionable information about what went wrong. The <code>{testthat}</code> package provides several reporting formats that help you understand test results at different levels of detail.</p>
 <section id="understanding-test-reporters" class="level2">
-<h2 class="anchored" data-anchor-id="understanding-test-reporters">4.2.1 Understanding Test Reporters</h2>
-<p>Test reporters control how <strong>{testthat}</strong> displays test results. You configure them in your <strong>{<strong>tests</strong>/<strong>init</strong>.r}</strong> file through the <code>reporter</code> parameter in <code>test_dir()</code>:</p>
+<h2 class="anchored" data-anchor-id="understanding-test-reporters">Understanding Test Reporters</h2>
+<p>Test reporters control how <code>{testthat}</code> displays test results. You configure them in <code>__tests__/__init__.r</code> file through <code>reporter</code> argument in <code>test_dir()</code> function:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(testthat[...])</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>.on_load <span class="ot">=</span> <span class="cf">function</span> (ns) {</span>
@@ -551,8 +551,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 <section id="reading-test-failures" class="level2">
-<h2 class="anchored" data-anchor-id="reading-test-failures">4.2.2 Reading Test Failures</h2>
-<p>Understanding failure messages is crucial for efficient debugging. Here’s what a typical failure looks like:</p>
+<h2 class="anchored" data-anchor-id="reading-test-failures">Reading Test Failures</h2>
+<p>This is just usual debugging step for developers. There are times where understanding failure messages is crucial for efficient debugging. Here’s what a typical failure looks like:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> Rscript module/statistics/models/linear.r</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">──</span> Failure <span class="er">(</span><span class="st">'test-linear.r:15:5'</span><span class="kw">)</span><span class="bu">:</span> Linear Regression calculates correct coefficients ──</span>
@@ -575,10 +575,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 </section>
 <section id="common-failure-patterns" class="level2">
-<h2 class="anchored" data-anchor-id="common-failure-patterns">4.2.3 Common Failure Patterns</h2>
+<h2 class="anchored" data-anchor-id="common-failure-patterns">Common Failure Patterns</h2>
+<p>These occurrences happen so often in writing programs in R, but even if these are not common to you, this hopes awareness who writes unit tests to measure the robustness of their codes are stil applied on writing <code>{box}</code> modules. The example you see is using <code>matrix_ops.r</code>, which involves operator overloading which can cause several (if not few) bugs since the multiplication operator <code>*</code> in R is designed for two numeric values, not for matrices. That’s why the following occurrences below tries to test the common <em>possible</em> failures under the implementation.</p>
 <section id="numerical-precision-concern" class="level3">
-<h3 class="anchored" data-anchor-id="numerical-precision-concern">4.2.3.1 Numerical Precision Concern</h3>
-<p>Floating-point arithmetic can cause unexpected failures:</p>
+<h3 class="anchored" data-anchor-id="numerical-precision-concern">Numerical Precision Concern</h3>
+<p>The overloaded <code>*</code> still carries the default semantics of base R’s <code>*</code> operator, that is to multiply two numeric values, especially if those two (2) numbers are floating point arithmetic, thus a concern on numerical precision. A common concern in programming is the floating-point arithmetic can cause unexpected failures:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix operations match'</span>, {</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    sols <span class="ot">=</span> A <span class="sc">^</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> b</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> <span class="fu">solve</span>(A) <span class="sc">%*%</span> b</span>
@@ -586,8 +587,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This might fail!</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(sols, expected)</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The solution is quick and meticulous: Use tolerance for floating-point comparisons.</p>
-<p>For example:</p>
+<p>The solution is quick and meticulous: Use <code>tolerance</code> argument for floating-point comparisons. Preferably the value for the tolerance is close to <code>.Machine$double.eps</code> to test how precise the difference can be. Here’s a basic example:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix operations match'</span>, {</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    sols <span class="ot">=</span> A <span class="sc">^</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> b</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> <span class="fu">solve</span>(A) <span class="sc">%*%</span> b</span>
@@ -597,8 +597,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="dimension-mismatches" class="level3">
-<h3 class="anchored" data-anchor-id="dimension-mismatches">4.2.3.2 Dimension Mismatches</h3>
-<p>Matrix operations are particularly sensitive to dimensions:</p>
+<h3 class="anchored" data-anchor-id="dimension-mismatches">Dimension Mismatches</h3>
+<p>The overloaded <code>*</code> dispatches its argument, not through S3, that works with matrices. Matrix operations are particularly sensitive to dimensions. To test <code>*</code>’s robustness for matrix operations, let’s compare that to base R’s <code>%*%</code> operator:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix multiplication with dimension mismatch tries reverse order'</span>, {</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">8</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span>
@@ -616,19 +616,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 <section id="type-coercion-concern" class="level3">
-<h3 class="anchored" data-anchor-id="type-coercion-concern">4.2.3.3 Type Coercion Concern</h3>
-<p>R’s automatic type conversion can cause subtle bugs:</p>
+<h3 class="anchored" data-anchor-id="type-coercion-concern">Type Coercion Concern</h3>
+<p>One of R’s biggest gripes is R’s weak type system. There are reasons why <code>{S7}</code> class is made. R’s automatic and (sometimes) unwanted type conversion can cause subtle bugs:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'data frame conversion works'</span>, {</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">a =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">b =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> df <span class="sc">*</span> <span class="dv">2</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Might fail if df isn't properly converted to matrix</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(result, <span class="st">"matrix"</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">a =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">b =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> df <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Might fail if df isn't properly converted to matrix</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(result, <span class="st">"matrix"</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="testing-best-practices" class="level2">
-<h2 class="anchored" data-anchor-id="testing-best-practices">4.2.4 Testing Best Practices</h2>
+<h2 class="anchored" data-anchor-id="testing-best-practices">Testing Best Practices</h2>
+<p>Teaching everybody’s best practices in programming and software development is a good feeling. You can even teach anybody your past mistakes and how they were resolved. Following best practices is good for readability and maintainability.</p>
 <section id="write-descriptive-test-names" class="level3">
 <h3 class="anchored" data-anchor-id="write-descriptive-test-names">Write Descriptive Test Names</h3>
 <p>Good test names explain <em>what</em> is being tested and <em>why</em> it matters.</p>
@@ -675,37 +679,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 <section id="continuous-integration" class="level2">
-<h2 class="anchored" data-anchor-id="continuous-integration">4.2.5 Continuous Integration</h2>
-<p>R is also used for production, you see. For production code, I recommend integrating your tests into a CI/CD pipeline.</p>
-<p>Here’s a simple GitHub Actions workflow:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .github/workflows/test.yml</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Run Tests</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">push</span><span class="kw">,</span><span class="at"> pull_request</span><span class="kw">]</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">test</span><span class="kw">:</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v2</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> </span><span class="st">'4.3.0'</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>          install.packages(c("box", "testthat", "dplyr", "purrr", "rlang"))</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">shell</span><span class="kw">:</span><span class="at"> Rscript {0}</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Test matrix_ops</span></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> Rscript module/matrix_ops.r</span></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Test linear regression</span></span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> Rscript module/statistics/models/linear.r</span></span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Test logistic regression</span></span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> Rscript module/statistics/models/logistic.r</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<h2 class="anchored" data-anchor-id="continuous-integration">Continuous Integration</h2>
+<p>R is also used for production, you see. For production code, it is sometimes recommended to integrate your tests in a CI/CD pipeline.</p>
+<p>Here’s a simple GitHub Actions workflow (you can save it as <code>.github/workflows/test.yml</code>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Run Tests</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">push</span><span class="kw">,</span><span class="at"> pull_request</span><span class="kw">]</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">test</span><span class="kw">:</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v2</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> </span><span class="st">'4.3.0'</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>          install.packages(c("box", "testthat", "dplyr", "purrr", "rlang"))</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">shell</span><span class="kw">:</span><span class="at"> Rscript {0}</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Test matrix_ops</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> Rscript module/matrix_ops.r</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Test linear regression</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> Rscript module/statistics/models/linear.r</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Test logistic regression</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> Rscript module/statistics/models/logistic.r</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Since you already wrote your tests under <code>./module/__tests__.r</code>, you may want to execute the whole test for <code>./module</code> module by loading <code>./module/__tests__.r</code> through <code>box::use()</code>. Here’s an example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .github/workflows/test.yml</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Run Tests</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">push</span><span class="kw">,</span><span class="at"> pull_request</span><span class="kw">]</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">test</span><span class="kw">:</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v2</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> </span><span class="st">'4.3.0'</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>          install.packages(c("box", "testthat", "dplyr", "purrr", "rlang"))</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">shell</span><span class="kw">:</span><span class="at"> Rscript {0}</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Test module</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> Rscript -e 'box::use(./module/`__tests__`)'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
