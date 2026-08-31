@@ -1,10 +1,10 @@
 # Unit Test Diagnostics
 
-When tests fail—and they will—you need clear, actionable information about what went wrong. The **{testthat}** package provides several reporting formats that help you understand test results at different levels of detail.
+Most of the diagnostics covered by this book using `{testthat}` package are applied on what you did when making R packages, so whatever you did on R packages, you will apply them when composing `{box}` modules. When tests fail — and they will — you need clear, actionable information about what went wrong. The `{testthat}` package provides several reporting formats that help you understand test results at different levels of detail.
 
-## 4.2.1 Understanding Test Reporters
+## Understanding Test Reporters
 
-Test reporters control how **{testthat}** displays test results. You configure them in your **{__tests__/__init__.r}** file through the `reporter` parameter in `test_dir()`:
+Test reporters control how `{testthat}` displays test results. You configure them in `__tests__/__init__.r` file through `reporter` argument in `test_dir()` function:
 
 ``` r
 box::use(testthat[...])
@@ -108,9 +108,9 @@ and you'll see a number if the test fails.
 
 ::: 
 
-## 4.2.2 Reading Test Failures
+## Reading Test Failures
 
-Understanding failure messages is crucial for efficient debugging. Here's what a typical failure looks like:
+This is just usual debugging step for developers. There are times where understanding failure messages is crucial for efficient debugging. Here's what a typical failure looks like:
 
 ``` bash
 $ Rscript module/statistics/models/linear.r
@@ -135,11 +135,13 @@ Let's break down this failure message:
 4. **Details**: Specific information about the mismatch (e.g., "Mean relative difference: 0.0523")
 5. **Backtrace**: The call stack leading to the failure
 
-## 4.2.3 Common Failure Patterns
+## Common Failure Patterns
 
-### 4.2.3.1 Numerical Precision Concern
+These occurrences happen so often in writing programs in R, but even if these are not common to you, this hopes awareness who writes unit tests to measure the robustness of their codes are stil applied on writing `{box}` modules. The example you see is using `matrix_ops.r`, which involves operator overloading which can cause several (if not few) bugs since the multiplication operator `*` in R is designed for two numeric values, not for matrices. That's why the following occurrences below tries to test the common *possible* failures under the implementation. 
 
-Floating-point arithmetic can cause unexpected failures:
+### Numerical Precision Concern
+
+The overloaded `*` still carries the default semantics of base R's `*` operator, that is to multiply two numeric values, especially if those two (2) numbers are floating point arithmetic, thus a concern on numerical precision. A common concern in programming is the floating-point arithmetic can cause unexpected failures:
 
 ``` r
 test_that('matrix operations match', {
@@ -151,9 +153,7 @@ test_that('matrix operations match', {
 })
 ```
 
-The solution is quick and meticulous: Use tolerance for floating-point comparisons.
-
-For example: 
+The solution is quick and meticulous: Use `tolerance` argument for floating-point comparisons. Preferably the value for the tolerance is close to `.Machine$double.eps` to test how precise the difference can be. Here's a basic example: 
 
 ``` r
 test_that('matrix operations match', {
@@ -165,9 +165,9 @@ test_that('matrix operations match', {
 })
 ```
 
-### 4.2.3.2 Dimension Mismatches
+### Dimension Mismatches
 
-Matrix operations are particularly sensitive to dimensions:
+The overloaded `*` dispatches its argument, not through S3, that works with matrices. Matrix operations are particularly sensitive to dimensions. To test `*`'s robustness for matrix operations, let's compare that to base R's `%*%` operator: 
 
 ``` r
 test_that('matrix multiplication with dimension mismatch tries reverse order', {
@@ -187,13 +187,16 @@ If this fails with a dimension error, check:
 -   Do the matrix dimensions actually allow multiplication?
 -   Is your operator overloading logic handling edge cases?
 
-### 4.2.3.3 Type Coercion Concern
+### Type Coercion Concern
 
-R's automatic type conversion can cause subtle bugs:
+One of R's biggest gripes is R's weak type system. There are reasons why `{S7}` class is made. R's automatic and (sometimes) unwanted type conversion can cause subtle bugs:
 
 ``` r
 test_that('data frame conversion works', {
-    df = data.frame(a = c(1, 2), b = c(3, 4))
+    df = data.frame(
+        a = c(1, 2, 3, 4, 5), 
+        b = c(6, 7, 8, 9, 10)
+    )
     result = df * 2
     
     # Might fail if df isn't properly converted to matrix
@@ -201,7 +204,9 @@ test_that('data frame conversion works', {
 })
 ```
 
-## 4.2.4 Testing Best Practices
+## Testing Best Practices
+
+Teaching everybody's best practices in programming and software development is a good feeling. You can even teach anybody your past mistakes and how they were resolved. Following best practices is good for readability and maintainability.  
 
 ### Write Descriptive Test Names
 
@@ -256,14 +261,13 @@ test_that('error thrown for non-binary response', {
 })
 ```
 
-## 4.2.5 Continuous Integration
+## Continuous Integration
 
-R is also used for production, you see. For production code, I recommend integrating your tests into a CI/CD pipeline. 
+R is also used for production, you see. For production code, it is sometimes recommended to integrate your tests in a CI/CD pipeline. 
 
-Here's a simple GitHub Actions workflow:
+Here's a simple GitHub Actions workflow (you can save it as `.github/workflows/test.yml`):
 
 ``` yaml
-# .github/workflows/test.yml
 name: Run Tests
 
 on: [push, pull_request]
@@ -292,3 +296,31 @@ jobs:
       - name: Test logistic regression
         run: Rscript module/statistics/models/logistic.r
 ```
+
+Since you already wrote your tests under `./module/__tests__.r`, you may want to execute the whole test for `./module` module by loading `./module/__tests__.r` through `box::use()`. Here's an example:
+
+``` yaml
+# .github/workflows/test.yml
+name: Run Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3.0'
+      
+      - name: Install dependencies
+        run: |
+          install.packages(c("box", "testthat", "dplyr", "purrr", "rlang"))
+        shell: Rscript {0}
+      
+      - name: Test module
+        run: Rscript -e 'box::use(./module/`__tests__`)'
+```
+

@@ -259,7 +259,7 @@ box::use(
 )
 ```
 
-Then write the following unit tests below. Else, do the following steps below. Let us test both `module/statistics/models/linear.r` and `module/statistics/models/logistic.r`, for example:
+Then copy the following unit tests, both `test-linear-reg.r` and `test-logistic-reg.r`, below. Else, do the following steps below. Let us test both `module/statistics/models/linear.r` and `module/statistics/models/logistic.r`. First, here's the structure:
 
 ```
 module/statistics/models/
@@ -269,8 +269,8 @@ module/statistics/models/
 ├── __tests__/               # ◄─── Add
 │   ├── __init__.r
 │   ├── helper-module.r
-│   ├── test-linear.r
-│   └── test-logistic.r
+│   ├── test-linear-reg.r
+│   └── test-logistic-reg.r
 └── baseline_logit.r
 ```
 
