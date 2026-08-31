@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4 Unit Testing Modules – Box: Placing module system into R</title>
+<title>Unit Testing Modules – Box: Placing module system into R</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -256,7 +256,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <h1 class="quarto-secondary-nav-title no-breadcrumbs"><span class="chapter-title">4 Unit Testing Modules</span></h1>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs"><span class="chapter-title">Unit Testing Modules</span></h1>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -384,17 +384,17 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapter 4/1-testing-modules.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">4 Unit Testing Modules</span></a>
+  <a href="../Chapter 4/1-testing-modules.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">4.1 Unit Testing Modules</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapter 4/2-testthat-1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4.1 Setting Up Module Tests</span></a>
+  <a href="../Chapter 4/2-testthat-1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4.2 Setting Up Module Tests</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapter 4/3-testthat-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4.2 Unit Test Diagnostics</span></a>
+  <a href="../Chapter 4/3-testthat-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4.3 Unit Test Diagnostics</span></a>
   </div>
 </li>
       </ul>
@@ -419,7 +419,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-title">4 Unit Testing Modules</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-title">Unit Testing Modules</span></h1>
 </div>
 
 
@@ -436,12 +436,12 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>One of the significant advantages of modular code is that it’s easier to test. When your code is organized into discrete modules with clear interfaces, you can verify each piece works correctly in isolation before integrating everything together. This chapter explores practical approaches to testing your <strong>{box}</strong> modules effectively.</p>
-<p>Unlike traditional R package development where tests live in a separate tests / directory far from your implementation code, <strong>{box}</strong> modules encourage a different pattern: keeping tests close to the code they verify. This co-location makes it easier to maintain tests alongside the source code of your module, and it follows conventions used in many modern programming languages like JavaScript, Python, and Rust.</p>
+<p>One of the significant advantages of modular code is that it’s easier to test. When your code is organized into discrete modules with clear interfaces, you can verify each piece works correctly in isolation before integrating everything together. This chapter explores practical approaches to testing your <code>{box}</code> modules effectively.</p>
+<p>Unlike traditional R package development where tests live in a separate tests / directory far from your implementation code, <code>{box}</code> modules encourage a different pattern: keeping tests close to the code they verify. This co-location makes it easier to maintain tests alongside the source code of your module, and it follows conventions used in many modern programming languages like JavaScript, Python, and Rust.</p>
 <hr>
 <section id="advantages" class="level2">
 <h2 class="anchored" data-anchor-id="advantages">Advantages</h2>
-<p>Well, according to the official documentation of <strong>{box}</strong> package, it is “agnostic”, meaning it doesn’t matter which frameworks you are applying to measure the robustness of the modules. The most widely package for unit testing: <strong>{testthat}</strong>, works with modules quite well. In this chapter, <strong>{testthat}</strong> is the main framework we are using.</p>
+<p>Well, according to the official documentation of <code>{box}</code> package, it is “agnostic”, meaning it doesn’t matter which frameworks you are applying to measure the robustness of the modules. The most widely package for unit testing: <code>{testthat}</code>, works with modules quite well. In this chapter, <code>{testthat}</code> is the main framework we are using.</p>
 
 
 </section>
@@ -872,8 +872,8 @@ ul.task-list li input[type="checkbox"] {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Chapter 4/2-testthat-1.html" class="pagination-link" aria-label="4.1 Setting Up Module Tests">
-        <span class="nav-page-text"><span class="chapter-title">4.1 Setting Up Module Tests</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../Chapter 4/2-testthat-1.html" class="pagination-link" aria-label="4.2 Setting Up Module Tests">
+        <span class="nav-page-text"><span class="chapter-title">4.2 Setting Up Module Tests</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

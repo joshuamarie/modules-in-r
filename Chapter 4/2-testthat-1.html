@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4.1 Setting Up Module Tests – Box: Placing module system into R</title>
+<title>Setting Up Module Tests – Box: Placing module system into R</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <h1 class="quarto-secondary-nav-title no-breadcrumbs"><span class="chapter-title">4.1 Setting Up Module Tests</span></h1>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs"><span class="chapter-title">Setting Up Module Tests</span></h1>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -419,17 +419,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapter 4/1-testing-modules.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4 Unit Testing Modules</span></a>
+  <a href="../Chapter 4/1-testing-modules.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4.1 Unit Testing Modules</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapter 4/2-testthat-1.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">4.1 Setting Up Module Tests</span></a>
+  <a href="../Chapter 4/2-testthat-1.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">4.2 Setting Up Module Tests</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapter 4/3-testthat-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4.2 Unit Test Diagnostics</span></a>
+  <a href="../Chapter 4/3-testthat-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">4.3 Unit Test Diagnostics</span></a>
   </div>
 </li>
       </ul>
@@ -444,10 +444,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">4.1.1 Getting Started</a></li>
-  <li><a href="#making-modules-testable" id="toc-making-modules-testable" class="nav-link" data-scroll-target="#making-modules-testable">4.1.2 Making Modules Testable</a></li>
-  <li><a href="#tests-execution" id="toc-tests-execution" class="nav-link" data-scroll-target="#tests-execution">4.1.3 Tests Execution</a></li>
-  <li><a href="#testing-nested-modules" id="toc-testing-nested-modules" class="nav-link" data-scroll-target="#testing-nested-modules">4.1.4 Testing Nested Modules</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting Started</a></li>
+  <li><a href="#making-modules-testable" id="toc-making-modules-testable" class="nav-link" data-scroll-target="#making-modules-testable">Making Modules Testable</a></li>
+  <li><a href="#tests-execution" id="toc-tests-execution" class="nav-link" data-scroll-target="#tests-execution">Tests Execution</a></li>
+  <li><a href="#testing-nested-modules" id="toc-testing-nested-modules" class="nav-link" data-scroll-target="#testing-nested-modules">Testing Nested Modules</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/joshuamarie/modules-in-r/edit/main/Chapter 4/2-testthat-1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/joshuamarie/modules-in-r/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -457,7 +457,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-title">4.1 Setting Up Module Tests</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-title">Setting Up Module Tests</span></h1>
 </div>
 
 
@@ -474,10 +474,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The <strong>{box}</strong> package works seamlessly with <strong>{testthat}</strong>, R’s most popular testing framework. While you can use other testing frameworks, this guide focuses on testthat because of its widespread adoption and excellent integration with RStudio.</p>
+<p>The <code>{box}</code> package works seamlessly with <code>{testthat}</code>, R’s most popular testing framework. While you can use other testing frameworks, this guide focuses on testthat because of its widespread adoption and excellent integration with RStudio.</p>
 <section id="getting-started" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started">4.1.1 Getting Started</h2>
-<p>Let us revisit the <strong>{./module}</strong> directory from what Chapter 3.1 is on about, and let us test the robustness of <strong>{./module/matrix_ops.r}</strong>, where it overloads <code>*</code> and <code>^</code> from base R for matrix operations. Update <strong>{./module}</strong> by creating another subfolder named <code>__tests__/</code>, next to your module file. The double underscores make it clear this is special infrastructure code, not a regular module.</p>
+<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
+<p>Let us revisit from what we started on <code>./module</code> from Chapter 3, and let us test the robustness of <code>./module/matrix_ops.r</code>, where it overloads <code>*</code> and <code>^</code> from base R for matrix operations. Update <code>./module</code> by creating another subfolder named <code>__tests__/</code>, next to your module file. The double underscores make it clear this is special infrastructure code, not a regular module.</p>
 <p>This is the structure should look like:</p>
 <pre><code>module/
 ├── __init__.r
@@ -500,7 +500,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         ├── linear.r
         ├── logistic.r
         └── baseline_logit.r</code></pre>
-<p>The <strong>{./module/<strong>tests</strong>/<strong>init</strong>.r}</strong> file serves as the test runner. It’s minimal but essential:</p>
+<p>The <code>./module/__tests__/__init__.r</code> file serves as the test runner. It’s minimal but essential:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(testthat[...])</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>.on_load <span class="ot">=</span> <span class="cf">function</span> (ns) {</span>
@@ -508,16 +508,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">export</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The <code>.on_load</code> hook ensures tests run automatically when the <code>__tests__</code> module loads. Using <code>box::file()</code> gives us the current directory path.</p>
-<p>The <strong>{./module/<strong>tests</strong>/helper-module.r}</strong> file loads the namespace of the module you want to test into the test environment. In our case, we choose <strong>{./module/matrix_ops.r}</strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(..<span class="sc">/</span>matrix_ops[...])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>.on_load</code> hook here will make tests run automatically when the <code>__tests__</code> module loads. Using <code>box::file()</code> gives us the current directory path.</p>
+<p>The <code>./module/__tests__/helper-module.r</code> file loads/attaches the namespace of the module you want to test into the test environment (this file). In our case, we choose <code>./module/matrix_ops.r</code>, and since the module is located at 1 level upper from <code>__tests__/</code>, locate the module 1 <code>../</code> upper, then load/attach its namespace:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>helper-module.r</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="helper-module.r"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(..<span class="sc">/</span>matrix_ops[...])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>The <code>[...]</code> syntax attaches all exported functions, and we are applying this to make the exports of the module namespace available in tests without prefixes.</p>
 </section>
 <section id="making-modules-testable" class="level2">
-<h2 class="anchored" data-anchor-id="making-modules-testable">4.1.2 Making Modules Testable</h2>
-<p>Suppose you want to verify that <strong>{module/matrix_ops.r}</strong> works correctly. This script contains R source code that overloads the <code>*</code> operator from base R to enable intelligent matrix multiplication, and <code>^</code> to take the exponentiation of the matrices, except when <code>^-1</code>, which takes the (square) matrix its inverse.</p>
+<h2 class="anchored" data-anchor-id="making-modules-testable">Making Modules Testable</h2>
+<p>Suppose you want to verify that <code>./module/matrix_ops.r</code> works correctly. This script contains R source code that overloads the <code>*</code> operator from base R to enable intelligent matrix multiplication, and <code>^</code> to take the exponentiation of the matrices, except when <code>^-1</code>, which takes the (square) matrix its inverse.</p>
 <p>Take a look of the source code:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Matrix Multiplication</span></span>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>./modules/matrix_ops.r</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="./modules/matrix_ops.r"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Matrix Multiplication</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">*</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span> (e1, e2) <span class="fu">UseMethod</span>(<span class="st">"*"</span>)</span>
@@ -547,12 +556,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">register_S3_method</span>(<span class="st">"^"</span>, <span class="st">"matrix"</span>)</span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">register_S3_method</span>(<span class="st">"^"</span>, <span class="st">"array"</span>)</span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">register_S3_method</span>(<span class="st">"^"</span>, <span class="st">"data.frame"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>To make this module testable, append the following code at the bottom of <strong>{module/matrix_ops.r}</strong>:</p>
+</div>
+<p>To make this module testable if executed, append the following code at the bottom of <code>./module/matrix_ops.r</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.null</span>(box<span class="sc">::</span><span class="fu">name</span>())) {</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span><span class="st">`</span><span class="at">__tests__</span><span class="st">`</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>and it becomes:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Matrix Multiplication</span></span>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>./modules/matrix_ops.r</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="./modules/matrix_ops.r"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Matrix Multiplication</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">*</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span> (e1, e2) <span class="fu">UseMethod</span>(<span class="st">"*"</span>)</span>
@@ -586,6 +600,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.null</span>(box<span class="sc">::</span><span class="fu">name</span>())) {</span>
 <span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span><span class="st">`</span><span class="at">__tests__</span><span class="st">`</span>)</span>
 <span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>This conditional check distinguishes between two scenarios: when you execute <code>Rscript module/matrix_ops.r</code> directly from the command line, <code>box::name()</code> returns <code>NULL</code> and the test suite runs. However, when another module imports it using <code>box::use(module/matrix_ops)</code>, the condition evaluates to false and tests are skipped.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -597,11 +612,17 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The backticks around <code>__tests__</code> — R doesn’t normally allow identifiers starting with underscores, so backticks tell R to treat it as a literal name.</p>
+<p>The backticks around <code>__tests__</code> is another case of non-syntactic names (discussed at Advanced R and this book under Chapter 2) — R doesn’t normally allow identifiers starting with underscores, so backticks tell R to treat it as a literal name.</p>
 </div>
 </div>
-<p>After that, update the <strong>{./module/<strong>tests</strong>/test-matrix_ops.r}</strong> file that contains the actual tests:</p>
+<p>After that, update the <code>./module/__tests__/test-matrix_ops.r</code> file that contains the actual tests:</p>
 <div class="cell">
+<div id="lst-matrix_ops_test" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored" data-code-fold="true">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-matrix_ops_test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;13.1: ./module/<strong>tests</strong>/test-matrix_ops.r
+</figcaption>
+<div aria-describedby="lst-matrix_ops_test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ---Matrix Multiplication---</span></span>
@@ -657,9 +678,12 @@ Note
 <span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+</figure>
+</div>
+</div>
 </section>
 <section id="tests-execution" class="level2">
-<h2 class="anchored" data-anchor-id="tests-execution">4.1.3 Tests Execution</h2>
+<h2 class="anchored" data-anchor-id="tests-execution">Tests Execution</h2>
 <p>You have several options for running tests:</p>
 <ol type="1">
 <li><p>If you are using the terminal:</p>
@@ -689,8 +713,8 @@ Important
 <p>Make sure you are in the current directory where <strong>{./module}</strong> is found.</p>
 </div>
 </div></li>
-<li><p>In RStudio, locate <strong>{./module/<strong>tests</strong>/test-matrix_ops.r}</strong>. Click the file, and click “Run Tests”.</p>
-<p><img src="Images/img-c4.1.3.jpg" class="img-fluid"></p>
+<li><p>In RStudio, locate <code>./module/__tests__/test-matrix_ops.r</code>. Click the file, and click “Run Tests”.</p>
+<p><img src="../Images/img-c4.1.3.jpg" class="img-fluid"></p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -701,16 +725,19 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Don’t use RStudio’s “Source” button! It reuses the current R session, and box caches loaded modules. You might end up testing old code without realizing it. Always run tests in a fresh session to ensure you’re testing the current version of your code.</p>
+<p>Do not run RStudio’s “Source” button (if there’s any)! It reuses the current R session, and box caches loaded modules. You might end up testing old code without realizing it. Always run tests in a fresh session to ensure you’re testing the current version of your code.</p>
 </div>
 </div></li>
 </ol>
 </section>
 <section id="testing-nested-modules" class="level2">
-<h2 class="anchored" data-anchor-id="testing-nested-modules">4.1.4 Testing Nested Modules</h2>
-<p>How about testing nested modules? We want modules from <strong>{./module/statistics}</strong> to be tested as well. The problem is they found deeply from the parent folder <strong>{./module}</strong>. Updating <strong>{./module/<strong>tests</strong>}</strong>, and prepare some scripts for unit testing the source code of nested scripts / folders, is a mistake. Instead, each subfolder has <code>__tests__</code> to be prepared.</p>
-<p>The testing pattern from <strong>{./module}</strong> works for nested modules, such as <strong>{./module/statistics}</strong> and <strong>{./module/statistics/models}</strong>.</p>
-<p>Let us test both <code>module/statistics/models/linear.r</code> and <code>module/statistics/models/logistic.r</code>, for example:</p>
+<h2 class="anchored" data-anchor-id="testing-nested-modules">Testing Nested Modules</h2>
+<p>How about testing nested modules? In this example, we want to measure the robustness the functions for linear and logistic regression under <code>./module/statistics/models/</code> module. Then, you can choose either updating <code>./modules/__tests__/</code> then prepare the scripts containing the unit tests, or create another <code>__tests__/</code> under <code>./module/statistics/models/</code> module folder. If you choose the former, the <code>./module/__tests__/helper-module.r</code> should contain the following import declaration:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>statistics<span class="sc">/</span>models<span class="sc">/</span>linear[linear_reg], </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>statistics<span class="sc">/</span>models<span class="sc">/</span>logistic[logistic_reg], </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then write the following unit tests below. Else, do the following steps below. Let us test both <code>module/statistics/models/linear.r</code> and <code>module/statistics/models/logistic.r</code>, for example:</p>
 <pre><code>module/statistics/models/
 ├── __init__.r
 ├── linear.r                 # ◄─── Test this
@@ -721,102 +748,102 @@ Important
 │   ├── test-linear.r
 │   └── test-logistic.r
 └── baseline_logit.r</code></pre>
-<p>The <code>helper-module.r</code> file from <strong>{./module/statistics/models}</strong> adjusts the relative path:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>linear[linear_reg], </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>logistic[logistic_reg]</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>And <strong>{./module/statistics/models/<strong>tests</strong>/test-linear-reg.r}</strong> contains tests <code>linear_reg()</code> function:</p>
+<p>The <code>helper-module.r</code> file from <code>./module/statistics/models</code> adjusts the relative path:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>linear[linear_reg], </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>logistic[logistic_reg]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And <code>./module/statistics/models/__tests__/test-linear-reg.r</code> contains tests <code>linear_reg()</code> function:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression from formula S3 method works'</span>, {</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"out"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"fitted"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"terms"</span>, <span class="st">"coefficients"</span>, <span class="st">"std_err"</span>, <span class="st">"t_statistic"</span>, <span class="st">"pval"</span>, <span class="st">"vif"</span>, <span class="st">"tolerance"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out)))</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>terms, <span class="fu">c</span>(<span class="st">"beta0"</span>, <span class="st">"wt"</span>, <span class="st">"hp"</span>))</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression from data frame S3 method works'</span>, {</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression calculates correct coefficients'</span>, {</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compare with base R lm()</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    base_model <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>coefficients, <span class="fu">as.vector</span>(<span class="fu">coef</span>(base_model)), <span class="at">tolerance =</span> <span class="fl">1e-6</span>)</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression with column selection works'</span>, {</span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">linear_reg</span>(<span class="fu">c</span>(wt, hp), mpg)</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without vif flag, should not have vif columns</span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_false</span>(<span class="st">"vif"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out))</span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<p>As well as <strong>{./module/statistics/models/<strong>tests</strong>/test-logistic-reg.r}</strong> to tests <code>logistic_reg()</code> function:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression from formula S3 method works'</span>, {</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression from formula S3 method works'</span>, {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"out"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"fitted"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"levels"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"reference"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"terms"</span>, <span class="st">"coefficients"</span>, <span class="st">"odds_ratio"</span>, <span class="st">"std_err"</span>, <span class="st">"z_statistic"</span>, <span class="st">"pval"</span>, <span class="st">"vif"</span>, <span class="st">"tolerance"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out)))</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>terms, <span class="fu">c</span>(<span class="st">"beta0"</span>, <span class="st">"wt"</span>, <span class="st">"hp"</span>))</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression from data frame S3 method works'</span>, {</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression calculates correct coefficients'</span>, {</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compare with base R glm()</span></span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    base_model <span class="ot">=</span> <span class="fu">glm</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">data =</span> mtcars, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>coefficients, <span class="fu">as.vector</span>(<span class="fu">coef</span>(base_model)), <span class="at">tolerance =</span> <span class="fl">1e-4</span>)</span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression with column selection works'</span>, {</span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logistic_reg</span>(<span class="fu">c</span>(wt, hp), am)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"terms"</span>, <span class="st">"coefficients"</span>, <span class="st">"std_err"</span>, <span class="st">"t_statistic"</span>, <span class="st">"pval"</span>, <span class="st">"vif"</span>, <span class="st">"tolerance"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out)))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>terms, <span class="fu">c</span>(<span class="st">"beta0"</span>, <span class="st">"wt"</span>, <span class="st">"hp"</span>))</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression from data frame S3 method works'</span>, {</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression calculates correct coefficients'</span>, {</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compare with base R lm()</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    base_model <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>coefficients, <span class="fu">as.vector</span>(<span class="fu">coef</span>(base_model)), <span class="at">tolerance =</span> <span class="fl">1e-6</span>)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression with column selection works'</span>, {</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">linear_reg</span>(<span class="fu">c</span>(wt, hp), mpg)</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
 <span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
-<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without vif flag, should not have vif columns</span></span>
-<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_false</span>(<span class="st">"vif"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out))</span>
-<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without vif flag, should not have vif columns</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_false</span>(<span class="st">"vif"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out))</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>As well as <code>./module/statistics/models/__tests__/test-logistic-reg.r</code> to tests <code>logistic_reg()</code> function:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression from formula S3 method works'</span>, {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"out"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"fitted"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"levels"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"reference"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"terms"</span>, <span class="st">"coefficients"</span>, <span class="st">"odds_ratio"</span>, <span class="st">"std_err"</span>, <span class="st">"z_statistic"</span>, <span class="st">"pval"</span>, <span class="st">"vif"</span>, <span class="st">"tolerance"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out)))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>terms, <span class="fu">c</span>(<span class="st">"beta0"</span>, <span class="st">"wt"</span>, <span class="st">"hp"</span>))</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression from data frame S3 method works'</span>, {</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression calculates correct coefficients'</span>, {</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compare with base R glm()</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    base_model <span class="ot">=</span> <span class="fu">glm</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">data =</span> mtcars, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>coefficients, <span class="fu">as.vector</span>(<span class="fu">coef</span>(base_model)), <span class="at">tolerance =</span> <span class="fl">1e-4</span>)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression with column selection works'</span>, {</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logistic_reg</span>(<span class="fu">c</span>(wt, hp), am)</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without vif flag, should not have vif columns</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_false</span>(<span class="st">"vif"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out))</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 
@@ -1244,13 +1271,13 @@ Important
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../Chapter 4/1-testing-modules.html" class="pagination-link" aria-label="4 Unit Testing Modules">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">4 Unit Testing Modules</span></span>
+      <a href="../Chapter 4/1-testing-modules.html" class="pagination-link" aria-label="4.1 Unit Testing Modules">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">4.1 Unit Testing Modules</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Chapter 4/3-testthat-2.html" class="pagination-link" aria-label="4.2 Unit Test Diagnostics">
-        <span class="nav-page-text"><span class="chapter-title">4.2 Unit Test Diagnostics</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../Chapter 4/3-testthat-2.html" class="pagination-link" aria-label="4.3 Unit Test Diagnostics">
+        <span class="nav-page-text"><span class="chapter-title">4.3 Unit Test Diagnostics</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
