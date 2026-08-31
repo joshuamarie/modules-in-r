@@ -75,6 +75,9 @@ format:
     smooth-scroll: true
     link-external-newwindow: true
     bread-crumbs: false  
+  pdf:
+    number-sections: false
+    toc: true
 
 execute:
   warning: false
