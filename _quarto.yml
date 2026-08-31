@@ -48,9 +48,12 @@ book:
         # - Chapter 3/3.5-compiled-codes.qmd
     - part: "4 Testing Modules"
       chapters:
-        - Chapter 4/1-testing-modules.qmd
-        - Chapter 4/2-testthat-1.qmd
-        - Chapter 4/3-testthat-2.qmd
+        - text: "4.1 Unit Testing Modules"
+          href: Chapter 4/1-testing-modules.qmd
+        - text: "4.2 Setting Up Module Tests"
+          href: Chapter 4/2-testthat-1.qmd
+        - text: "4.3 Unit Test Diagnostics"
+          href: Chapter 4/3-testthat-2.qmd
 
   repo-url: https://github.com/joshuamarie/modules-in-r
   repo-actions: [edit, issue]

@@ -1,10 +1,10 @@
-# 4.1 Setting Up Module Tests
+# Setting Up Module Tests
 
-The **{box}** package works seamlessly with **{testthat}**, R's most popular testing framework. While you can use other testing frameworks, this guide focuses on testthat because of its widespread adoption and excellent integration with RStudio.
+The `{box}` package works seamlessly with `{testthat}`, R's most popular testing framework. While you can use other testing frameworks, this guide focuses on testthat because of its widespread adoption and excellent integration with RStudio.
 
-## 4.1.1 Getting Started
+## Getting Started
 
-Let us revisit the **{./module}** directory from what Chapter 3.1 is on about, and let us test the robustness of **{./module/matrix_ops.r}**, where it overloads `*` and `^` from base R for matrix operations. Update **{./module}** by creating another subfolder named `__tests__/`, next to your module file. The double underscores make it clear this is special infrastructure code, not a regular module.
+Let us revisit from what we started on `./module` from Chapter 3, and let us test the robustness of `./module/matrix_ops.r`, where it overloads `*` and `^` from base R for matrix operations. Update `./module` by creating another subfolder named `__tests__/`, next to your module file. The double underscores make it clear this is special infrastructure code, not a regular module.
 
 This is the structure should look like:
 
@@ -32,7 +32,7 @@ module/
         └── baseline_logit.r
 ```
 
-The **{./module/__tests__/__init__.r}** file serves as the test runner. It's minimal but essential:
+The `./module/__tests__/__init__.r` file serves as the test runner. It's minimal but essential:
 
 ```r
 box::use(testthat[...])
@@ -44,23 +44,23 @@ box::use(testthat[...])
 box::export()
 ```
 
-The `.on_load` hook ensures tests run automatically when the `__tests__` module loads. Using `box::file()` gives us the current directory path.
+The `.on_load` hook here will make tests run automatically when the `__tests__` module loads. Using `box::file()` gives us the current directory path.
 
-The **{./module/__tests__/helper-module.r}** file loads the namespace of the module you want to test into the test environment. In our case, we choose **{./module/matrix_ops.r}**: 
+The `./module/__tests__/helper-module.r` file loads/attaches the namespace of the module you want to test into the test environment (this file). In our case, we choose `./module/matrix_ops.r`, and since the module is located at 1 level upper from `__tests__/`, locate the module 1 `../` upper, then load/attach its namespace: 
 
-```r
+```{.r filename="helper-module.r"}
 box::use(../matrix_ops[...])
 ```
 
 The `[...]` syntax attaches all exported functions, and we are applying this to make the exports of the module namespace available in tests without prefixes.
 
-## 4.1.2 Making Modules Testable
+## Making Modules Testable
 
-Suppose you want to verify that **{module/matrix_ops.r}** works correctly. This script contains R source code that overloads the `*` operator from base R to enable intelligent matrix multiplication, and `^` to take the exponentiation of the matrices, except when `^-1`, which takes the (square) matrix its inverse.
+Suppose you want to verify that `./module/matrix_ops.r` works correctly. This script contains R source code that overloads the `*` operator from base R to enable intelligent matrix multiplication, and `^` to take the exponentiation of the matrices, except when `^-1`, which takes the (square) matrix its inverse.
 
 Take a look of the source code:
 
-```r
+```{.r filename="./modules/matrix_ops.r"}
 #' Matrix Multiplication
 #' 
 #' @export
@@ -93,9 +93,9 @@ box::register_S3_method("^", "array")
 box::register_S3_method("^", "data.frame")
 ```
 
-To make this module testable, append the following code at the bottom of **{module/matrix_ops.r}**:
+To make this module testable if executed, append the following code at the bottom of `./module/matrix_ops.r`:
 
-```r
+``` r
 if (is.null(box::name())) {
     box::use(./`__tests__`)
 }
@@ -103,7 +103,7 @@ if (is.null(box::name())) {
 
 and it becomes:
 
-```r
+```{.r filename="./modules/matrix_ops.r"}
 #' Matrix Multiplication
 #' 
 #' @export
@@ -143,15 +143,17 @@ if (is.null(box::name())) {
 This conditional check distinguishes between two scenarios: when you execute `Rscript module/matrix_ops.r` directly from the command line, `box::name()` returns `NULL` and the test suite runs. However, when another module imports it using `box::use(module/matrix_ops)`, the condition evaluates to false and tests are skipped.
 
 ::: callout-note
-The backticks around `__tests__` — R doesn't normally allow identifiers starting with underscores, so backticks tell R to treat it as a literal name.
+The backticks around `__tests__` is another case of non-syntactic names (discussed at Advanced R and this book under Chapter 2) — R doesn't normally allow identifiers starting with underscores, so backticks tell R to treat it as a literal name.
 :::
 
-After that, update the **{./module/__tests__/test-matrix_ops.r}** file that contains the actual tests:
+After that, update the `./module/__tests__/test-matrix_ops.r` file that contains the actual tests:
 
 ```{r}
 #| echo: true
 #| code-fold: true
 #| eval: false
+#| lst-label: lst-matrix_ops_test
+#| lst-cap: "./module/__tests__/test-matrix_ops.r"
 # ---Matrix Multiplication---
 
 test_that('matrix multiplication works correctly', {
@@ -205,7 +207,7 @@ test_that('combined operations work (inverse then multiply)', {
 })
 ```
 
-## 4.1.3 Tests Execution
+## Tests Execution
 
 You have several options for running tests:
 
@@ -238,21 +240,26 @@ You have several options for running tests:
     :::
     
     
-2.  In RStudio, locate **{./module/__tests__/test-matrix_ops.r}**. Click the file, and click "Run Tests". 
+2.  In RStudio, locate `./module/__tests__/test-matrix_ops.r`. Click the file, and click "Run Tests". 
 
-    ![](Images/img-c4.1.3.jpg)
+    ![](../Images/img-c4.1.3.jpg)
 
     ::: callout-important
-    Don't use RStudio's "Source" button! It reuses the current R session, and box caches loaded modules. You might end up testing old code without realizing it. Always run tests in a fresh session to ensure you're testing the current version of your code.
+    Do not run RStudio's "Source" button (if there's any)! It reuses the current R session, and box caches loaded modules. You might end up testing old code without realizing it. Always run tests in a fresh session to ensure you're testing the current version of your code.
     :::
 
-## 4.1.4 Testing Nested Modules
+## Testing Nested Modules
 
-How about testing nested modules? We want modules from **{./module/statistics}** to be tested as well. The problem is they found deeply from the parent folder **{./module}**. Updating **{./module/__tests__}**, and prepare some scripts for unit testing the source code of nested scripts / folders, is a mistake. Instead, each subfolder has `__tests__` to be prepared.
+How about testing nested modules? In this example, we want to measure the robustness the functions for linear and logistic regression under `./module/statistics/models/` module. Then, you can choose either updating `./modules/__tests__/` then prepare the scripts containing the unit tests, or create another `__tests__/` under `./module/statistics/models/` module folder. If you choose the former, the `./module/__tests__/helper-module.r` should contain the following import declaration:
 
-The testing pattern from **{./module}** works for nested modules, such as **{./module/statistics}** and **{./module/statistics/models}**. 
+``` r
+box::use(
+    ../statistics/models/linear[linear_reg], 
+    ../statistics/models/logistic[logistic_reg], 
+)
+```
 
-Let us test both `module/statistics/models/linear.r` and `module/statistics/models/logistic.r`, for example:
+Then write the following unit tests below. Else, do the following steps below. Let us test both `module/statistics/models/linear.r` and `module/statistics/models/logistic.r`, for example:
 
 ```
 module/statistics/models/
@@ -267,7 +274,7 @@ module/statistics/models/
 └── baseline_logit.r
 ```
 
-The `helper-module.r` file from **{./module/statistics/models}** adjusts the relative path:
+The `helper-module.r` file from `./module/statistics/models` adjusts the relative path:
 
 ```r
 box::use(
@@ -276,7 +283,7 @@ box::use(
 )
 ```
 
-And **{./module/statistics/models/__tests__/test-linear-reg.r}** contains tests `linear_reg()` function: 
+And `./module/statistics/models/__tests__/test-linear-reg.r` contains tests `linear_reg()` function: 
 
 ```{r}
 #| echo: true
@@ -323,7 +330,7 @@ test_that('Linear Regression with column selection works', {
 })
 ```
 
-As well as **{./module/statistics/models/__tests__/test-logistic-reg.r}** to tests `logistic_reg()` function: 
+As well as `./module/statistics/models/__tests__/test-logistic-reg.r` to tests `logistic_reg()` function: 
 
 ```{r}
 #| echo: true
@@ -372,6 +379,3 @@ test_that('Logistic Regression with column selection works', {
     expect_false("vif" %in% names(model$out))
 })
 ```
-
-
-

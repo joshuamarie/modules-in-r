@@ -1,4 +1,4 @@
-# 4.2 Unit Test Diagnostics
+# Unit Test Diagnostics
 
 When tests fail—and they will—you need clear, actionable information about what went wrong. The **{testthat}** package provides several reporting formats that help you understand test results at different levels of detail.
 
