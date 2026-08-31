@@ -1,6 +1,6 @@
 # Structuring and constructing modules part 3: Reading and adding data
 
-When constructing modules, there are times you need a built-in data frames on those modules, list/atomic vectors, arrays/matrices, or any object outside from functions that represents the constant. Let's explore how to effectively import / export and manage different types of data using `{box}`. Again, it could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on. 
+When constructing modules, there are times you need a built-in data frames on those modules, list/atomic vectors, arrays/matrices, or any object outside from functions that represents the constant. Let's explore how to effectively import / export and manage different types of data using `{box}`. Again, it could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on. The basics of loading the data with `{box}` here is not rather lazy, unlike traditional R packages, the basics show you that you have to eagerly import them. 
 
 In this guide, especially for data frames later, let us use `mpg` dataset from the `{ggplot2}` package, and saved it as `mpg.rds` under `data/` from `./module` to load it via `readRDS()` function within the module.
 
@@ -8,24 +8,23 @@ In this guide, especially for data frames later, let us use `mpg` dataset from t
 
 ## Creating a module for the data
 
-The steps are trivial, (almost) every steps are similar to the process in R packages.
+The steps are trivial, (almost) every steps are similar to how R packages handle the data.
 
 ### File "extension"
 
-There's a script under **{./module}** folder named `not_func.r`, where non-functions are contained.
-
-Under **{./module}** folder, copy and paste this code:
+There's an R script under `./module` folder named `not_func.r`, where objects that are non-functions are contained. Use this code and save it on `not_func.r`:
 
 ``` r
 box::use(
-    tibble[as_tibble]
+    tibble[as_tibble],
+    datasets[iris]
 )
 
 #' @export
 pi = pi
 
 #' @export
-iris = as_tibble(datasets::iris)
+iris = as_tibble(iris)
 
 #' @export
 sales = readRDS(box::file('data/sales.rda'))
@@ -33,19 +32,19 @@ sales = readRDS(box::file('data/sales.rda'))
 
 ::: callout-note
 
-No need to place `#' @export` as the code were being exported into namespace of the modules anyways. Only use `#' @export` if you preferred to specifically export some saved R codes into the namespace of the module. When you load external packages or modules with `box::use()`, only what's inside the namespace of the package to be exported.
+Considering all of the assigned objects under the module namespace are exported, no need to place `#' @export`. Only use `#' @export` if you preferred to specifically export some assigned objects under the namespace of the module. When you load external packages or modules with `box::use()`, only what's inside the namespace of the package to be exported.
 
 :::
 
-Save that script and then load the module:
+Save that script and then try load the module:
 
 ``` r
 box::use(
-    module/not_func
+    ./module/not_func
 )
 ```
     
-If you have the initial file, you can import **{./module/not_func.r}** as **{not_func}** module within `[]`. For example:
+If you have the initial file `__init__.r` under `./module` which publicly exports `not_func`, you are allowed to import `not_func.r` as a module through the following:
 
 ``` r
 box::use(
@@ -53,19 +52,19 @@ box::use(
 )
 ```
 
-But remember, it will append another environment in the current environment, specifically under **{./module}** environment for **{not_func}**, and then create **{md_dt}** to load the entire **{./module}** afterwards.
+This is a bit trickier. While this import declaration will write `md_dt` module environment within the current environment, containing the namespace of `./module`, this will also load/attach `not_func` module at the same time. This was already discussed on "Granular Imports with Aliases" in **Chapter 2: Array of Imports with Monikers**.  
 
-#### Loading an object
+#### Attaching an object
 
-If you did the following:
+The granular import semantics still applies to assigned objects that are not limited to function. So, if you do the following:
 
 ``` r
 box::use(
-    md_dt = ./module[not_func]
+    ./module[not_func]
 )
 ```
 
-you can now access the data like this:
+Then try access the data under `not_func` module like this:
 
 ``` r
 not_func$pi
@@ -81,7 +80,7 @@ box::use(
 )
 ```
 
-you are allowed to do this:
+The logic stays the same, just the syntax is a bit different:
 
 ``` r
 md_dt$pi
@@ -89,7 +88,7 @@ md_dt$iris
 head(md_dt$mpg, 5)
 ```
 
-Don't forget that granular imports are allowed:
+Don't forget that specified granular imports are allowed:
 
 ``` r
 box::use(
@@ -97,7 +96,7 @@ box::use(
 )
 ```
 
-And access freely in R: 
+Then access them freely in R: 
 
 ``` r
 pi
@@ -108,5 +107,3 @@ head(sales, 5)
 *Just don't forget to maintain your current environment to avoid conflicts.*
 
 And that's how it is done. I hope you followed the steps so that you can proceed to the next part.
-
-

@@ -110,7 +110,7 @@ Here's the syntax pattern:
 
 ### Example: Accessing modules from nested directories
 
-Under `linear.r`, `logistic.r`, and `baseline_logit.r` scripts from **{statistics/models}**, there's an import that tries to access the namespace under `matrix_ops.r` and `tables.r` scripts, where both scripts are found 2 steps upper from the current directory of `linear.r`, `logistic.r`, and `baseline_logit.r` scripts:
+Under `linear.r`, `logistic.r`, and `baseline_logit.r` scripts from `statistics/models/`, there's an import declaration that tries to access the namespace under `matrix_ops.r` and `tables.r` scripts, where both scripts are found 2 steps upper from the current directory of `linear.r`, `logistic.r`, and `baseline_logit.r` scripts:
 
 ``` r
 box::use(
@@ -142,7 +142,7 @@ module/
 ```
 
 ::: {.callout-warning}
-The prefix `../` is quite a solution, indeed, however, using too many levels (e.g., `../../../`) can make your eye sore, and potentially makes your code a little bit harder to understand and maintain. If you find yourself going up many levels, consider reorganizing your folder structure or using absolute paths from the project root.
+This is an opinion: The prefix `../` is quite a solution, indeed, however, using too many levels (e.g., `../../../`) can make your eye sore, and potentially makes your code a little bit harder to understand and maintain. If you find yourself going up many levels, consider reorganizing your folder structure or using absolute paths from the project root.
 :::
 
 ::: {.callout-note collapse=true icon=false}
@@ -170,7 +170,7 @@ module/
         └── script2.r  
 ```
 
-And imagine you are in `script1.r` under `submodule2/subsubmodule1`. Is it possible to get `script2.r` under `submodule1/`? If yes, how? 
+Let's assume you are from `script1.r` under `submodule2/subsubmodule1`. Is it possible to get `script2.r` under `submodule1/`? If yes, how to get there? 
 
 Here's the visualization of the structure:
 

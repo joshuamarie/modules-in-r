@@ -138,9 +138,9 @@ Access all of the modules within `statistics/` by:
 
 ```{r}
 box::use(
-    ./module/statistics, 
+    tsm = ./module/statistics/time_series, 
     md_sts = ./module/statistics,
-    ./module/statistics/corrr[cor_pipe, moving_average],
+    ./module/statistics/corrr[cor_pipe],
 )
 ```
 
@@ -152,7 +152,7 @@ with(cars, md_sts$cor$custom_cor(speed, dist))
 mtcars |> 
     cor_pipe(mpg, hp, disp, qsec)
 
-mas = moving_average(AirPassengers, win = 3)
+mas = tsm$moving_average(AirPassengers, win = 3)
 
 plot(
     seq_along(AirPassengers),

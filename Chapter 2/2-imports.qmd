@@ -97,6 +97,8 @@ data |> keep_when(col > 0)
 AirPassengers |> filter_ts()      
 ```
 
+But wait, there's another thing you need to know. When you declare an import under `box::use()`, something like `box::use(pkg = package[fn1])`, two things will happen: this imports `pkg` carrying the namespace `package`, and at the same time will attach `fn1` under `package` namespace. 
+
 ::: callout-note
 Granular imports in R's `library()` also allowed using `include.only` parameter.
 
