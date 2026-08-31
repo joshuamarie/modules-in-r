@@ -2,7 +2,7 @@ name: Publish Book Release
 on:
   push:
     tags:
-      - 'ed.*'
+      - 'ed.v*'
   workflow_dispatch:
 
 permissions:
