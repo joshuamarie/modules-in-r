@@ -2,15 +2,15 @@
 
 When constructing modules, there are times you need a built-in data frames on those modules, list/atomic vectors, arrays/matrices, or any object outside from functions that represents the constant. Let's explore how to effectively import / export and manage different types of data using `{box}`. Again, it could be an atomic vector, a list, a matrix, a data frame, an n-dimensional array, and so on. 
 
-In this guide, especially for data frames later, let us use `mpg` dataset from the `{ggplot2}` package, and saved it as `mpg.rds` to load it via `readRDS()` function within the module.
+In this guide, especially for data frames later, let us use `mpg` dataset from the `{ggplot2}` package, and saved it as `mpg.rds` under `data/` from `./module` to load it via `readRDS()` function within the module.
 
 ---
 
-## 3.3.1 Creating a module for the data
+## Creating a module for the data
 
 The steps are trivial, (almost) every steps are similar to the process in R packages.
 
-### 3.3.1.1 File "extension"
+### File "extension"
 
 There's a script under **{./module}** folder named `not_func.r`, where non-functions are contained.
 
@@ -55,7 +55,7 @@ box::use(
 
 But remember, it will append another environment in the current environment, specifically under **{./module}** environment for **{not_func}**, and then create **{md_dt}** to load the entire **{./module}** afterwards.
 
-#### 3.3.1.2 Loading an object
+#### Loading an object
 
 If you did the following:
 
