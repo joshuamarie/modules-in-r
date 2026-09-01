@@ -131,7 +131,7 @@ To import functions with special characters, you need to wrap them in backticks:
 #| echo: true
 box::use(
     magrittr[`%>%`, `%T>%`], 
-    dplyr[group_by, summarise],
+    dplyr[group_by, summarise, n, mutate],
     stats[sd, median]
 )
 
@@ -141,7 +141,9 @@ iris %>%
         mu = mean(Sepal.Length, na.rm = TRUE), 
         sigma = sd(Sepal.Length, na.rm = TRUE),
         md = median(Sepal.Length, na.rm = TRUE)
-    )
+    ) %T>%
+    print() %>% 
+    mutate(cv = sigma / mu, .before = md)
 ```
 
 ### Wildcard import
