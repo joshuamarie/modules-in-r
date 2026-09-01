@@ -486,7 +486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><code>{box}</code> is an R package released on CRAN on September 2021. So, before we dive deeper, install <code>{box}</code> from CRAN first:</p>
+<p><code>{box}</code> is an R package that released its very first v1.0.0 version on CRAN on February 2021. So, before we dive deeper, install <code>{box}</code> from CRAN first:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"box"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>or you can install the development version from R-universe:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'box'</span>, <span class="at">repos =</span> <span class="st">'https://klmr.r-universe.dev'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -503,8 +503,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 <section id="why-box" class="level2">
 <h2 class="anchored" data-anchor-id="why-box">Why Box</h2>
-<p>For a long time, most R users compose their R codes in an R package or just a local collection of R scripts and sometimes with a deep nested directory. The reusability is rather not granular — you going to have to use <code>library()</code> to load R packages and <code>source()</code> to read R codes from scripts. As discussed on the <a href="">introduction</a>, they are mostly a problem in management, most especially when you code gets larger and larger. And as you can see, there’s 2 functions you’re going to use and there’s no singular solution for an easy and ergonomic reusability.</p>
-<p>That’s why <code>{box}</code> R package is recommended for these because it brings and simplifies modular programming in R for you. As described in its official documentation, it provides two key benefits:</p>
+<p>For a long time, most R users compose their R codes in an R package or just a local collection of R scripts and sometimes with a deep nested directory. The reusability is rather not that granular: you going to have to use <code>library()</code> to load R packages and <code>source()</code> to read R codes within and between scripts. As discussed in the <a href="https://modules-in-r.joshuamarie.com/Chapter%201/1-intro.html">introduction</a>, they are mostly a problem in management, most especially when you code gets larger and larger. And as you can see, there’s 2 functions you’re going to use and there’s no singular solution for an easy and ergonomic reusability.</p>
+<p>That’s why <code>{box}</code> R package is recommended for these because it brings and simplifies modular programming in R for us. As described in its official documentation, it provides two key benefits:</p>
 <ol type="1">
 <li><p>It facilitates modular code writing by treating files and folders as independent, nestable modules, so you don’t need to wrap reusable code into packages.</p></li>
 <li><p>It introduces a more powerful, less error-prone syntax for importing code from packages or modules, enabling explicit control over what names to import and restricting their scope.</p></li>
