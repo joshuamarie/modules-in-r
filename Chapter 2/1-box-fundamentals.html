@@ -483,11 +483,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>R already has <code>library()</code> to load packages you installed in R, then attaches the namespace onto the global namespace / environment, so the namespace from that package you load will be utilized <em>globally</em>. Now, you may ask: What’s the point of using <code>{box}</code> when there’s built-in <code>library()</code>? Well, you’ll learn enough that <code>{box}</code> offers best practices and ergnomics, something that R misses. R’s module system is NOT the actual modular programming that other programming languages do, and with <code>{box}</code>, it blows the import system from R out of the water.</p>
-<p><code>{box}</code>‘s ergonomics and most convenient features is its approach to reuse / import R packages, scripts, or folders’ namespace. Consequently, there are no consistent module system in native R at all. But <code>{box}</code> does more than importing which will be discussed on the later chapters.</p>
+<p>R already has <code>library()</code> to load packages you installed in R, then attaches the entire namespace onto the global namespace / environment, so the namespace from that package you load will be utilized <em>globally</em>. What’s the point of using <code>{box}</code> when there’s built-in <code>library()</code>, you may probably ask? Well, you’ll learn enough that <code>{box}</code> provides an actual module system in R which offers best practices and ergonomics, something that R misses. R’s module system is NOT <em>modular</em> — the actual modular programming that other programming languages do, and with <code>{box}</code>, it blows the import system from R out of the water.</p>
+<p><code>{box}</code>‘s ergonomics and most convenient features is its approach to compose and reuse / import R packages and scripts / folders’. Consequently, the module system in R is not consistent enough. But <code>{box}</code> does more than importing which will be discussed on the later chapters.</p>
 <section id="discussion-at-chapter-2" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-at-chapter-2">Discussion at Chapter 2</h2>
-<p>Within Chapter 2, the fundamentals of <code>{box}</code> package, the import system with <code>box::use()</code> is discussed.</p>
+<p>Within Chapter 2, the fundamentals of <code>{box}</code> package, the import system and semantics of <code>box::use()</code>, are discussed.</p>
 <section id="loading-packages" class="level3">
 <h3 class="anchored" data-anchor-id="loading-packages">1 Loading packages</h3>
 <p>Unlike the traditional way to load R packages through <code>library()</code>, <code>{box}</code> is more explicit, more declarative, and more granular to import R packages, and it is more consistent to work with path directories.</p>
@@ -495,22 +495,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># {box} package</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(dplyr[...])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(dplyr, dplyr[...])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The rest will be discussed under <a href="../Chapter 2/2-imports.html">Array of Imports with Monikers</a>.</p>
 </section>
 <section id="loading-scripts-folders" class="level3">
 <h3 class="anchored" data-anchor-id="loading-scripts-folders">2 Loading scripts / folders</h3>
-<p>With <code>{box}</code> modules, scripts and folders can be loaded and reused, as long as the namespace is defined. They are contained in an <em>environment</em> data structure as a <em>module</em>. It’s good since the import system of <code>{box}</code> using <code>box::use()</code> supersedes <code>source()</code> and then <code>box::file()</code> supersedes <code>setwd()</code>. For more details, the rest will be discussed under <a href="2.1-package-imports.qmd#">Array of Imports with Monikers</a>.</p>
+<p>With <code>{box}</code> modules, scripts and folders can be attached and reused, as long as the namespace is defined. They are contained in an <em>environment</em> data structure called <u><em>module</em></u>. It’s good since the import system of <code>{box}</code> using <code>box::use()</code> supersedes <code>source()</code> and then it has 2 functions — <code>box::file()</code> and <code>box::name()</code> — that supersede <code>setwd()</code>. For more details, the rest will be discussed under <a href="2.1-package-imports.qmd#">Array of Imports with Monikers</a>.</p>
 </section>
 <section id="reloading-modules" class="level3">
 <h3 class="anchored" data-anchor-id="reloading-modules">3 Reloading modules</h3>
-<p>Mostly applied for modules from scripts and folders. When the script or folders are imported as modules, the initial imports is cached. This means that changes you make to your module’s code won’t automatically take effect until you explicitly reload it. The rest will be discussed under <a href="2.2-reloading-modules.qmd">Chapter 2.1: Array of Imports with Monikers</a></p>
+<p>If you talk about local modules, they are mostly applied for modules from scripts and folders. When the scripts and/or folders are imported as modules, the initial imports are cached. This means that the changes you make to your module’s source code won’t automatically take effect until you explicitly purge the cache through <code>box::purge_cache()</code> (used after unloading the modules) or reload it. The rest will be discussed under <a href="2.2-reloading-modules.qmd">Chapter 2.1: Array of Imports with Monikers</a></p>
 <hr>
 </section>
 </section>
 <section id="some-restrictions" class="level2">
 <h2 class="anchored" data-anchor-id="some-restrictions">Some restrictions</h2>
-<p>While <code>{box}</code> package provides different approach to organize and import R code in an ergonomic way, there are some restrictions to be aware of. Specifically, <code>{box}</code> does <em>not</em> functionally do the following:</p>
+<p>While <code>{box}</code> provides different approach to organize and import R code in an ergonomic way, there are some restrictions to be aware of. Specifically, <code>{box}</code> does <em>not</em> functionally do the following:</p>
 <ul>
 <li>Attaching meta-packages such as <code>{tidyverse}</code> and <code>{tidymodels}</code>.</li>
 <li>Using <code>library()</code> / <code>require()</code> inside a module when writing a module.</li>

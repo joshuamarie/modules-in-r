@@ -489,7 +489,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>There are variety of import patterns in <code>box::use()</code>. The specific pattern: <code>mod[...]</code> allows specific qualification of imports, similar to how indexing in R works. Let’s first compare the traditional R approach with <code>{box}</code>. Here’s the following table:</p>
+<p>There are variety of import patterns to declare imports in <code>box::use()</code>. The specific pattern: <code>mod[foo, bar, ...]</code> allows specific qualification of imports, similar to <code>from mod import foo, bar</code> in Python, which uses indexing mechanism in R. Let’s first compare the traditional R approach to load/attach imports against <code>{box}</code>. Here’s the following table:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 25%">
@@ -531,7 +531,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Oh, and there’s also <code>require()</code> function, an “evil-ler” twin of <code>library()</code> function, where it won’t just attach the <em>entire</em> namespace to the search path, it returns boolean (<code>TRUE</code> if the package exists; <code>FALSE</code> if it doesn’t) when executed. There’s an inconsistency: it fails silently (“fails silently” means that a function fails without stopping the program or showing a clear error message).</p>
+<p>Oh, and there’s also <code>require()</code> function, an “evil-ler” twin of <code>library()</code> function, where it won’t just attach the <em>entire</em> namespace to the search path if the package exist, it returns in Boolean (<code>TRUE</code> if the package exists; <code>FALSE</code> if it doesn’t) when executed. There’s an inconsistency: it fails silently (“fails silently” means that a function fails without stopping the program or showing a clear error message).</p>
 <section id="importing-r-packages-and-scripts-folders" class="level2">
 <h2 class="anchored" data-anchor-id="importing-r-packages-and-scripts-folders">Importing R Packages and scripts / folders</h2>
 <p>If the table is not enough to you, this section will further explain. Let’s explore the different importing methods:</p>
@@ -552,13 +552,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>mod[fn1, ...], </span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">/</span>folder<span class="sc">/</span>mod[fn1, ...], </span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Carrier modules</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Carrier packages</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    mod, mod<span class="sc">/</span>submodule, </span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    mod[fn1, ...], </span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    mod<span class="sc">/</span>submodule[fn1, ...]</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>When importing scripts and modules, you are going to provide the name of the path (should be a literal name, not a string), and/or add prefix <code>./</code> that indicates the current path. The use of <code>../</code> is allowed as well, but this will be discussed in <a href="3.4-nested-modules.qmd">Chapter 3.4</a>. The rules applied on <code>{box}</code>-<code>{carrier}</code> modules except you are not allowed to place a prefix since they are packages, not a local module.</p>
+<p>When importing scripts and modules, you are going to provide the name of the path (should be a literal name, not a string), and/or add prefix <code>./</code> that indicates the current path. The use of <code>../</code> is allowed as well, but this will be discussed in <a href="3.4-nested-modules.qmd">Chapter 3.4</a>. The rules applied on <code>{box}</code>-<code>{carrier}</code> modules except you are not allowed to place a prefix (<code>./</code> or <code>../</code>) since they are interpreted as packages, not local modules.</p>
 </section>
 <section id="importing-the-entirety" class="level3">
 <h3 class="anchored" data-anchor-id="importing-the-entirety">Importing the entirety</h3>
@@ -598,7 +598,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> <span class="fu">keep_when</span>(col <span class="sc">&gt;</span> <span class="dv">0</span>)      </span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>AirPassengers <span class="sc">|&gt;</span> <span class="fu">filter_ts</span>()      </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>But wait, there’s another thing you need to know. When you declare an import under <code>box::use()</code>, something like <code>box::use(pkg = package[fn1])</code>, two things will happen: this imports <code>pkg</code> carrying the namespace <code>package</code>, and at the same time will attach <code>fn1</code> under <code>package</code> namespace.</p>
+<p>But wait, there’s another thing you need to know. There’s a gotcha when you declare an import under <code>box::use()</code>, i.e.&nbsp;something like <code>box::use(pkg = package[fn1])</code>, two things will happen: this imports <code>pkg</code> carrying the entire <code>package</code> namespace, and at the same time will attach <code>fn1</code> names under <code>package</code> namespace.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -622,7 +622,7 @@ Note
 </section>
 <section id="importing-non-syntactic-names" class="level3">
 <h3 class="anchored" data-anchor-id="importing-non-syntactic-names">Importing non-syntactic names</h3>
-<p>The infix operators like <code>%&gt;%</code> from <code>{magrittr}</code> are considered <a href="https://adv-r.hadley.nz/names-values.html#non-syntactic">non-syntactic names</a>. In R, operators and functions that use special characters (like <code>+</code>, <code>*</code>, <code>%&gt;%</code>, <code>%in%</code>, <code>%*%</code>, etc.) are called <em>infix operators</em> but internally parsed as the usual call in R, e.g.&nbsp;<code>add(a, b)</code>. These operators require special handling when importing with <code>{box}</code>. By the way, yes, these are still <em>functions</em>.</p>
+<p>The infix operators like <code>%&gt;%</code> from <code>{magrittr}</code> are considered <a href="https://adv-r.hadley.nz/names-values.html#non-syntactic">non-syntactic names</a>. In R, operators and functions that use special characters (like <code>+</code>, <code>*</code>, <code>%&gt;%</code>, <code>%in%</code>, <code>%*%</code>, etc.) are called <em>infix operators</em> but internally parsed as the usual function call in R, e.g.&nbsp;<code>`+`(a, b)</code>. These operators require special handling when importing with <code>{box}</code>. Regardless, yes, these are still <em>functions</em>.</p>
 <p>To import functions with special characters, you need to wrap them in backticks:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
@@ -722,10 +722,10 @@ Note
 </section>
 <section id="best-practices-for-package-imports" class="level2">
 <h2 class="anchored" data-anchor-id="best-practices-for-package-imports">Best Practices for Package Imports</h2>
-<p>But, of course, R packages have strengths, but don’t forget their flaws. I will enumerate the <em>do’s</em> in <code>{box}</code> package:</p>
+<p>But, of course, R packages have strengths, but don’t forget their flaws. I will enumerate the <em>do’s</em> when using <code>{box}</code> package:</p>
 <ol type="1">
 <li><p>Be Specific with Imports</p>
-<p>Please, do not import everything, unless there’s a good use case. The use of <em>wildcards</em>, i.e.&nbsp;the “ellipsis” <code>...</code> within the granular imports through <code>[...]</code> is a shortcut to import the namespace, but you are importing everything here.</p>
+<p>Please, do not import everything, unless there’s a good use case, like when you ALL of them. The use of <em>wildcards</em>, i.e.&nbsp;the “ellipsis” <code>...</code> within the indexing syntax through <code>[...]</code> is a shortcut to import the namespace, but you are importing everything here.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    dplyr[...]</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -750,7 +750,7 @@ Note
 <p>Let’s take an example, where you want to calculate the sample size, mean, standard deviation, standard error, and the coefficient of variation across the numeric columns in <code>iris</code> dataset:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    dplyr[n, mutate, relocate, group_by, summarise], </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    dplyr[n, mutate, relocate, group_by, summarise, everything], </span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    tidyr[<span class="at">melt =</span> pivot_longer, <span class="at">spread =</span> pivot_wider]</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>

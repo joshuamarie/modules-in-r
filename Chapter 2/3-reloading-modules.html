@@ -485,7 +485,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>When working with modules during development, you’ll frequently modify the source code, and need those changes to reflect in your current R session. Understanding how <code>{box}</code> handles module reloading to increase development workflow efficiency.</p>
+<p>When working with modules during development, you’ll frequently modify the source code, and need those changes to reflect in your current R session, especially when debugging. Understanding how <code>{box}</code> handles module reloading to increase development workflow efficiency.</p>
 <p>This section primarily applies to modules created from scripts and folders, not R packages loaded from CRAN or other repositories.</p>
 <hr>
 <section id="how-box-caches-modules" class="level2">
@@ -516,7 +516,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This behavior mirrors how R packages work - once loaded with <code>library()</code>, they remain in memory until the session restarts.</p>
+<p>This behavior mirrors how R packages work. Once loaded with <code>library()</code>, they remain in memory until the session restarts.</p>
 </div>
 </div>
 </section>
@@ -535,7 +535,7 @@ Note
 <section id="reloading-scenarios" class="level2">
 <h2 class="anchored" data-anchor-id="reloading-scenarios">Reloading scenarios</h2>
 <p>The practical examples are provided below that you can replicate in your current sessions somewhere. First, create <code>./utils/</code> folder then create an R script named <code>helpers.r</code>. Once <code>./utils/helpers</code> is loaded through <code>box::use(./utils/helpers)</code>, <code>helpers</code> module is now loaded and cached into the current environment.</p>
-<p>To be enlightened, here’s three (3) scenarios when you made some changes and then reload the <code>helpers</code> module:</p>
+<p>To be enlightened, here’s three (3) scenarios when you made some changes and then reload the <code>helpers/</code> module:</p>
 <section id="scenario-1-modifying-a-function" class="level3">
 <h3 class="anchored" data-anchor-id="scenario-1-modifying-a-function">Scenario 1: Modifying a function</h3>
 <p>Here’s what <code>./utils/helpers</code> is made of:</p>
@@ -557,7 +557,7 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>utils<span class="sc">/</span>helpers)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">1</span> <span class="sc">:</span> <span class="dv">10</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>helpers<span class="sc">$</span><span class="fu">sum</span>(x) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Then, suddenly you changed your mind because you figured out that it will not work once the vector <code>x</code> contains missing values <code>NA</code>. So, you made another modification:</p>
+<p>Then, suddenly you changed your mind because you figured out that it will not work once the vector <code>x</code> contains missing values <code>NA</code>. And so, you made another modification:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
