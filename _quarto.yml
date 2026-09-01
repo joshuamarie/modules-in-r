@@ -8,6 +8,9 @@ project:
 
 book:
   title: "Box: Placing module system into R"
+  reader-mode: true
+  keyword: box, carrier, module, package, module system, modular programming, package management
+  
   subtitle: "Definitive Guide"
   author:
     - name: "Joshua Marie"

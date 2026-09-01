@@ -1,6 +1,6 @@
 # Reloading modules
 
-When working with modules during development, you'll frequently modify the source code, and need those changes to reflect in your current R session. Understanding how `{box}` handles module reloading to increase development workflow efficiency.
+When working with modules during development, you'll frequently modify the source code, and need those changes to reflect in your current R session, especially when debugging. Understanding how `{box}` handles module reloading to increase development workflow efficiency.
 
 This section primarily applies to modules created from scripts and folders, not R packages loaded from CRAN or other repositories.
 
@@ -35,7 +35,7 @@ There are some reasons why caching happens:
 -   Maintains consistency within a single R session
 
 ::: {.callout-note}
-This behavior mirrors how R packages work - once loaded with `library()`, they remain in memory until the session restarts.
+This behavior mirrors how R packages work. Once loaded with `library()`, they remain in memory until the session restarts.
 :::
 
 ## Manual reloading 
@@ -62,7 +62,7 @@ To see changes made to a module without restarting R, see what I mean:
 
 The practical examples are provided below that you can replicate in your current sessions somewhere. First, create `./utils/` folder then create an R script named `helpers.r`. Once `./utils/helpers` is loaded through `box::use(./utils/helpers)`, `helpers` module is now loaded and cached into the current environment.
 
-To be enlightened, here's three (3) scenarios when you made some changes and then reload the `helpers` module: 
+To be enlightened, here's three (3) scenarios when you made some changes and then reload the `helpers/` module: 
 
 ### Scenario 1: Modifying a function
 
@@ -91,7 +91,7 @@ x = 1 : 10
 helpers$sum(x) 
 ```
 
-Then, suddenly you changed your mind because you figured out that it will not work once the vector `x` contains missing values `NA`. So, you made another modification: 
+Then, suddenly you changed your mind because you figured out that it will not work once the vector `x` contains missing values `NA`. And so, you made another modification: 
 
 ```{r}
 #| echo: true

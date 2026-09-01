@@ -10,7 +10,7 @@ format:
 
 # Preface
 
-Welcome to the definitive guide to module system in R using `{box}`! This is the newest
+Welcome to the definitive guide to module system in R using `{box}`! 
 
 You might have wanted another way to import R packages, or just simply sought better ways to write organized and composable R codes, welcome aboard! This book guides you to the re-imagination of how module system in R should have done. This book introduces you the package called [{box}](https://github.com/klmr/box) (initially started as a `{modules}` package) by Konrad Rudolph, and a Rust package with a thin CLI wrapper called [{carrier}](https://joshuamarie.com/carrier) that helps you manage your `{box}` modules as if you are working with R packages. 
 
@@ -51,7 +51,7 @@ This book is licensed under the Creative Commons Attribution 4.0 International L
 
 ## Credits
 
-This book was created by [Joshua Marie](https://github.com/joshuamarie).
+This book was written by [Joshua Marie](https://github.com/joshuamarie) and co-authored by John Riz Bagnol.
 
 Special thanks to:
 

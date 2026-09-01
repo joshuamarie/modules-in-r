@@ -1,12 +1,12 @@
 # Fundamentals of import system with {box} package
 
-R already has `library()` to load packages you installed in R, then attaches the namespace onto the global namespace / environment, so the namespace from that package you load will be utilized *globally*. Now, you may ask: What's the point of using `{box}` when there's built-in `library()`? Well, you'll learn enough that `{box}` offers best practices and ergnomics, something that R misses. R's module system is NOT the actual modular programming that other programming languages do, and with `{box}`, it blows the import system from R out of the water. 
+R already has `library()` to load packages you installed in R, then attaches the entire namespace onto the global namespace / environment, so the namespace from that package you load will be utilized *globally*. What's the point of using `{box}` when there's built-in `library()`, you may probably ask? Well, you'll learn enough that `{box}` provides an actual module system in R which offers best practices and ergonomics, something that R misses. R's module system is NOT *modular* — the actual modular programming that other programming languages do, and with `{box}`, it blows the import system from R out of the water. 
 
-`{box}`'s ergonomics and most convenient features is its approach to reuse / import R packages, scripts, or folders' namespace. Consequently, there are no consistent module system in native R at all. But `{box}` does more than importing which will be discussed on the later chapters. 
+`{box}`'s ergonomics and most convenient features is its approach to compose and reuse / import R packages and scripts / folders'. Consequently, the module system in R is not consistent enough. But `{box}` does more than importing which will be discussed on the later chapters. 
 
 ## Discussion at Chapter 2
 
-Within Chapter 2, the fundamentals of `{box}` package, the import system with `box::use()` is discussed. 
+Within Chapter 2, the fundamentals of `{box}` package, the import system and semantics of `box::use()`, are discussed. 
 
 ### 1 Loading packages
 
@@ -17,24 +17,24 @@ Unlike the traditional way to load R packages through `library()`, `{box}` is mo
 library(dplyr)
 
 # {box} package
-box::use(dplyr[...])
+box::use(dplyr, dplyr[...])
 ```
 
 The rest will be discussed under [Array of Imports with Monikers](2-imports.qmd). 
 
 ### 2 Loading scripts / folders
 
-With `{box}` modules, scripts and folders can be loaded and reused, as long as the namespace is defined. They are contained in an *environment* data structure as a *module*. It's good since the import system of `{box}` using `box::use()` supersedes `source()` and then `box::file()` supersedes `setwd()`. For more details, the rest will be discussed under [Array of Imports with Monikers](2.1-package-imports.qmd#). 
+With `{box}` modules, scripts and folders can be attached and reused, as long as the namespace is defined. They are contained in an *environment* data structure called [*module*]{.underline}. It's good since the import system of `{box}` using `box::use()` supersedes `source()` and then it has 2 functions — `box::file()` and `box::name()` — that supersede `setwd()`. For more details, the rest will be discussed under [Array of Imports with Monikers](2.1-package-imports.qmd#). 
     
 ### 3 Reloading modules
 
-Mostly applied for modules from scripts and folders. When the script or folders are imported as modules, the initial imports is cached. This means that changes you make to your module’s code won’t automatically take effect until you explicitly reload it. The rest will be discussed under [Chapter 2.1: Array of Imports with Monikers](2.2-reloading-modules.qmd)
+If you talk about local modules, they are mostly applied for modules from scripts and folders. When the scripts and/or folders are imported as modules, the initial imports are cached. This means that the changes you make to your module’s source code won’t automatically take effect until you explicitly purge the cache through `box::purge_cache()` (used after unloading the modules) or reload it. The rest will be discussed under [Chapter 2.1: Array of Imports with Monikers](2.2-reloading-modules.qmd)
 
 ---
 
 ## Some restrictions
 
-While `{box}` package provides different approach to organize and import R code in an ergonomic way, there are some restrictions to be aware of. Specifically, `{box}` does *not* functionally do the following:
+While `{box}` provides different approach to organize and import R code in an ergonomic way, there are some restrictions to be aware of. Specifically, `{box}` does *not* functionally do the following:
 
 -   Attaching meta-packages such as `{tidyverse}` and `{tidymodels}`. 
 -   Using `library()` / `require()` inside a module when writing a module. 
