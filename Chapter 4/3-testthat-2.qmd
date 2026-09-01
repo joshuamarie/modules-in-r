@@ -167,7 +167,7 @@ test_that('matrix operations match', {
 
 ### Dimension Mismatches
 
-The overloaded `*` dispatches its argument, not through S3, that works with matrices. Matrix operations are particularly sensitive to dimensions. To test `*`'s robustness for matrix operations, let's compare that to base R's `%*%` operator: 
+The overloaded `*` dispatches its argument not through S3, that works on matrix objects. Matrix operations are particularly sensitive to dimensions. To test `*`'s robustness for matrix operations, let's compare that to base R's `%*%` operator: 
 
 ``` r
 test_that('matrix multiplication with dimension mismatch tries reverse order', {
