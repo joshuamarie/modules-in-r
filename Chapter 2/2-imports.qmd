@@ -315,12 +315,6 @@ But, of course, R packages have strengths, but don't forget their flaws. I will 
 
     *Rename them whatever you want to employ clarity.*
 
-### Otherwise
-
-::: {.callout-warning title="Otherwise"}
-Trust me, I've been this a long time ago: not following any of those practices. So, if you don't do the following practices, you'll create inconsistent and unpredictable flaws. Keep up the good work and do the best practices.
-:::
-
 ## Troubleshooting Package Imports
 
 Frankly, I will show you solutions if you have similar errors like the following. The common issues to be found when importing packages happen are:
