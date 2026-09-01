@@ -1,6 +1,6 @@
 # Getting Started
 
-`{box}` is an R package released on CRAN on September 2021. So, before we dive deeper, install `{box}` from CRAN first:
+`{box}` is an R package that released its very first v1.0.0 version on CRAN on February 2021. So, before we dive deeper, install `{box}` from CRAN first:
 
 ``` r
 install.packages("box")
@@ -30,9 +30,9 @@ pak::pak(
 
 ## Why Box
 
-For a long time, most R users compose their R codes in an R package or just a local collection of R scripts and sometimes with a deep nested directory. The reusability is rather not granular — you going to have to use `library()` to load R packages and `source()` to read R codes from scripts. As discussed on the [introduction](), they are mostly a problem in management, most especially when you code gets larger and larger. And as you can see, there's 2 functions you're going to use and there's no singular solution for an easy and ergonomic reusability.
+For a long time, most R users compose their R codes in an R package or just a local collection of R scripts and sometimes with a deep nested directory. The reusability is rather not that granular: you going to have to use `library()` to load R packages and `source()` to read R codes within and between scripts. As discussed in the [introduction](https://modules-in-r.joshuamarie.com/Chapter%201/1-intro.html), they are mostly a problem in management, most especially when you code gets larger and larger. And as you can see, there's 2 functions you're going to use and there's no singular solution for an easy and ergonomic reusability.
 
-That's why `{box}` R package is recommended for these because it brings and simplifies modular programming in R for you. As described in its official documentation, it provides two key benefits:
+That's why `{box}` R package is recommended for these because it brings and simplifies modular programming in R for us. As described in its official documentation, it provides two key benefits:
 
 1.  It facilitates modular code writing by treating files and folders as independent, nestable modules, so you don’t need to wrap reusable code into packages.
 

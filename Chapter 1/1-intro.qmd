@@ -1,22 +1,22 @@
 # Introduction
 
-Some R programmers have long sought elegant ways to organize their code into reusable R codes, maintainable modules, and granular import system. Unfortunately, R lacks ergonomics for a long time, until [{box}](https://github.com/klmr/box) R package came in as your saving grace, as it offers a fresh approach to module system in your respective projects.
+Some R programmers have long sought elegant ways to properly organize their codes into composable and reusable R codes, and maintainable modules with granular import system. Unfortunately, R lacks ergonomics for a long time, until [{box}](https://github.com/klmr/box) R package came in as your saving grace, as it offers a fresh approach to module system in your respective projects.
 
 ---
 
 ## The Challenge of Code Organization in R
 
-Let's look at the common challenges:
+The lack of proper module system in R is one of the reason why it is so hard to put R into production, not that impossible, just complex and so tough. Let's look at the common challenges:
 
--   R has `source()` function but has [several caveats](https://www.reddit.com/r/rstats/comments/lm0smw/comment/gnvy0vn/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button). 
--   You have to write an R package just to organize R codes then make those R codes to be reused, but that's pretty much it. There's no way to reuse code in any R script files / folders. 
--   R has no way to explicitly dictates dependencies between different parts of your scripts, aside from creating an R package. 
--   Maintaining consistency across large codebases can be slow and tedious. 
+-   R has `source()` function but has [few to several important caveats](https://www.reddit.com/r/rstats/comments/lm0smw/comment/gnvy0vn/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button) to know. 
+-   You have to compose a reusable R code by writing an R package. It is still part of the boilerplates, since you just have to organize R codes then make those R codes to be reused. R packages usually requires plenty of boilerplates, no deep nesting of modules, and most of all, that's pretty much it. There's no way to reuse code in any R script files / folders, or employ modules with hierarchical and deep nested structure. 
+-   R has no way to explicitly declare imports and dictate dependencies within and between scripts/directories, aside from writing R packages. 
+-   Maintaining consistency across large codebases can be slow and tedious. Since there's no granular import system, there's no way to attach the names from scripts/folders, and you have to use `source()` function. 
 -   Sharing code between projects categorically. 
 
 ## Enter the {box} Package
 
-Before `{box}`, there are packages out there that actually does a pretty solid job, and those are `{conflicted}` and `{import}`. However, `{box}` package is subjectively but ergonomically more superior than those as it does more: it offers a fresh approach to modular programming within R, bringing better clarity and structure to your projects. It addresses these challenges by introducing a modern, explicit module system that feels natural to both any R veteran and developer coming from other programming languages.
+All of them solved by `{box}`, except on distribution and proper declaration of package dependencies which is solved by [{carrier}](https://joshuamarie.com/carrier). Before `{box}`, there are packages out there that actually does a pretty solid job, and those are `{conflicted}` and `{import}`, except the former mainly manages the namespace conflicts by declaring and the latter does what `{box}` can do but [less](https://joshuamarie.com/posts/06-load-pkg/#import-pack). `{box}` package is just subjectively but ergonomically more superior than those as it does more: it offers a fresh approach to modular programming within R, bringing better clarity and structure to your projects. It addresses these challenges by introducing a modern, explicit module system that feels natural to both any R veteran and developer coming from other programming languages.
 
 ## Understanding Modular Programming
 
