@@ -1,0 +1,32 @@
+# "Packaged" {box} modules
+
+So now, after the last 4 chapters talking about the declaration of imports (and the way they are used and reload) whether they are R packages or scripts/folders from the local directory, how to write modules in any depths and how they are being reused, and the way you measure the robustness of the module with unit testing using `{testthat}`. Do you ever wonder if they can be distributed across different machines while other matters like the resolution of the package dependencies being used and installation of those modules are done at the same time? Here's 
+
+This chapter talks about making `{box}` modules you just composed into similar to the traditional R packages, where the reusable R codes are *packaged* and be simply reusable across different machines. It is recommendable to read Chapter 3 first because diving under this Chapter, since it involves writing and composing modules. 
+
+---
+
+## Rationale
+
+Here's a problem you've run into already if you followed along since Chapter 3: your `module/` folder only exists on your machine. From the [official documentation](https://klmr.me/box/articles/box.html#attaching-modules), it already teaches you on how modules are globally by setting `options(box.path = <place-the-path>)`. This book, however, teaches you the alternative way to make `{box}` modules distributable, installable, and accessible across different machines — introducing `{carrier}`. Most of the steps, such as the resolution of the package dependencies being used on `{box}` modules, are done automatically once you run them on terminal. 
+
+## Introducing {carrier}
+
+`{carrier}` is a new tool for R in the wild that makes the distribution and the installation (with resolution) of `{box}` modules possible. When using `{carrier}`, all you need to have is your terminal and any editor you prefer to use to write `{box}` modules. There's no official name for this packages yet, since it is another variation and a new way to write packages in R involving `{box}` module, and they are called `{box}`-`{carrier}` packages. Under the project containing the source code of the module, the root directory must contain one metadata file called `carrier.toml`. This book won't explain everything about the `{carrier}` installation details, the CLI commands,and won't fully explain the metadata itself, instead it is recommended to read the official documentations, under the following links:
+
+-  [Installation Guide](https://joshuamarie.com/carrier/installation.html)
+-  [Metadata](https://joshuamarie.com/carrier/reference/carrier-toml.html)
+-  [CLI Commands](https://joshuamarie.com/carrier/reference/cli.html)
+
+## Why not just write an R package
+
+Well, there's the traditional CRAN-style R packages already, as long as there's `DESCRIPTION`, `NAMESPACE`, and `R CMD build`. An existing real R package system already solves the distribution, and there's already decades of support for this system, so why built another approach? 
+
+The thing is that writing a real package around something you were only ever `box::use()`-ing internally costs you more than it gives back. A few things get in the way:
+
+-  Traditional packages spread their metadata across more than one file. `DESCRIPTION` holds the dependency list and package information. Then, we have `NAMESPACE` that holds what gets exported, and neither writes itself, `NAMESPACE` especially usually comes out of an `{Roxygen2}` build step you rerun every time an export changes. A `{box}`-`{carrier}` package holds all of that in the single `carrier.toml` you just saw above, and you'll worry less about the exports since `{box}` already borrows `#' @export` tag. 
+
+-  As explained on this [part](https://modules-in-r.joshuamarie.com/Chapter%203/2-struct-module-1.html#the-structure) from Chapter 1, packages flatten everything into one namespace, and the module with deep nesting doesn't survive that. If you wish to make everything flat under the module, you just need to pre-export everything through `box::use(./mod[...])` (see this [part](https://modules-in-r.joshuamarie.com/Chapter%202/2-imports.html#wildcard-import) for more details). 
+
+When you actually want is a package produced from modular programming through `{box}` modules, that's what the rest of this chapter is talking about, along with the `{carrier}` docs linked above, walks through.
+
