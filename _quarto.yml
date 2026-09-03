@@ -61,7 +61,7 @@ book:
       chapters:
         - text: "5.1 Overview on packaged modules"
           href: Chapter 5/1-box-packages.qmd
-        - text: "5.2 Writing Module Packages"
+        - text: "5.2 {carrier}: Writing Module Packages"
           href: Chapter 5/2-writing-packages.qmd
         - text: "5.3 Bundle and Installation"
           href: Chapter 5/3-bundle-install.qmd
