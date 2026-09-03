@@ -87,7 +87,7 @@ r_version = ">=4.1.0"
 
 Then, write the two submodules under `stringkit/` source code, `case` and `pad`. 
 
-```{r}
+``` r
 # stringkit/case.r
 #' @export
 to_snake = function (x) {
@@ -95,7 +95,7 @@ to_snake = function (x) {
 }
 ```
 
-```{r}
+``` r
 # stringkit/pad.r
 #' @export
 left = function (x, width, fill = "0") {
@@ -103,7 +103,7 @@ left = function (x, width, fill = "0") {
 }
 ```
 
-```{r}
+``` r
 # stringkit/__init__.r
 #' @export
 box::use(
