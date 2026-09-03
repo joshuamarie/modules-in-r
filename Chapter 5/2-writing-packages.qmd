@@ -1,0 +1,187 @@
+# Writing Packages out from {box} modules
+
+To make `{box}` modules to be packaged, making it distributable and installable, `{carrier}` is made for that purpose. But first, you need to install `{carrier}` to get started. Under the installation guide, you can install `{carrier}` in the most recommendable way — using Shell installer:
+
+1.  Linux / macOS:
+
+    ``` bash
+    curl -sSL https://raw.githubusercontent.com/joshuamarie/carrier/refs/heads/main/scripts/install.sh | bash
+    ```
+
+2.  Windows:
+
+    ``` bash
+    powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/joshuamarie/carrier/refs/heads/main/scripts/install.ps1 | iex"
+    ```
+
+But if you prefer the development version, one must require [Rust](https://www.rust-lang.org/tools/install) toolchain, particularly you need to have the following toolchains: `rustc` and `cargo` on your system to compile it from source.
+
+``` bash
+cargo install --git https://github.com/joshuamarie/carrier
+```
+
+------------------------------------------------------------------------
+
+## Overview to the {carrier} TOML file
+
+To make `{box}` modules to be packaged through `{carrier}`, the directory containing the source requires `carrier.toml`, similar to `DESCRIPTION` in traditional R packages and `pyproject.toml` in Python packages. We'll explore the anatomy of `carrier.toml` here to get an explanation while reading this book.
+
+Here's an example of `carrier.toml`:
+
+``` toml
+[module]
+name = "demodule"
+author = "Joshua Marie"
+version = "0.1.0"
+description = ""
+r_version = ">=4.1.0"
+
+[package_deps]
+rlang = ">1.2.0"
+dplyr = ">=1.1.0"
+ggplot2 = ">=4.0.0"
+
+[module_deps]
+fpurrr = {version = "*", source = "gh:joshuamarie/fpurrr"}
+```
+
+There are [five (5) blocks in total](https://joshuamarie.com/carrier/reference/carrier-toml.html), but to get started, only three (3) blocks that you need to know to get started.
+
+1.  `[module]` is the information of the `{box}`-`{carrier}` module authorship. This includes the name of the module, its declared version, description of the package, and the required R versions. This block is always required.
+
+2.  `[package_deps]` is where the list of R package dependencies lived. Not the modules which applies `{carrier}`, but the traditional CRAN-style R packages. The versioning of the package dependencies are varied and must be declared once. There are few ways to declare the version to be required:
+
+    i.  `"*"` - If declared, then `{carrier}` will fetch the *latest version* of that package.
+    ii. `"=1.0.0"` - If declared, then `{carrier}` will fetch the *exact version* of that package.
+    iii. `"<=1.0.0"` - If declared, then `{carrier}` will fetch the package not later than 1.0.0.
+    iv. `">=1.0.0"` - If declared, then `{carrier}` will fetch the package later than 1.0.0.
+
+    You can also declare it with the `{}` table syntax, which takes two arguments, `version` and `source`, for when the package needs to come from somewhere other than CRAN, a GitHub source, for instance. The `[package_deps]` can be empty or the entire block do not exist on `carrier.toml` if you don't have any packages import along the source code of your module. 
+
+3.  `[module_deps]` works the same way, but lists other `{box}`-`{carrier}` modules instead of CRAN packages, even though they're really just another kind of package under the hood. Versioning and the `source` field follow the same rules as `[package_deps]`. And just like `[package_deps]`, this can be empty or do not exist on `carrier.toml` file. 
+
+## Creating your first package
+
+Composability of a simple module is...simple. You don't require few to plenty boilerplates to start, and then reuse the code you just wrote. How about making that simple package on your mind to be packaged? It is also simple through `{carrier}`. For our demo here, let's pick up an example, say `stringkit`, which is a small text-formatting module. Here's an example structure:
+
+``` text
+<dir-where-stringkit-lives>/
+├── carrier.toml            
+└── stringkit/
+    ├── __init__.r
+    ├── case.r
+    └── pad.r
+```
+
+The `<dir-where-stringkit-lives>/` name is just a placeholder, pick up a better name. As a starter, you must place your current directory under `<dir-where-stringkit-lives>/`. One file that is always required to be placed at the relative path of where you are working with: `carrier.toml`. This is just the `DESCRIPTION` file for `{box}`-`{carrier}` modules and for the sake of demonstration, here's the following content you can copy:
+
+``` toml
+[module]
+name = "stringkit"
+author = "Joshua Marie"
+version = "0.1.0"
+description = "A small text-formatting module"
+r_version = ">=4.1.0"
+# src = "stringkit/"
+```
+
+Then, write the two submodules under `stringkit/` source code, `case` and `pad`. 
+
+``` r
+# stringkit/case.r
+#' @export
+to_snake = function (x) {
+    gsub("([a-z])([A-Z])", "\\1_\\2", x) |> tolower()
+}
+```
+
+``` r
+# stringkit/pad.r
+#' @export
+left = function (x, width, fill = "0") {
+    formatC(x, width = width, flag = fill)
+}
+```
+
+``` r
+# stringkit/__init__.r
+#' @export
+box::use(
+    ./case, 
+    pad = ./pad[pad_left = left], 
+)
+```
+
+Then install the following module above by running the following command:
+
+``` bash
+carrier install .
+```
+
+There are more details about installations on the next part of this book. 
+
+### Usage
+
+To use the module after installing, reminder that the declaration of imports is rather the combination of R packages or local modules. 
+
+``` r
+box::use(
+    stringkit,
+    stringkit/case,
+    stringkit/pad
+)
+
+stringkit$case$to_snake("myVariableName")
+#> [1] "my_variable_name"
+
+case$to_snake("myVariableName")
+#> [1] "my_variable_name"
+
+stringkit$pad$pad_left(7, width = 3)
+#> [1] "007"
+
+pad$left(7, width = 3)
+#> [1] "007"
+
+box::unload(stringkit)
+box::unload(case)
+box::unload(pad)
+```
+
+## Make {./module} compatible with {carrier}
+
+To make the module we demonstrated on the previous chapters, `./module`, under the current directory 1 level above `./module/`, just add `carrier.toml`. Copy the following content:
+
+``` toml
+[module]
+name = "demodule"
+author = "Joshua Marie"
+version = "0.1.0"
+description = "A demo module from BPMSiR book"
+r_version = ">=4.1.0"
+src = "module/"
+
+[package_deps]
+dplyr = ">1.1.0"
+tidyselect = "*"
+tibble = "*"
+rlang = ">=1.1.0"
+purrr = ">=1.2.0"
+glue = "*"
+```
+
+### Usage
+
+We can use the codes being used on the previous chapters:
+
+``` r
+box::use(
+    dm = demodule, 
+    demodule/statistics/modules/linear[linear_reg], 
+)
+
+dm$convert$fahrenheit_to_celsius(100)
+linear_reg(mtcars, mpg ~ wt + hp, vif = TRUE)
+```
+
+
