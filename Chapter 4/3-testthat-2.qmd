@@ -1,10 +1,10 @@
 # Unit Test Diagnostics
 
-Most of the diagnostics covered by this book using `{testthat}` package are applied on what you did when making R packages, so whatever you did on R packages, you will apply them when composing `{box}` modules. When tests fail — and they will — you need clear, actionable information about what went wrong. The `{testthat}` package provides several reporting formats that help you understand test results at different levels of detail.
+Most of the diagnostics covered by this book using `{testthat}` package are applied on what you did when developing R packages. Like, whatever you did on R packages, you will apply them when composing `{box}` modules. When tests fail — and they will — you need clear, actionable information about what went wrong. The `{testthat}` package provides several reporting formats that help you understand test results at different levels of detail.
 
 ## Understanding Test Reporters
 
-Test reporters control how `{testthat}` displays test results. You configure them in `__tests__/__init__.r` file through `reporter` argument in `test_dir()` function:
+Test reporters control how `{testthat}` displays test results. You configure them in `__tests__/__init__.r` file through `reporter` argument in `test_dir()` function and it will change the display:
 
 ``` r
 box::use(testthat[...])
@@ -127,21 +127,21 @@ Backtrace:
 [ FAIL 1 | WARN 0 | SKIP 0 | PASS 3 ]
 ```
 
-Let's break down this failure message:
+Here's the summary from this failure message:
 
-1. **Location**: `'test-linear.r:15:5'` tells you exactly where the failure occurred—line 15, column 5
-2. **Context**: The test description helps identify what functionality broke
-3. **Expectation**: Shows what you expected vs. what you got
-4. **Details**: Specific information about the mismatch (e.g., "Mean relative difference: 0.0523")
-5. **Backtrace**: The call stack leading to the failure
+1. **Location**: `'test-linear.r:15:5'` tells you exactly where the failure occurred—line 15, column 5. Go to that line of code and identify what's the cause (referring to **Context** below). 
+2. **Context**: The test description helps identify what functionality broke. This entails the breakage under the **Location**. 
+3. **Expectation**: Shows what you expected vs. what you got. Here, you want to test out the equality between `model$out$coefficients` and `as.vector(coef(base_model))`, but it got broke. 
+4. **Details**: Specific information about the mismatch (e.g., "Mean relative difference: 0.0523"). This is good since you identify what's the reason behind the breakage. 
+5. **Backtrace**: The call stack leading to the failure. Now, you can either fix the implementation behind the code you wrote or fix the test you compose. 
 
 ## Common Failure Patterns
 
-These occurrences happen so often in writing programs in R, but even if these are not common to you, this hopes awareness who writes unit tests to measure the robustness of their codes are stil applied on writing `{box}` modules. The example you see is using `matrix_ops.r`, which involves operator overloading which can cause several (if not few) bugs since the multiplication operator `*` in R is designed for two numeric values, not for matrices. That's why the following occurrences below tries to test the common *possible* failures under the implementation. 
+These occurrences happen so often in writing programs in R, but even if these are not common to you, this hopes awareness who writes unit tests to measure the robustness of their codes are still applied on writing `{box}` modules. The example you see is using `matrix_ops.r`, which involves operator overloading which can cause few (if not several) bugs since by the default, the multiplication operator `*` in R is designed for two numeric values only, not either or both arguments under `*` are matrices. That's why the following occurrences below tries to test the common *possible* failures under the implementation. 
 
 ### Numerical Precision Concern
 
-The overloaded `*` still carries the default semantics of base R's `*` operator, that is to multiply two numeric values, especially if those two (2) numbers are floating point arithmetic, thus a concern on numerical precision. A common concern in programming is the floating-point arithmetic can cause unexpected failures:
+The overloaded `*` still carries the default semantics of base R's `*` operator, that is to multiply two (2) numeric values, especially if those two (2) numbers are floating point arithmetic, thus a concern on numerical precision. A common concern in programming is the floating-point arithmetic can cause unexpected failures:
 
 ``` r
 test_that('matrix operations match', {
@@ -153,7 +153,7 @@ test_that('matrix operations match', {
 })
 ```
 
-The solution is quick and meticulous: Use `tolerance` argument for floating-point comparisons. Preferably the value for the tolerance is close to `.Machine$double.eps` to test how precise the difference can be. Here's a basic example: 
+The solution is quick but meticulous: Use `tolerance` argument for floating-point comparisons. Preferably the value for the tolerance is close to `.Machine$double.eps` to test how precise the difference can be. Here's a basic example: 
 
 ``` r
 test_that('matrix operations match', {

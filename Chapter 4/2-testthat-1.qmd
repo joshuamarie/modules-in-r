@@ -1,10 +1,10 @@
 # Setting Up Module Tests
 
-The `{box}` package works seamlessly with any frameworks, even `{testthat}`, R's most popular unit testing framework. While you can use other testing frameworks, this guide focuses on the use of `{testthat}` because of its widespread adoption and excellent integration with popular IDEs like RStudio.
+`{box}` works seamlessly with any frameworks, even `{testthat}`, R's most popular unit testing framework. While you can use other testing frameworks, this guide focuses on the use of `{testthat}` because of its widespread adoption and excellent integration with popular IDEs like RStudio.
 
 ## Getting Started
 
-Let us revisit from what we started on `./module` from Chapter 3, then test the robustness of `./module/matrix_ops.r`, where it overloads `*` and `^` from base R for matrix operations. For our example, update `./module` by creating another subfolder named `__tests__/`, next to your module file. The double underscores make it clear this is special infrastructure code, not just a regular module.
+Let us revisit from what we started on `./module` from Chapter 3, then for this example, let us test the robustness of `./module/matrix_ops.r`, where it overloads `*` and `^` from base R for matrix operations. For our example, update `./module` by creating another subfolder named `__tests__/` that contains the unit test scripts, next to your module file you want to test. You can choose ANY name, the double underscores here is used to make it clear this is special infrastructure code, not just a regular module.
 
 Here's the visualization of the structure:
 
@@ -44,7 +44,11 @@ box::use(testthat[...])
 box::export()
 ```
 
-The `.on_load` hook here will make all unit tests automatically run when the `__tests__/` module loads. Using `box::file()` gives us the current directory path.
+The `.on_load` hook here will make all unit tests automatically run when the `__tests__/` module loads. Using `box::file()` gives us the current directory path. 
+
+::: callout-note
+In R, any names that start with `_` are considered *non-syntactic* names. To declare an import that attaches this module, you must place backticks side-by-side. Quotation marks are not allowed as discussed on the use of NSE back in Chapter 2. 
+:::
 
 The `./module/__tests__/helper-module.r` file loads/attaches the namespace of the module you want to test into the test environment (this file). In our case, we choose `./module/matrix_ops.r`, and since the module is located at 1 level upper from `__tests__/`, locate the module 1 `../` upper, then load/attach its namespace: 
 
@@ -150,7 +154,17 @@ This conditional check distinguishes between two scenarios: when you execute `Rs
 The backticks around `__tests__` is another case of non-syntactic names (discussed at Advanced R and this book under Chapter 2) — R doesn't normally allow identifiers starting with underscores, so backticks tell R to treat it as a literal name.
 :::
 
-After that, update the `./module/__tests__/test-matrix_ops.r` file that contains the actual tests:
+Or if you just want to test only that script containing the test, use `test_file()` instead, then specify the path of the file containing the test, i.e. `./module/__tests__/test-matrix-ops.r`. Do the following:
+
+``` r
+if (is.null(box::name())) {
+    testthat::test_file(path = box::file("__tests__", "test-matrix_ops.r"))
+}
+```
+
+Considering that you have two or more scripts that contain the tests from `matrix_ops.r` module especially, use either a map-family function (`^walk()` in `{purrr}` package) or just a for-loop to execute the unit tests at once. 
+
+Now you know how you can mark the module into testable by executing it. After knowing that, update the `./module/__tests__/test-matrix_ops.r` file that contains the actual tests:
 
 ```{r}
 #| echo: true
@@ -254,16 +268,33 @@ You have several options for running tests:
 
 ## Testing Nested Modules
 
-How about testing nested modules? In this example, we want to measure the robustness the functions for linear and logistic regression under `./module/statistics/models/` module. Then, you can choose either updating `./modules/__tests__/` then prepare the scripts containing the unit tests, or create another `__tests__/` under `./module/statistics/models/` module folder. If you choose the former, the `./module/__tests__/helper-module.r` should contain the following import declaration:
+How about testing nested modules? In this example, we want to measure the robustness the functions for linear and logistic regression models under `./module/statistics/models/` module. Then, choose either updating `./module/__tests__/` then prepare the scripts containing the unit tests, or create another `__tests__/` under `./module/statistics/models/` module folder. If you choose the former, the `./module/__tests__/helper-module.r` should contain the following import declaration:
 
 ``` r
+# helper-module.r
 box::use(
     ../statistics/models/linear[linear_reg], 
     ../statistics/models/logistic[logistic_reg], 
 )
 ```
 
-Then copy the following unit tests, both `test-linear-reg.r` and `test-logistic-reg.r`, below. Else, do the following steps below. Let us test both `module/statistics/models/linear.r` and `module/statistics/models/logistic.r`. First, here's the structure:
+Then copy the following unit tests, both `test-linear-reg.r` and `test-logistic-reg.r`, below. If you want to make these unit test script files testable assuming these scripts live under `./module/__tests__/`, then the following code that makes these scripts testable becomes:
+
+``` r
+if (is.null(box::name())) {
+    box::use(../../`__tests__`)
+}
+```
+
+Then execute either `module/statistics/models/linear.r` and/or `module/statistics/models/logistic.r` scripts on the terminal, assuming the Shell working directory is the root directory where `module/` live, through the following command:
+
+``` bash
+Rscript module/statistics/models/linear.r
+```
+
+Else, do the following steps below. Let us test both `module/statistics/models/linear.r` and `module/statistics/models/logistic.r`. 
+
+First, here's the structure:
 
 ```
 module/statistics/models/
@@ -278,16 +309,16 @@ module/statistics/models/
 └── baseline_logit.r
 ```
 
-The `helper-module.r` file from `./module/statistics/models` adjusts the relative path:
+The `helper-module.r` file from `./module/statistics/models/__tests__/` adjusts the relative path:
 
-```r
+``` r
 box::use(
     ../linear[linear_reg], 
     ../logistic[logistic_reg]
 )
 ```
 
-And `./module/statistics/models/__tests__/test-linear-reg.r` contains tests `linear_reg()` function: 
+And `/__tests__/test-linear-reg.r` contains tests `linear_reg()` function: 
 
 ```{r}
 #| echo: true
@@ -334,7 +365,7 @@ test_that('Linear Regression with column selection works', {
 })
 ```
 
-As well as `./module/statistics/models/__tests__/test-logistic-reg.r` to tests `logistic_reg()` function: 
+As well as `/__tests__/test-logistic-reg.r` to tests `logistic_reg()` function: 
 
 ```{r}
 #| echo: true
