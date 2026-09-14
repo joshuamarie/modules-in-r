@@ -83,9 +83,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-8b59572d5a32d48cb2b99e0b9d237534.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-002a58eb99fdce6a2cd4786ca075bbbb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-4f68dd4be32aed7e9ef896588cd9369d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-002a58eb99fdce6a2cd4786ca075bbbb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-17ad7eadcc6c4c6d1b6b0d62e426494c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-4ce9f66b060a1de050eab28b8145bb05.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-17ad7eadcc6c4c6d1b6b0d62e426494c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -488,10 +488,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Most of the diagnostics covered by this book using <code>{testthat}</code> package are applied on what you did when making R packages, so whatever you did on R packages, you will apply them when composing <code>{box}</code> modules. When tests fail — and they will — you need clear, actionable information about what went wrong. The <code>{testthat}</code> package provides several reporting formats that help you understand test results at different levels of detail.</p>
+<p>Most of the diagnostics covered by this book using <code>{testthat}</code> package are applied on what you did when developing R packages. Like, whatever you did on R packages, you will apply them when composing <code>{box}</code> modules. When tests fail — and they will — you need clear, actionable information about what went wrong. The <code>{testthat}</code> package provides several reporting formats that help you understand test results at different levels of detail.</p>
 <section id="understanding-test-reporters" class="level2">
 <h2 class="anchored" data-anchor-id="understanding-test-reporters">Understanding Test Reporters</h2>
-<p>Test reporters control how <code>{testthat}</code> displays test results. You configure them in <code>__tests__/__init__.r</code> file through <code>reporter</code> argument in <code>test_dir()</code> function:</p>
+<p>Test reporters control how <code>{testthat}</code> displays test results. You configure them in <code>__tests__/__init__.r</code> file through <code>reporter</code> argument in <code>test_dir()</code> function and it will change the display:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(testthat[...])</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>.on_load <span class="ot">=</span> <span class="cf">function</span> (ns) {</span>
@@ -570,21 +570,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="ex">at</span> test-linear.r:15:4</span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> FAIL 1 <span class="er">|</span> <span class="er">WARN</span> <span class="ex">0</span> <span class="kw">|</span> <span class="ex">SKIP</span> 0 <span class="kw">|</span> <span class="ex">PASS</span> 3 ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Let’s break down this failure message:</p>
+<p>Here’s the summary from this failure message:</p>
 <ol type="1">
-<li><strong>Location</strong>: <code>'test-linear.r:15:5'</code> tells you exactly where the failure occurred—line 15, column 5</li>
-<li><strong>Context</strong>: The test description helps identify what functionality broke</li>
-<li><strong>Expectation</strong>: Shows what you expected vs.&nbsp;what you got</li>
-<li><strong>Details</strong>: Specific information about the mismatch (e.g., “Mean relative difference: 0.0523”)</li>
-<li><strong>Backtrace</strong>: The call stack leading to the failure</li>
+<li><strong>Location</strong>: <code>'test-linear.r:15:5'</code> tells you exactly where the failure occurred—line 15, column 5. Go to that line of code and identify what’s the cause (referring to <strong>Context</strong> below).</li>
+<li><strong>Context</strong>: The test description helps identify what functionality broke. This entails the breakage under the <strong>Location</strong>.</li>
+<li><strong>Expectation</strong>: Shows what you expected vs.&nbsp;what you got. Here, you want to test out the equality between <code>model$out$coefficients</code> and <code>as.vector(coef(base_model))</code>, but it got broke.</li>
+<li><strong>Details</strong>: Specific information about the mismatch (e.g., “Mean relative difference: 0.0523”). This is good since you identify what’s the reason behind the breakage.</li>
+<li><strong>Backtrace</strong>: The call stack leading to the failure. Now, you can either fix the implementation behind the code you wrote or fix the test you compose.</li>
 </ol>
 </section>
 <section id="common-failure-patterns" class="level2">
 <h2 class="anchored" data-anchor-id="common-failure-patterns">Common Failure Patterns</h2>
-<p>These occurrences happen so often in writing programs in R, but even if these are not common to you, this hopes awareness who writes unit tests to measure the robustness of their codes are stil applied on writing <code>{box}</code> modules. The example you see is using <code>matrix_ops.r</code>, which involves operator overloading which can cause several (if not few) bugs since the multiplication operator <code>*</code> in R is designed for two numeric values, not for matrices. That’s why the following occurrences below tries to test the common <em>possible</em> failures under the implementation.</p>
+<p>These occurrences happen so often in writing programs in R, but even if these are not common to you, this hopes awareness who writes unit tests to measure the robustness of their codes are still applied on writing <code>{box}</code> modules. The example you see is using <code>matrix_ops.r</code>, which involves operator overloading which can cause few (if not several) bugs since by the default, the multiplication operator <code>*</code> in R is designed for two numeric values only, not either or both arguments under <code>*</code> are matrices. That’s why the following occurrences below tries to test the common <em>possible</em> failures under the implementation.</p>
 <section id="numerical-precision-concern" class="level3">
 <h3 class="anchored" data-anchor-id="numerical-precision-concern">Numerical Precision Concern</h3>
-<p>The overloaded <code>*</code> still carries the default semantics of base R’s <code>*</code> operator, that is to multiply two numeric values, especially if those two (2) numbers are floating point arithmetic, thus a concern on numerical precision. A common concern in programming is the floating-point arithmetic can cause unexpected failures:</p>
+<p>The overloaded <code>*</code> still carries the default semantics of base R’s <code>*</code> operator, that is to multiply two (2) numeric values, especially if those two (2) numbers are floating point arithmetic, thus a concern on numerical precision. A common concern in programming is the floating-point arithmetic can cause unexpected failures:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix operations match'</span>, {</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    sols <span class="ot">=</span> A <span class="sc">^</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> b</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> <span class="fu">solve</span>(A) <span class="sc">%*%</span> b</span>
@@ -592,7 +592,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This might fail!</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(sols, expected)</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The solution is quick and meticulous: Use <code>tolerance</code> argument for floating-point comparisons. Preferably the value for the tolerance is close to <code>.Machine$double.eps</code> to test how precise the difference can be. Here’s a basic example:</p>
+<p>The solution is quick but meticulous: Use <code>tolerance</code> argument for floating-point comparisons. Preferably the value for the tolerance is close to <code>.Machine$double.eps</code> to test how precise the difference can be. Here’s a basic example:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix operations match'</span>, {</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    sols <span class="ot">=</span> A <span class="sc">^</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> b</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> <span class="fu">solve</span>(A) <span class="sc">%*%</span> b</span>

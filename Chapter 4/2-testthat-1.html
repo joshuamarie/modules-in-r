@@ -84,9 +84,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-8b59572d5a32d48cb2b99e0b9d237534.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-002a58eb99fdce6a2cd4786ca075bbbb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-4f68dd4be32aed7e9ef896588cd9369d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-002a58eb99fdce6a2cd4786ca075bbbb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-17ad7eadcc6c4c6d1b6b0d62e426494c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-4ce9f66b060a1de050eab28b8145bb05.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-17ad7eadcc6c4c6d1b6b0d62e426494c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -479,10 +479,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The <code>{box}</code> package works seamlessly with any frameworks, even <code>{testthat}</code>, R’s most popular unit testing framework. While you can use other testing frameworks, this guide focuses on the use of <code>{testthat}</code> because of its widespread adoption and excellent integration with popular IDEs like RStudio.</p>
+<p><code>{box}</code> works seamlessly with any frameworks, even <code>{testthat}</code>, R’s most popular unit testing framework. While you can use other testing frameworks, this guide focuses on the use of <code>{testthat}</code> because of its widespread adoption and excellent integration with popular IDEs like RStudio.</p>
 <section id="getting-started" class="level2">
 <h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
-<p>Let us revisit from what we started on <code>./module</code> from Chapter 3, then test the robustness of <code>./module/matrix_ops.r</code>, where it overloads <code>*</code> and <code>^</code> from base R for matrix operations. For our example, update <code>./module</code> by creating another subfolder named <code>__tests__/</code>, next to your module file. The double underscores make it clear this is special infrastructure code, not just a regular module.</p>
+<p>Let us revisit from what we started on <code>./module</code> from Chapter 3, then for this example, let us test the robustness of <code>./module/matrix_ops.r</code>, where it overloads <code>*</code> and <code>^</code> from base R for matrix operations. For our example, update <code>./module</code> by creating another subfolder named <code>__tests__/</code> that contains the unit test scripts, next to your module file you want to test. You can choose ANY name, the double underscores here is used to make it clear this is special infrastructure code, not just a regular module.</p>
 <p>Here’s the visualization of the structure:</p>
 <pre><code>module/
 ├── __init__.r
@@ -514,6 +514,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">export</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>.on_load</code> hook here will make all unit tests automatically run when the <code>__tests__/</code> module loads. Using <code>box::file()</code> gives us the current directory path.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In R, any names that start with <code>_</code> are considered <em>non-syntactic</em> names. To declare an import that attaches this module, you must place backticks side-by-side. Quotation marks are not allowed as discussed on the use of NSE back in Chapter 2.</p>
+</div>
+</div>
 <p>The <code>./module/__tests__/helper-module.r</code> file loads/attaches the namespace of the module you want to test into the test environment (this file). In our case, we choose <code>./module/matrix_ops.r</code>, and since the module is located at 1 level upper from <code>__tests__/</code>, locate the module 1 <code>../</code> upper, then load/attach its namespace:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -633,7 +646,12 @@ Note
 <p>The backticks around <code>__tests__</code> is another case of non-syntactic names (discussed at Advanced R and this book under Chapter 2) — R doesn’t normally allow identifiers starting with underscores, so backticks tell R to treat it as a literal name.</p>
 </div>
 </div>
-<p>After that, update the <code>./module/__tests__/test-matrix_ops.r</code> file that contains the actual tests:</p>
+<p>Or if you just want to test only that script containing the test, use <code>test_file()</code> instead, then specify the path of the file containing the test, i.e.&nbsp;<code>./module/__tests__/test-matrix-ops.r</code>. Do the following:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.null</span>(box<span class="sc">::</span><span class="fu">name</span>())) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    testthat<span class="sc">::</span><span class="fu">test_file</span>(<span class="at">path =</span> box<span class="sc">::</span><span class="fu">file</span>(<span class="st">"__tests__"</span>, <span class="st">"test-matrix_ops.r"</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Considering that you have two or more scripts that contain the tests from <code>matrix_ops.r</code> module especially, use either a map-family function (<code>^walk()</code> in <code>{purrr}</code> package) or just a for-loop to execute the unit tests at once.</p>
+<p>Now you know how you can mark the module into testable by executing it. After knowing that, update the <code>./module/__tests__/test-matrix_ops.r</code> file that contains the actual tests:</p>
 <div class="cell">
 <div id="lst-matrix_ops_test" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored" data-code-fold="true">
 <figure class="quarto-float quarto-float-lst figure">
@@ -643,57 +661,57 @@ Listing&nbsp;13.1: ./module/<strong>tests</strong>/test-matrix_ops.r
 <div aria-describedby="lst-matrix_ops_test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ---Matrix Multiplication---</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix multiplication works correctly'</span>, {</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> m1 <span class="sc">*</span> m2</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> m1 <span class="sc">%*%</span> m2</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(result, expected)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix multiplication with dimension mismatch tries reverse order'</span>, {</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">8</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_error</span>(m1 <span class="sc">*</span> m2)</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_error</span>(m2 <span class="sc">%*%</span> m1)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix multiplication works with scalar'</span>, {</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    scalar <span class="ot">=</span> <span class="dv">2</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> m1 <span class="sc">*</span> scalar</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> base<span class="sc">::</span><span class="st">`</span><span class="at">*</span><span class="st">`</span>(m1, scalar)</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(result, expected)</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co"># ---Exponentiation---</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix inverse (^-1) works correctly'</span>, {</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">=</span> <span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">7</span>), <span class="fu">c</span>(<span class="dv">5</span>, <span class="sc">-</span><span class="dv">4</span>))</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> m <span class="sc">^</span> <span class="sc">-</span><span class="dv">1</span></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> <span class="fu">solve</span>(m)</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(result, expected)</span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="co"># ---Solving system of linear equation---</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="co"># ---An example from https://www.youtube.com/watch?v=cblHUeq3bkE---</span></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'combined operations work (inverse then multiply)'</span>, {</span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">=</span> <span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">7</span>), <span class="fu">c</span>(<span class="dv">5</span>, <span class="sc">-</span><span class="dv">4</span>))</span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    b <span class="ot">=</span> <span class="fu">cbind</span>(<span class="fu">c</span>(<span class="dv">34</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> A <span class="sc">^</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> b</span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">ncol =</span> <span class="dv">1</span>)</span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(result, expected)</span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ---Matrix Multiplication---</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix multiplication works correctly'</span>, {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> m1 <span class="sc">*</span> m2</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> m1 <span class="sc">%*%</span> m2</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(result, expected)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix multiplication with dimension mismatch tries reverse order'</span>, {</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">8</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_error</span>(m1 <span class="sc">*</span> m2)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_error</span>(m2 <span class="sc">%*%</span> m1)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix multiplication works with scalar'</span>, {</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    scalar <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> m1 <span class="sc">*</span> scalar</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> base<span class="sc">::</span><span class="st">`</span><span class="at">*</span><span class="st">`</span>(m1, scalar)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(result, expected)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co"># ---Exponentiation---</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'matrix inverse (^-1) works correctly'</span>, {</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">=</span> <span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">7</span>), <span class="fu">c</span>(<span class="dv">5</span>, <span class="sc">-</span><span class="dv">4</span>))</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> m <span class="sc">^</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> <span class="fu">solve</span>(m)</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(result, expected)</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co"># ---Solving system of linear equation---</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="co"># ---An example from https://www.youtube.com/watch?v=cblHUeq3bkE---</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'combined operations work (inverse then multiply)'</span>, {</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">=</span> <span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">7</span>), <span class="fu">c</span>(<span class="dv">5</span>, <span class="sc">-</span><span class="dv">4</span>))</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    b <span class="ot">=</span> <span class="fu">cbind</span>(<span class="fu">c</span>(<span class="dv">34</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">=</span> A <span class="sc">^</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> b</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>    expected <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(result, expected)</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </figure>
@@ -705,17 +723,17 @@ Listing&nbsp;13.1: ./module/<strong>tests</strong>/test-matrix_ops.r
 <p>You have several options for running tests:</p>
 <ol type="1">
 <li><p>If you are using the terminal:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> module/matrix_ops.r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> module/matrix_ops.r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>and when all five executable tests passed the unit test, you’ll get <code>.</code> being tallied:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> Rscript module/matrix_ops.r</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">✔</span> <span class="kw">|</span> <span class="ex">F</span> W  S  OK <span class="kw">|</span> <span class="ex">Context</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">⠏</span> <span class="kw">|</span>          <span class="ex">0</span> <span class="kw">|</span> <span class="ex">matrix_ops</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">✔</span> <span class="kw">|</span>          <span class="ex">6</span> <span class="kw">|</span> <span class="ex">matrix_ops</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">══</span> Results ════════════════════════════════════════════════════════════════</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> FAIL 0 <span class="er">|</span> <span class="er">WARN</span> <span class="ex">0</span> <span class="kw">|</span> <span class="ex">SKIP</span> 0 <span class="kw">|</span> <span class="ex">PASS</span> 6 ]</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="ex">You</span> rock!</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> Rscript module/matrix_ops.r</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">✔</span> <span class="kw">|</span> <span class="ex">F</span> W  S  OK <span class="kw">|</span> <span class="ex">Context</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">⠏</span> <span class="kw">|</span>          <span class="ex">0</span> <span class="kw">|</span> <span class="ex">matrix_ops</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">✔</span> <span class="kw">|</span>          <span class="ex">6</span> <span class="kw">|</span> <span class="ex">matrix_ops</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">══</span> Results ════════════════════════════════════════════════════════════════</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> FAIL 0 <span class="er">|</span> <span class="er">WARN</span> <span class="ex">0</span> <span class="kw">|</span> <span class="ex">SKIP</span> 0 <span class="kw">|</span> <span class="ex">PASS</span> 6 ]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ex">You</span> rock!</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This depends on what <code>reporter</code> argument you are placing. In this case, <code>"progress"</code> is chosen, because in my opinion, this is easier to read.</p>
 <p>See Chapter 4.2 to talk about more about diagnostics.</p>
 <div class="callout callout-style-default callout-important callout-titled">
@@ -750,12 +768,20 @@ Important
 </section>
 <section id="testing-nested-modules" class="level2">
 <h2 class="anchored" data-anchor-id="testing-nested-modules">Testing Nested Modules</h2>
-<p>How about testing nested modules? In this example, we want to measure the robustness the functions for linear and logistic regression under <code>./module/statistics/models/</code> module. Then, you can choose either updating <code>./modules/__tests__/</code> then prepare the scripts containing the unit tests, or create another <code>__tests__/</code> under <code>./module/statistics/models/</code> module folder. If you choose the former, the <code>./module/__tests__/helper-module.r</code> should contain the following import declaration:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>statistics<span class="sc">/</span>models<span class="sc">/</span>linear[linear_reg], </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>statistics<span class="sc">/</span>models<span class="sc">/</span>logistic[logistic_reg], </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Then copy the following unit tests, both <code>test-linear-reg.r</code> and <code>test-logistic-reg.r</code>, below. Else, do the following steps below. Let us test both <code>module/statistics/models/linear.r</code> and <code>module/statistics/models/logistic.r</code>. First, here’s the structure:</p>
+<p>How about testing nested modules? In this example, we want to measure the robustness the functions for linear and logistic regression models under <code>./module/statistics/models/</code> module. Then, choose either updating <code>./module/__tests__/</code> then prepare the scripts containing the unit tests, or create another <code>__tests__/</code> under <code>./module/statistics/models/</code> module folder. If you choose the former, the <code>./module/__tests__/helper-module.r</code> should contain the following import declaration:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># helper-module.r</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>statistics<span class="sc">/</span>models<span class="sc">/</span>linear[linear_reg], </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>statistics<span class="sc">/</span>models<span class="sc">/</span>logistic[logistic_reg], </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then copy the following unit tests, both <code>test-linear-reg.r</code> and <code>test-logistic-reg.r</code>, below. If you want to make these unit test script files testable assuming these scripts live under <code>./module/__tests__/</code>, then the following code that makes these scripts testable becomes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.null</span>(box<span class="sc">::</span><span class="fu">name</span>())) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    box<span class="sc">::</span><span class="fu">use</span>(..<span class="sc">/</span>..<span class="sc">/</span><span class="st">`</span><span class="at">__tests__</span><span class="st">`</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then execute either <code>module/statistics/models/linear.r</code> and/or <code>module/statistics/models/logistic.r</code> scripts on the terminal, assuming the Shell working directory is the root directory where <code>module/</code> live, through the following command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> module/statistics/models/linear.r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Else, do the following steps below. Let us test both <code>module/statistics/models/linear.r</code> and <code>module/statistics/models/logistic.r</code>.</p>
+<p>First, here’s the structure:</p>
 <pre><code>module/statistics/models/
 ├── __init__.r
 ├── linear.r                 # ◄─── Test this
@@ -766,102 +792,102 @@ Important
 │   ├── test-linear-reg.r
 │   └── test-logistic-reg.r
 └── baseline_logit.r</code></pre>
-<p>The <code>helper-module.r</code> file from <code>./module/statistics/models</code> adjusts the relative path:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>linear[linear_reg], </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>logistic[logistic_reg]</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>And <code>./module/statistics/models/__tests__/test-linear-reg.r</code> contains tests <code>linear_reg()</code> function:</p>
+<p>The <code>helper-module.r</code> file from <code>./module/statistics/models/__tests__/</code> adjusts the relative path:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>linear[linear_reg], </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    ..<span class="sc">/</span>logistic[logistic_reg]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And <code>/__tests__/test-linear-reg.r</code> contains tests <code>linear_reg()</code> function:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression from formula S3 method works'</span>, {</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"out"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"fitted"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"terms"</span>, <span class="st">"coefficients"</span>, <span class="st">"std_err"</span>, <span class="st">"t_statistic"</span>, <span class="st">"pval"</span>, <span class="st">"vif"</span>, <span class="st">"tolerance"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out)))</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>terms, <span class="fu">c</span>(<span class="st">"beta0"</span>, <span class="st">"wt"</span>, <span class="st">"hp"</span>))</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression from data frame S3 method works'</span>, {</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression calculates correct coefficients'</span>, {</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compare with base R lm()</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    base_model <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>coefficients, <span class="fu">as.vector</span>(<span class="fu">coef</span>(base_model)), <span class="at">tolerance =</span> <span class="fl">1e-6</span>)</span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression with column selection works'</span>, {</span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span></span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">linear_reg</span>(<span class="fu">c</span>(wt, hp), mpg)</span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without vif flag, should not have vif columns</span></span>
-<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_false</span>(<span class="st">"vif"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out))</span>
-<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression from formula S3 method works'</span>, {</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"out"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"fitted"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"terms"</span>, <span class="st">"coefficients"</span>, <span class="st">"std_err"</span>, <span class="st">"t_statistic"</span>, <span class="st">"pval"</span>, <span class="st">"vif"</span>, <span class="st">"tolerance"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out)))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>terms, <span class="fu">c</span>(<span class="st">"beta0"</span>, <span class="st">"wt"</span>, <span class="st">"hp"</span>))</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression from data frame S3 method works'</span>, {</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression calculates correct coefficients'</span>, {</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compare with base R lm()</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">linear_reg</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    base_model <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>coefficients, <span class="fu">as.vector</span>(<span class="fu">coef</span>(base_model)), <span class="at">tolerance =</span> <span class="fl">1e-6</span>)</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Linear Regression with column selection works'</span>, {</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">linear_reg</span>(<span class="fu">c</span>(wt, hp), mpg)</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"linear_reg"</span>)</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without vif flag, should not have vif columns</span></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_false</span>(<span class="st">"vif"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out))</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>As well as <code>./module/statistics/models/__tests__/test-logistic-reg.r</code> to tests <code>logistic_reg()</code> function:</p>
+<p>As well as <code>/__tests__/test-logistic-reg.r</code> to tests <code>logistic_reg()</code> function:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression from formula S3 method works'</span>, {</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"out"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"fitted"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"levels"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"reference"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"terms"</span>, <span class="st">"coefficients"</span>, <span class="st">"odds_ratio"</span>, <span class="st">"std_err"</span>, <span class="st">"z_statistic"</span>, <span class="st">"pval"</span>, <span class="st">"vif"</span>, <span class="st">"tolerance"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out)))</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>terms, <span class="fu">c</span>(<span class="st">"beta0"</span>, <span class="st">"wt"</span>, <span class="st">"hp"</span>))</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression from data frame S3 method works'</span>, {</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression calculates correct coefficients'</span>, {</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compare with base R glm()</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    base_model <span class="ot">=</span> <span class="fu">glm</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">data =</span> mtcars, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>coefficients, <span class="fu">as.vector</span>(<span class="fu">coef</span>(base_model)), <span class="at">tolerance =</span> <span class="fl">1e-4</span>)</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression with column selection works'</span>, {</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logistic_reg</span>(<span class="fu">c</span>(wt, hp), am)</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without vif flag, should not have vif columns</span></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_false</span>(<span class="st">"vif"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out))</span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression from formula S3 method works'</span>, {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"out"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"fitted"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"levels"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="st">"reference"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model))</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_true</span>(<span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"terms"</span>, <span class="st">"coefficients"</span>, <span class="st">"odds_ratio"</span>, <span class="st">"std_err"</span>, <span class="st">"z_statistic"</span>, <span class="st">"pval"</span>, <span class="st">"vif"</span>, <span class="st">"tolerance"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out)))</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>terms, <span class="fu">c</span>(<span class="st">"beta0"</span>, <span class="st">"wt"</span>, <span class="st">"hp"</span>))</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression from data frame S3 method works'</span>, {</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">vif =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression calculates correct coefficients'</span>, {</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compare with base R glm()</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> <span class="fu">logistic_reg</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, mtcars)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    base_model <span class="ot">=</span> <span class="fu">glm</span>(am <span class="sc">~</span> wt <span class="sc">+</span> hp, <span class="at">data =</span> mtcars, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(model<span class="sc">$</span>out<span class="sc">$</span>coefficients, <span class="fu">as.vector</span>(<span class="fu">coef</span>(base_model)), <span class="at">tolerance =</span> <span class="fl">1e-4</span>)</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">'Logistic Regression with column selection works'</span>, {</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">=</span> </span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>        mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logistic_reg</span>(<span class="fu">c</span>(wt, hp), am)</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_s3_class</span>(model, <span class="st">"logistic_reg"</span>)</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_equal</span>(<span class="fu">nrow</span>(model<span class="sc">$</span>out), <span class="dv">3</span>)</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Without vif flag, should not have vif columns</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect_false</span>(<span class="st">"vif"</span> <span class="sc">%in%</span> <span class="fu">names</span>(model<span class="sc">$</span>out))</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 
