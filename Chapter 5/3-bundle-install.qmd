@@ -1,2 +1,4 @@
 # Bundle and Installation
 
+Another entire chapter of packaging and installing modules is dedicated on this part of Chapter 5. Bundling the module part is easy as it has similar mechanism to `R CMD build`, done by running `carrier bundle .` command, then you'll get a tarball archive containing `{box}`-`{carrier}` module. And the installation part is also easy by running `carrier install <path-where-the-archive-lived>.tar.gz`. 
+

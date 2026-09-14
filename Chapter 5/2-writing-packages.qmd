@@ -14,7 +14,7 @@ To make `{box}` modules to be packaged, making it distributable and installable,
     powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/joshuamarie/carrier/refs/heads/main/scripts/install.ps1 | iex"
     ```
 
-But if you prefer the development version, one must require [Rust](https://www.rust-lang.org/tools/install) toolchain, particularly you need to have the following toolchains: `rustc` and `cargo` on your system to compile it from source.
+But if you prefer the development version, see the following syntax below. In order to do that, one must require [Rust](https://www.rust-lang.org/tools/install) toolchain, particularly you need to have the following toolchains: `rustc` and `cargo` on your system to compile it from source, then fetch the source code of `{carrier}` from this [repo](https://github.com/joshuamarie/carrier). 
 
 ``` bash
 cargo install --git https://github.com/joshuamarie/carrier
@@ -24,7 +24,7 @@ cargo install --git https://github.com/joshuamarie/carrier
 
 ## Overview to the {carrier} TOML file
 
-To make `{box}` modules to be packaged through `{carrier}`, the directory containing the source requires `carrier.toml`, similar to `DESCRIPTION` in traditional R packages and `pyproject.toml` in Python packages. We'll explore the anatomy of `carrier.toml` here to get an explanation while reading this book.
+Again, to make `{box}`-`{carrier}` modules happening, the directory containing the source requires `carrier.toml`, similar to `DESCRIPTION` in traditional R packages and `pyproject.toml` in Python packages. We'll explore the surface level of anatomy of `carrier.toml` here to get an explanation while reading this book.
 
 Here's an example of `carrier.toml`:
 
@@ -47,7 +47,7 @@ fpurrr = {version = "*", source = "gh:joshuamarie/fpurrr"}
 
 There are [five (5) blocks in total](https://joshuamarie.com/carrier/reference/carrier-toml.html), but to get started, only three (3) blocks that you need to know to get started.
 
-1.  `[module]` is the information of the `{box}`-`{carrier}` module authorship. This includes the name of the module, its declared version, description of the package, and the required R versions. This block is always required.
+1.  `[module]` is the information of the `{box}`-`{carrier}` module authorship. This includes the name of the module, its declared version (`version`), the description of the package (`description`), and the required R versions (`r_version`). This block is always required.
 
 2.  `[package_deps]` is where the list of R package dependencies lived. Not the modules which applies `{carrier}`, but the traditional CRAN-style R packages. The versioning of the package dependencies are varied and must be declared once. There are few ways to declare the version to be required:
 
@@ -56,13 +56,13 @@ There are [five (5) blocks in total](https://joshuamarie.com/carrier/reference/c
     iii. `"<=1.0.0"` - If declared, then `{carrier}` will fetch the package not later than 1.0.0.
     iv. `">=1.0.0"` - If declared, then `{carrier}` will fetch the package later than 1.0.0.
 
-    You can also declare it with the `{}` table syntax, which takes two arguments, `version` and `source`, for when the package needs to come from somewhere other than CRAN, a GitHub source, for instance. The `[package_deps]` can be empty or the entire block do not exist on `carrier.toml` if you don't have any packages import along the source code of your module. 
+    You can also declare it with the `{}` table syntax, which takes two arguments, `version` and `source`, for when the package needs to come from somewhere other than CRAN, a GitHub source, for instance. The `[package_deps]` can be empty or the entire block do not exist on `carrier.toml` if you don't have any packages import along the source code of your module. If `source` is not declared, `{carrier}` will lookup at the main CRAN repo. 
 
 3.  `[module_deps]` works the same way, but lists other `{box}`-`{carrier}` modules instead of CRAN packages, even though they're really just another kind of package under the hood. Versioning and the `source` field follow the same rules as `[package_deps]`. And just like `[package_deps]`, this can be empty or do not exist on `carrier.toml` file. 
 
 ## Creating your first package
 
-Composability of a simple module is...simple. You don't require few to plenty boilerplates to start, and then reuse the code you just wrote. How about making that simple package on your mind to be packaged? It is also simple through `{carrier}`. For our demo here, let's pick up an example, say `stringkit`, which is a small text-formatting module. Here's an example structure:
+Composability of a simple module is...well, simple. You don't have to require few to plenty boilerplates to start, and then compose the code you just wrote. How about making that simple package on your mind to be packaged? It is also simple through `{carrier}`. For our demo here, let's pick up an example, say `{stringkit}`, which is a small text-formatting module. Here's an example structure:
 
 ``` text
 <dir-where-stringkit-lives>/
@@ -70,10 +70,11 @@ Composability of a simple module is...simple. You don't require few to plenty bo
 └── stringkit/
     ├── __init__.r
     ├── case.r
+    ├── flatten.r
     └── pad.r
 ```
 
-The `<dir-where-stringkit-lives>/` name is just a placeholder, pick up a better name. As a starter, you must place your current directory under `<dir-where-stringkit-lives>/`. One file that is always required to be placed at the relative path of where you are working with: `carrier.toml`. This is just the `DESCRIPTION` file for `{box}`-`{carrier}` modules and for the sake of demonstration, here's the following content you can copy:
+The `<dir-where-stringkit-lives>/` name is just a placeholder, pick up a better name. As a starter, place your current directory under `<dir-where-stringkit-lives>/`. One file that is always required to be placed at the relative path of where you are working with: `carrier.toml`. This is just the `DESCRIPTION` file for `{box}`-`{carrier}` modules and for the sake of demonstration, here's the following content you can copy:
 
 ``` toml
 [module]
@@ -83,9 +84,12 @@ version = "0.1.0"
 description = "A small text-formatting module"
 r_version = ">=4.1.0"
 # src = "stringkit/"
+
+[package_deps]
+stringi = "*"
 ```
 
-Then, write the two submodules under `stringkit/` source code, `case` and `pad`. 
+Then, write the two submodules under `stringkit/` source code, `case` and `pad`. Here are the following sources you can copy and reproduce: 
 
 ``` r
 # stringkit/case.r
@@ -108,6 +112,7 @@ left = function (x, width, fill = "0") {
 #' @export
 box::use(
     ./case, 
+    ./flat, 
     pad = ./pad[pad_left = left], 
 )
 ```
@@ -137,7 +142,7 @@ stringkit$case$to_snake("myVariableName")
 case$to_snake("myVariableName")
 #> [1] "my_variable_name"
 
-stringkit$pad$pad_left(7, width = 3)
+stringkit$pad$left(7, width = 3)
 #> [1] "007"
 
 pad$left(7, width = 3)
