@@ -1,0 +1,16 @@
+[module]
+name = "demodule"
+authors = ["Joshua Marie"]
+version = "0.1.0"
+description = "A demo module from BPMSiR book"
+r_version = ">=4.1.0"
+license = "unknown"
+src = "module/"
+
+[package_deps]
+dplyr = ">1.1.0"
+tidyselect = "*"
+tibble = "*"
+rlang = ">=1.1.0"
+purrr = ">=1.2.0"
+glue = "*"
